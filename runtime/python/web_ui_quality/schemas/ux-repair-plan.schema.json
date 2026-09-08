@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/ux-repair-plan.schema.json",
+  "title": "UX Repair Plan",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "score",
+    "findingCount",
+    "findings",
+    "quickWins",
+    "structuralRepairs",
+    "principles"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "score": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "findingCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "findings": {
+      "type": "array"
+    },
+    "quickWins": {
+      "type": "array"
+    },
+    "structuralRepairs": {
+      "type": "array"
+    },
+    "principles": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}

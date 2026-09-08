@@ -1,0 +1,196 @@
+{
+  "$id": "https://web-ui-quality.local/4.2/host-write-receipt-v3.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activationId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "actualOperation": {
+      "enum": [
+        "EDIT",
+        "CHANGE_SET"
+      ]
+    },
+    "applyResult": {
+      "const": "APPLIED"
+    },
+    "attestationIdentity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "authorizationTicketDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "baselineDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "changeSetDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "entries": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "actualAfterHash": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "actualBeforeHash": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "actualOperation": {
+            "enum": [
+              "EDIT"
+            ]
+          },
+          "canonicalPath": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "entryId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "entryResult": {
+            "const": "APPLIED"
+          },
+          "reasonCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "entryId",
+          "canonicalPath",
+          "actualOperation",
+          "entryResult",
+          "actualBeforeHash",
+          "actualAfterHash"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "expiresAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "freshnessEpoch": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "hostIdentity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "integrityMechanism": {
+      "enum": [
+        "HOST_SIGNATURE",
+        "HMAC_SHA256",
+        "OPAQUE_HOST_ATTESTATION"
+      ]
+    },
+    "integrityTag": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "issuedAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "kernelVersion": {
+      "const": "4.2.3"
+    },
+    "keyId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "nonce": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "packageTreeDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "pluginVersion": {
+      "const": "4.3.0"
+    },
+    "receiptDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "receiptId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "receiptProtocolVersion": {
+      "const": "3.0"
+    },
+    "runId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "3"
+    },
+    "sessionId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "targetDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "taskId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "verificationPolicyDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "receiptProtocolVersion",
+    "receiptId",
+    "pluginVersion",
+    "kernelVersion",
+    "packageTreeDigest",
+    "activationId",
+    "runId",
+    "sessionId",
+    "taskId",
+    "nonce",
+    "issuedAt",
+    "expiresAt",
+    "freshnessEpoch",
+    "baselineDigest",
+    "targetDigest",
+    "changeSetDigest",
+    "verificationPolicyDigest",
+    "hostIdentity",
+    "attestationIdentity",
+    "authorizationTicketDigest",
+    "actualOperation",
+    "applyResult",
+    "entries",
+    "receiptDigest",
+    "integrityMechanism",
+    "integrityTag"
+  ],
+  "title": "Host Write Receipt v3",
+  "type": "object"
+}

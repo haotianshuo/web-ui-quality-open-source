@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/host-write-receipt-v2.schema.json",
+  "title": "Host Write Receipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "receiptId",
+    "taskId",
+    "authorizationTicketDigest",
+    "actualOperation",
+    "applyResult",
+    "hostActor",
+    "observedAt",
+    "entries",
+    "receiptDigest",
+    "integrityMechanism",
+    "integrityTag"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2"
+    },
+    "receiptId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authorizationTicketDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "changeSetDigest": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "actualOperation": {
+      "enum": [
+        "CREATE",
+        "EDIT",
+        "DELETE",
+        "RENAME",
+        "CHANGE_SET"
+      ]
+    },
+    "applyResult": {
+      "enum": [
+        "REJECTED",
+        "NOT_APPLIED",
+        "APPLIED",
+        "APPLY_PARTIAL",
+        "ROLLED_BACK",
+        "ROLLBACK_FAILED",
+        "RECOVERY_REQUIRED"
+      ]
+    },
+    "hostActor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "concurrencySemantics": {
+      "enum": [
+        "SINGLE_WRITER_SERIALIZED",
+        "MULTI_PROCESS_CAS",
+        "DISTRIBUTED_AUTHORITY"
+      ]
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entryId",
+          "canonicalPath",
+          "actualOperation",
+          "entryResult",
+          "actualBeforeHash",
+          "actualAfterHash"
+        ],
+        "properties": {
+          "entryId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "canonicalPath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actualOperation": {
+            "enum": [
+              "CREATE",
+              "EDIT",
+              "DELETE",
+              "RENAME"
+            ]
+          },
+          "entryResult": {
+            "enum": [
+              "NOT_ATTEMPTED",
+              "APPLIED",
+              "FAILED",
+              "ROLLED_BACK",
+              "ROLLBACK_FAILED",
+              "STATE_UNKNOWN"
+            ]
+          },
+          "actualBeforeHash": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "const": "ABSENT"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "actualAfterHash": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "const": "ABSENT"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reasonCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "receiptDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "integrityMechanism": {
+      "enum": [
+        "HOST_SIGNATURE",
+        "HMAC_SHA256",
+        "OPAQUE_HOST_ATTESTATION"
+      ]
+    },
+    "keyId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "integrityTag": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/signal-validity-report-v1.schema.json",
+  "title": "WUQ Signal Validity Pre-Gate Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion","analysisMode","authoritative","recordCount","independentlyLabelledRowCount","minimumIndependentRows","minimumSignalSupport","labelSourceCounts","splitCounts","excludedReasonCounts","signalMetrics","predictiveValidity","preGateDecision","profileRecommendation","clampRecommendation","authorityEffect","adaptiveEffect","holdoutUsed","claimBoundary","reportDigest"],
+  "properties": {
+    "schemaVersion":{"const":"1"},
+    "analysisMode":{"enum":["DEVELOPMENT_ONLY","EXPLICIT_HOLDOUT_ANALYSIS"]},
+    "authoritative":{"const":false},
+    "recordCount":{"type":"integer","minimum":0},
+    "independentlyLabelledRowCount":{"type":"integer","minimum":0},
+    "minimumIndependentRows":{"type":"integer","minimum":1},
+    "minimumSignalSupport":{"type":"integer","minimum":1},
+    "labelSourceCounts":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+    "splitCounts":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+    "excludedReasonCounts":{"type":"object","additionalProperties":{"type":"integer","minimum":0}},
+    "signalMetrics":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["code","polarity","support","tp","fp","fn","tn","precision","recall","falsePositiveRate","supportSufficient"],"properties":{"code":{"type":"string","minLength":1},"polarity":{"enum":["POSITIVE","NEGATIVE"]},"support":{"type":"integer","minimum":0},"tp":{"type":"integer","minimum":0},"fp":{"type":"integer","minimum":0},"fn":{"type":"integer","minimum":0},"tn":{"type":"integer","minimum":0},"precision":{"type":["number","null"],"minimum":0,"maximum":1},"recall":{"type":["number","null"],"minimum":0,"maximum":1},"falsePositiveRate":{"type":["number","null"],"minimum":0,"maximum":1},"supportSufficient":{"type":"boolean"}}}},
+    "predictiveValidity":{"enum":["NOT_MEASURED","PRE_GATE_DATA_ONLY","PRE_GATE_MEASURED_DEVELOPMENT_ONLY"]},
+    "preGateDecision":{"enum":["NOT_READY_NO_INDEPENDENT_LABELS","NOT_READY_INSUFFICIENT_INDEPENDENT_ROWS","NOT_READY_INSUFFICIENT_SIGNAL_SUPPORT","READY_FOR_PREREGISTERED_SIGNAL_VALIDITY_GATE"]},
+    "profileRecommendation":{"const":"NOT_EVALUATED_UNTIL_SIGNAL_VALIDITY_GATE"},
+    "clampRecommendation":{"const":"NOT_EVALUATED_UNTIL_SIGNAL_VALIDITY_GATE"},
+    "authorityEffect":{"const":"NONE"},
+    "adaptiveEffect":{"const":"NONE"},
+    "holdoutUsed":{"type":"boolean"},
+    "claimBoundary":{"type":"string","minLength":1},
+    "reportDigest":{"type":"string","minLength":16}
+  }
+}

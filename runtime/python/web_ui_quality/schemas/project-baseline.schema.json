@@ -1,0 +1,224 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/project-baseline.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "projectRoot",
+    "createdAt",
+    "files",
+    "fileCount",
+    "truncated",
+    "completenessStatus",
+    "scanLimit",
+    "metadata",
+    "baselineDigest",
+    "targetCoverage",
+    "criticalContextCoverage"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "projectRoot": {
+      "const": "."
+    },
+    "createdAt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fileCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "completenessStatus": {
+      "enum": [
+        "COMPLETE",
+        "INDETERMINATE"
+      ]
+    },
+    "scanLimit": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "baselineDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frameworks",
+        "packageManager",
+        "scripts",
+        "localTools"
+      ],
+      "properties": {
+        "frameworks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "packageManager": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scripts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "localTools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256",
+          "bytes",
+          "suffix",
+          "configOrToolchain",
+          "qualitySignals"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "suffix": {
+            "type": "string"
+          },
+          "configOrToolchain": {
+            "type": "boolean"
+          },
+          "qualitySignals": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "important",
+              "inlineStyle",
+              "magicPixel"
+            ],
+            "properties": {
+              "important": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "inlineStyle": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "magicPixel": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "targetCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested",
+        "indexed",
+        "missing",
+        "status"
+      ],
+      "properties": {
+        "requested": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "indexed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "enum": [
+            "COMPLETE",
+            "INDETERMINATE"
+          ]
+        }
+      }
+    },
+    "criticalContextCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested",
+        "indexed",
+        "missing",
+        "status",
+        "claimBoundary"
+      ],
+      "properties": {
+        "requested": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "indexed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "enum": [
+            "COMPLETE",
+            "INDETERMINATE"
+          ]
+        },
+        "claimBoundary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

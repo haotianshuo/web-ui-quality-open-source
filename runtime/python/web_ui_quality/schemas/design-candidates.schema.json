@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "candidateDigest": {
+      "type": "string"
+    },
+    "candidates": {
+      "items": {
+        "properties": {
+          "antiPatterns": {
+            "type": "array"
+          },
+          "archetype": {
+            "type": "string"
+          },
+          "designDNA": {
+            "type": "object"
+          },
+          "decisionFrame": {
+            "type": "string"
+          },
+          "direction": {
+            "enum": [
+              "conservative-repair",
+              "journey-focused",
+              "system-modernization"
+            ]
+          },
+          "experienceRules": {
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "score": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "selectionReasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "structuralDimensions": {
+            "minProperties": 3,
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "archetype",
+          "score",
+          "direction",
+          "decisionFrame",
+          "selectionReasons",
+          "structuralDimensions",
+          "designDNA",
+          "experienceRules",
+          "antiPatterns"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 1,
+      "type": "array"
+    },
+    "candidateContractVersion": {
+      "const": "1.0"
+    },
+    "schemaVersion": {
+      "const": "2.2"
+    },
+    "differenceGate": {
+      "properties": {
+        "allPairsPass": {
+          "const": true
+        },
+        "dimensions": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 3,
+          "type": "array"
+        },
+        "minimumDistinctDimensions": {
+          "const": 3
+        },
+        "pairwise": {
+          "items": {
+            "properties": {
+              "distinctDimensionCount": {
+                "minimum": 3,
+                "type": "integer"
+              },
+              "distinctDimensions": {
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 3,
+                "type": "array"
+              },
+              "left": {
+                "type": "string"
+              },
+              "right": {
+                "type": "string"
+              },
+              "status": {
+                "const": "PASS"
+              }
+            },
+            "required": [
+              "left",
+              "right",
+              "distinctDimensions",
+              "distinctDimensionCount",
+              "status"
+            ],
+            "type": "object"
+          },
+          "maxItems": 3,
+          "minItems": 0,
+          "type": "array"
+        },
+        "status": {
+          "const": "PASS"
+        },
+        "gateType": {
+          "const": "DECLARED_DIRECTION_CONTRACT_DIFFERENCE"
+        },
+        "claimBoundary": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "minimumDistinctDimensions",
+        "dimensions",
+        "pairwise",
+        "allPairsPass",
+        "gateType",
+        "claimBoundary"
+      ],
+      "type": "object"
+    },
+    "selected": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "selectionPolicy": {
+      "type": "object"
+    },
+    "status": {
+      "const": "CANDIDATES_READY"
+    },
+    "recommended": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "status",
+    "candidateContractVersion",
+    "candidates",
+    "differenceGate",
+    "selectionPolicy",
+    "candidateDigest",
+    "recommended"
+  ],
+  "title": "Design Candidates",
+  "type": "object"
+}

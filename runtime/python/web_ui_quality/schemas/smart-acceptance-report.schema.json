@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/smart-acceptance-report.schema.json",
+  "title": "Smart Acceptance Report v2.3 P0-A",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "producer",
+    "packageVersion",
+    "generatedAt",
+    "status",
+    "deliveryConclusion",
+    "target",
+    "businessContext",
+    "preflight",
+    "runtime",
+    "pageHealth",
+    "journey",
+    "findings",
+    "topFindings",
+    "repairRecipes",
+    "normalization",
+    "coverage",
+    "coverageSummary",
+    "phaseCapabilities",
+    "claimBoundary",
+    "reportDigest"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2.3-p0a"
+    },
+    "producer": {
+      "const": "web-ui-quality-smart-acceptance"
+    },
+    "packageVersion": {
+      "type": "string"
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "FAIL",
+        "NOT_VERIFIED",
+        "BLOCKED"
+      ]
+    },
+    "deliveryConclusion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "businessContext": {
+      "type": "object"
+    },
+    "preflight": {
+      "type": "object"
+    },
+    "runtime": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "journey": {
+      "type": "object"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "acceptance-finding.schema.json"
+      }
+    },
+    "topFindings": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "$ref": "acceptance-finding.schema.json"
+      }
+    },
+    "normalization": {
+      "type": "object"
+    },
+    "coverage": {
+      "type": "object"
+    },
+    "coverageSummary": {
+      "type": "object"
+    },
+    "phaseCapabilities": {
+      "type": "object"
+    },
+    "claimBoundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reportDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "open": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Primary user-facing HTML report path."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Primary Markdown summary path."
+    },
+    "pageHealth": {
+      "$ref": "page-health.schema.json"
+    },
+    "repairRecipes": {
+      "type": "array",
+      "items": {
+        "$ref": "ux-repair-recipe.schema.json"
+      }
+    }
+  }
+}

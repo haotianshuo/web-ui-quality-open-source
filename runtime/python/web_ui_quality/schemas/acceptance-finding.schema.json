@@ -1,0 +1,191 @@
+{
+  "$defs": {
+    "outcome": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "summary": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "summary"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://web-ui-quality.local/schemas/acceptance-finding.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contextVersion": {
+      "type": "string"
+    },
+    "evidenceKinds": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "evidenceRefs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "expectedOutcome": {
+      "$ref": "#/$defs/outcome"
+    },
+    "fingerprint": {
+      "pattern": "^af-[0-9a-f]{20}$",
+      "type": "string"
+    },
+    "goalRelevance": {
+      "enum": [
+        "DIRECT",
+        "SUPPORTING",
+        "UNRELATED"
+      ]
+    },
+    "impact": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "issueType": {
+      "enum": [
+        "NO_RESPONSE",
+        "FALSE_SUCCESS",
+        "RESULT_MISMATCH",
+        "RESPONSIVE_BLOCK",
+        "FEEDBACK_GAP",
+        "RECOVERY_GAP",
+        "ACCESSIBILITY_BLOCK",
+        "COMPLETENESS_SUGGESTION",
+        "RUNTIME_HEALTH",
+        "VISUAL_FRICTION"
+      ]
+    },
+    "journeyId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observedOutcome": {
+      "$ref": "#/$defs/outcome"
+    },
+    "recommendation": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "redactionApplied": {
+      "type": "boolean"
+    },
+    "resultLabel": {
+      "enum": [
+        "现在会出错",
+        "用起来别扭",
+        "建议考虑补充",
+        "暂时无法确认"
+      ]
+    },
+    "routeTemplate": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "ruleId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "ruleVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "2"
+    },
+    "semanticTarget": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info"
+      ]
+    },
+    "state": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "stepId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "summary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "targetIdentity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "verificationState": {
+      "enum": [
+        "VERIFIED",
+        "NOT_VERIFIED",
+        "NOT_EXECUTED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "viewportClass": {
+      "enum": [
+        "mobile",
+        "small-desktop",
+        "desktop",
+        "all",
+        "unknown"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "contextVersion",
+    "fingerprint",
+    "targetIdentity",
+    "routeTemplate",
+    "journeyId",
+    "stepId",
+    "issueType",
+    "semanticTarget",
+    "state",
+    "viewportClass",
+    "expectedOutcome",
+    "observedOutcome",
+    "evidenceKinds",
+    "evidenceRefs",
+    "ruleId",
+    "ruleVersion",
+    "verificationState",
+    "resultLabel",
+    "severity",
+    "goalRelevance",
+    "summary",
+    "impact",
+    "recommendation",
+    "redactionApplied"
+  ],
+  "title": "Smart Acceptance Finding v2",
+  "type": "object"
+}

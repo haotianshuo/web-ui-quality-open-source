@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.local/web-ui-quality/source-scope-manifest.schema.json",
+  "title": "Source Scope Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "projectRoot",
+    "entries"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "projectRoot": {
+      "const": "."
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "kind"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "file",
+              "planned-new",
+              "missing",
+              "in-memory"
+            ]
+          },
+          "resolvedPath": {
+            "type": "string",
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+          },
+          "linkType": {
+            "type": "string",
+            "enum": [
+              "regular",
+              "symbolic-link",
+              "junction",
+              "reparse-point",
+              "mixed-reparse"
+            ]
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "file"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "resolvedPath",
+                "linkType",
+                "size",
+                "sha256"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "in-memory"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "size",
+                "sha256"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

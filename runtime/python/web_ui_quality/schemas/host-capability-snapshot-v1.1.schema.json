@@ -1,0 +1,739 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/host-capability-snapshot-v1.1.schema.json",
+  "title": "Host Capability Snapshot v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "snapshotId",
+    "hostId",
+    "hostVersion",
+    "adapterId",
+    "adapterVersion",
+    "threatModelVersion",
+    "channelAssessments",
+    "issuedAt",
+    "validUntil",
+    "snapshotDigest",
+    "integrityMechanism",
+    "integrityTag"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.1"
+    },
+    "snapshotId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hostId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hostVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapterId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapterVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "threatModelVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channelAssessments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/mutation"
+          },
+          {
+            "$ref": "#/$defs/observation"
+          },
+          {
+            "$ref": "#/$defs/identity"
+          },
+          {
+            "$ref": "#/$defs/telemetry"
+          },
+          {
+            "$ref": "#/$defs/context"
+          },
+          {
+            "$ref": "#/$defs/execution"
+          },
+          {
+            "$ref": "#/$defs/persistence"
+          }
+        ]
+      }
+    },
+    "issuedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validUntil": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "previousSnapshotDigest": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "snapshotDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "integrityMechanism": {
+      "enum": [
+        "HOST_SIGNATURE",
+        "HMAC_SHA256",
+        "OPAQUE_HOST_ATTESTATION",
+        "LOCAL_DIGEST_ONLY"
+      ]
+    },
+    "keyId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "integrityTag": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "mutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channelId",
+        "kind",
+        "capabilityLevel",
+        "limitationCodes",
+        "assessedAt",
+        "validUntil",
+        "assessorId",
+        "assessmentDigest",
+        "canPrevent",
+        "canDetect",
+        "canAttribute",
+        "canHashBefore",
+        "canHashAfter",
+        "canBindReceipt",
+        "canBlockReplay",
+        "atomicityLevel"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "capabilityLevel": {
+          "enum": [
+            "UNKNOWN",
+            "UNAVAILABLE",
+            "ADVISORY",
+            "DETECT_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "limitationCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "assessorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessmentDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "const": "MUTATION"
+        },
+        "canPrevent": {
+          "type": "boolean"
+        },
+        "canDetect": {
+          "type": "boolean"
+        },
+        "canAttribute": {
+          "type": "boolean"
+        },
+        "canHashBefore": {
+          "type": "boolean"
+        },
+        "canHashAfter": {
+          "type": "boolean"
+        },
+        "canBindReceipt": {
+          "type": "boolean"
+        },
+        "canBlockReplay": {
+          "type": "boolean"
+        },
+        "atomicityLevel": {
+          "enum": [
+            "NONE",
+            "PER_FILE",
+            "CHANGE_SET"
+          ]
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channelId",
+        "kind",
+        "capabilityLevel",
+        "limitationCodes",
+        "assessedAt",
+        "validUntil",
+        "assessorId",
+        "assessmentDigest",
+        "canObserve",
+        "canAttribute",
+        "observationIntegrity",
+        "freshnessBound",
+        "environmentBinding"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "capabilityLevel": {
+          "enum": [
+            "UNKNOWN",
+            "UNAVAILABLE",
+            "ADVISORY",
+            "DETECT_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "limitationCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "assessorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessmentDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "const": "OBSERVATION"
+        },
+        "canObserve": {
+          "type": "boolean"
+        },
+        "canAttribute": {
+          "type": "boolean"
+        },
+        "observationIntegrity": {
+          "enum": [
+            "NONE",
+            "LOCAL_DIGEST",
+            "LOCAL_MAC",
+            "HOST_ATTESTED"
+          ]
+        },
+        "freshnessBound": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "environmentBinding": {
+          "type": "boolean"
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channelId",
+        "kind",
+        "capabilityLevel",
+        "limitationCodes",
+        "assessedAt",
+        "validUntil",
+        "assessorId",
+        "assessmentDigest",
+        "authoritativeSource",
+        "integrityLevel",
+        "versionBinding",
+        "freshnessBound",
+        "sessionBinding"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "capabilityLevel": {
+          "enum": [
+            "UNKNOWN",
+            "UNAVAILABLE",
+            "ADVISORY",
+            "DETECT_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "limitationCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "assessorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessmentDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "const": "IDENTITY"
+        },
+        "authoritativeSource": {
+          "type": "string",
+          "minLength": 1
+        },
+        "integrityLevel": {
+          "enum": [
+            "NONE",
+            "LOCAL_DIGEST",
+            "LOCAL_MAC",
+            "HOST_ATTESTED"
+          ]
+        },
+        "versionBinding": {
+          "type": "boolean"
+        },
+        "freshnessBound": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sessionBinding": {
+          "type": "boolean"
+        }
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channelId",
+        "kind",
+        "capabilityLevel",
+        "limitationCodes",
+        "assessedAt",
+        "validUntil",
+        "assessorId",
+        "assessmentDigest",
+        "quality",
+        "unit",
+        "source",
+        "monotonic",
+        "integrityLevel",
+        "freshnessBound"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "capabilityLevel": {
+          "enum": [
+            "UNKNOWN",
+            "UNAVAILABLE",
+            "ADVISORY",
+            "DETECT_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "limitationCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "assessorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessmentDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "const": "TELEMETRY"
+        },
+        "quality": {
+          "enum": [
+            "AUTHORITATIVE",
+            "ESTIMATED",
+            "UNKNOWN"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "monotonic": {
+          "type": "boolean"
+        },
+        "integrityLevel": {
+          "enum": [
+            "NONE",
+            "LOCAL_DIGEST",
+            "LOCAL_MAC",
+            "HOST_ATTESTED"
+          ]
+        },
+        "freshnessBound": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channelId",
+        "kind",
+        "capabilityLevel",
+        "limitationCodes",
+        "assessedAt",
+        "validUntil",
+        "assessorId",
+        "assessmentDigest",
+        "canInject",
+        "canRestrict",
+        "canRedact",
+        "canIsolate",
+        "canAudit"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "capabilityLevel": {
+          "enum": [
+            "UNKNOWN",
+            "UNAVAILABLE",
+            "ADVISORY",
+            "DETECT_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "limitationCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "assessorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessmentDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "const": "CONTEXT_CONTROL"
+        },
+        "canInject": {
+          "type": "boolean"
+        },
+        "canRestrict": {
+          "type": "boolean"
+        },
+        "canRedact": {
+          "type": "boolean"
+        },
+        "canIsolate": {
+          "type": "boolean"
+        },
+        "canAudit": {
+          "type": "boolean"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channelId",
+        "kind",
+        "capabilityLevel",
+        "limitationCodes",
+        "assessedAt",
+        "validUntil",
+        "assessorId",
+        "assessmentDigest",
+        "canPause",
+        "canBlock",
+        "canResume",
+        "canAttribute",
+        "canAudit"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "capabilityLevel": {
+          "enum": [
+            "UNKNOWN",
+            "UNAVAILABLE",
+            "ADVISORY",
+            "DETECT_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "limitationCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "assessorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessmentDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "const": "EXECUTION_CONTROL"
+        },
+        "canPause": {
+          "type": "boolean"
+        },
+        "canBlock": {
+          "type": "boolean"
+        },
+        "canResume": {
+          "type": "boolean"
+        },
+        "canAttribute": {
+          "type": "boolean"
+        },
+        "canAudit": {
+          "type": "boolean"
+        }
+      }
+    },
+    "persistence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channelId",
+        "kind",
+        "capabilityLevel",
+        "limitationCodes",
+        "assessedAt",
+        "validUntil",
+        "assessorId",
+        "assessmentDigest",
+        "canPersist",
+        "canReadBack",
+        "durabilityLevel",
+        "integrityLevel"
+      ],
+      "properties": {
+        "channelId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "capabilityLevel": {
+          "enum": [
+            "UNKNOWN",
+            "UNAVAILABLE",
+            "ADVISORY",
+            "DETECT_ONLY",
+            "ENFORCED"
+          ]
+        },
+        "limitationCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "assessorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assessmentDigest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "kind": {
+          "const": "PERSISTENCE"
+        },
+        "canPersist": {
+          "type": "boolean"
+        },
+        "canReadBack": {
+          "type": "boolean"
+        },
+        "durabilityLevel": {
+          "enum": [
+            "NONE",
+            "PROCESS",
+            "LOCAL_DURABLE",
+            "HOST_DURABLE"
+          ]
+        },
+        "integrityLevel": {
+          "enum": [
+            "NONE",
+            "LOCAL_DIGEST",
+            "LOCAL_MAC",
+            "HOST_ATTESTED"
+          ]
+        }
+      }
+    }
+  }
+}

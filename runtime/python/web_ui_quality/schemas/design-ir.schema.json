@@ -1,0 +1,201 @@
+{
+  "$defs": {
+    "node": {
+      "properties": {
+        "bindings": {
+          "type": "object"
+        },
+        "bounds": {
+          "type": "object"
+        },
+        "children": {
+          "items": {
+            "$ref": "#/$defs/node"
+          },
+          "type": "array"
+        },
+        "content": {
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "semantics": {
+          "type": "object"
+        },
+        "source": {
+          "type": "object"
+        },
+        "style": {
+          "type": "object"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "name",
+        "style",
+        "semantics",
+        "bindings",
+        "children"
+      ],
+      "type": "object"
+    },
+    "productModelNode": {
+      "properties": {
+        "children": {
+          "items": {"$ref": "#/$defs/productModelNode"},
+          "type": "array"
+        },
+        "confidence": {
+          "properties": {
+            "level": {"enum": ["low", "medium", "high"]},
+            "score": {"maximum": 1, "minimum": 0, "type": "number"}
+          },
+          "required": ["score", "level"],
+          "type": "object"
+        },
+        "designSystemOrigin": {
+          "properties": {
+            "status": {"enum": ["observed", "inferred", "declared", "unknown"]},
+            "value": {"type": "string"}
+          },
+          "required": ["status", "value"],
+          "type": "object"
+        },
+        "evidence": {
+          "properties": {
+            "channels": {
+              "properties": {
+                "dom": {"items": {"type": "string"}, "type": "array"},
+                "runtime": {"items": {"type": "string"}, "type": "array"},
+                "source": {"items": {"type": "string"}, "type": "array"},
+                "visual": {"items": {"type": "string"}, "type": "array"}
+              },
+              "required": ["source", "dom", "visual", "runtime"],
+              "type": "object"
+            },
+            "declared": {"items": {"type": "string"}, "type": "array"},
+            "inferred": {"items": {"type": "string"}, "type": "array"},
+            "observed": {"items": {"type": "string"}, "type": "array"},
+            "unknown": {"items": {"type": "string"}, "type": "array"}
+          },
+          "required": ["observed", "inferred", "declared", "unknown", "channels"],
+          "type": "object"
+        },
+        "evidenceClass": {"enum": ["observed", "inferred", "declared", "unknown"]},
+        "id": {"minLength": 1, "type": "string"},
+        "layer": {"enum": ["Product", "Route", "Journey", "Region", "Component", "Interaction State"]},
+        "name": {"type": "string"},
+        "responsiveBehavior": {
+          "properties": {
+            "rules": {"items": {"type": "string"}, "type": "array"},
+            "status": {"enum": ["observed", "inferred", "declared", "unknown"]}
+          },
+          "required": ["status", "rules"],
+          "type": "object"
+        },
+        "risk": {
+          "properties": {
+            "level": {"enum": ["low", "medium", "high", "unknown"]},
+            "reasons": {"items": {"type": "string"}, "type": "array"}
+          },
+          "required": ["level", "reasons"],
+          "type": "object"
+        },
+        "semantics": {"type": "object"},
+        "sourceOwnership": {
+          "properties": {
+            "authority": {"const": "read-only-reference"},
+            "owner": {"type": "string"},
+            "paths": {"items": {"type": "string"}, "type": "array"}
+          },
+          "required": ["owner", "authority", "paths"],
+          "type": "object"
+        }
+      },
+      "required": [
+        "id", "layer", "name", "evidenceClass", "evidence", "sourceOwnership",
+        "confidence", "risk", "responsiveBehavior", "designSystemOrigin", "semantics", "children"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://web-ui-quality.local/schemas/design-ir.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "assets": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "canvas": {
+      "type": "object"
+    },
+    "designDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "productModel": {
+      "$ref": "#/$defs/productModelNode"
+    },
+    "productModelVersion": {
+      "const": "2.0"
+    },
+    "roots": {
+      "items": {
+        "$ref": "#/$defs/node"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "2.2"
+    },
+    "source": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "figma",
+            "screenshot",
+            "experience-plan",
+            "manual",
+            "project-source"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ],
+      "type": "object"
+    },
+    "tokens": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "source",
+    "roots",
+    "productModelVersion",
+    "productModel",
+    "designDigest"
+  ],
+  "title": "Design IR",
+  "type": "object"
+}

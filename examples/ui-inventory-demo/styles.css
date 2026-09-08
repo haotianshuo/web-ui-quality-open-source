@@ -1,0 +1,109 @@
+:root {
+  --background: #f5f7fb;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --border: #e5e7eb;
+  --input-border: #d1d5db;
+  --primary: #0958d9;
+  --focus: #0958d9;
+  --control-radius: 8px;
+  --page-space: 24px;
+  --font-family-sans: Arial, sans-serif;
+  --font-size-body: 16px;
+  --font-size-control: 14px;
+  --font-size-title: 32px;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height-control: 1.4;
+  --line-height-title: 1.2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  fill: var(--text);
+}
+
+button,
+input {
+  font-family: var(--font-family-sans);
+}
+
+h1 {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-title);
+}
+
+html,
+body,
+body * {
+  fill: var(--text);
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+  padding: 16px var(--page-space);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav a,
+.nav a:visited {
+  color: var(--primary);
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: var(--page-space);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--control-radius);
+  padding: var(--page-space);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+button.save {
+  height: 44px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--primary);
+  border-radius: var(--control-radius);
+  background: var(--primary);
+  color: var(--surface);
+  font-size: var(--font-size-control);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-control);
+}
+
+.field {
+  height: 44px;
+  min-height: 44px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--control-radius);
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: var(--font-size-control);
+  line-height: var(--line-height-control);
+}
+
+button:focus-visible,
+input:focus-visible,
+.nav a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}

@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/experience-core.schema.json",
+  "title": "Web UI Quality Experience Core",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "experienceModel",
+    "selectedPattern",
+    "visualSystem",
+    "interactionContract",
+    "modernTechnology",
+    "implementationPlan",
+    "acceptance",
+    "experienceDigest",
+    "selectedSkeleton",
+    "uxRepairPlan",
+    "projectDesignSystem",
+    "library",
+    "qualityReadiness",
+    "modernizationStrategy"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "3.0"
+    },
+    "experienceModel": {
+      "type": "object",
+      "required": [
+        "frequency",
+        "userExpertise",
+        "environment",
+        "taskType",
+        "risk",
+        "informationDensity",
+        "devicePriority",
+        "confidence",
+        "unresolvedQuestions"
+      ]
+    },
+    "selectedPattern": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "score",
+        "composition",
+        "primaryInteractions",
+        "requiredStates"
+      ]
+    },
+    "patternAlternatives": {
+      "type": "array"
+    },
+    "visualSystem": {
+      "type": "object",
+      "required": [
+        "directionId",
+        "directionName",
+        "light",
+        "dark",
+        "density",
+        "motion",
+        "css"
+      ]
+    },
+    "interactionContract": {
+      "type": "object",
+      "required": [
+        "primaryInteractions",
+        "stateCoverage",
+        "feedbackContract",
+        "navigationMemory",
+        "acceptanceCriteria"
+      ]
+    },
+    "modernTechnology": {
+      "type": "object",
+      "required": [
+        "features",
+        "principles"
+      ]
+    },
+    "implementationPlan": {
+      "type": "object",
+      "required": [
+        "phase1Structure",
+        "phase2Visual",
+        "phase3Interaction",
+        "phase4Validation",
+        "controlPoints"
+      ]
+    },
+    "styleCatalog": {
+      "type": "array"
+    },
+    "acceptance": {
+      "type": "object"
+    },
+    "experienceDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "selectedSkeleton": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "family",
+        "score",
+        "components",
+        "interactions",
+        "states"
+      ]
+    },
+    "skeletonAlternatives": {
+      "type": "array"
+    },
+    "uxRepairPlan": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "findingCount",
+        "findings",
+        "quickWins",
+        "structuralRepairs"
+      ]
+    },
+    "projectDesignSystem": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "metrics",
+        "inventory",
+        "dtcg",
+        "recommendations"
+      ]
+    },
+    "library": {
+      "type": "object",
+      "required": [
+        "metrics",
+        "selectedComponents",
+        "catalogArtifact"
+      ]
+    },
+    "qualityReadiness": {
+      "type": "object",
+      "required": [
+        "status",
+        "score",
+        "dimensions",
+        "gaps",
+        "nextGate"
+      ]
+    },
+    "modernizationStrategy": {
+      "type": "object",
+      "required": ["schemaVersion", "capabilityCenters", "priorityBacklog", "criticalJourneys", "stateMatrix", "readiness", "strategyDigest"],
+      "properties": {
+        "schemaVersion": {"const": "3.0"},
+        "capabilityCenters": {"type": "array", "minItems": 8, "maxItems": 8},
+        "priorityBacklog": {"type": "object"},
+        "criticalJourneys": {"type": "array", "minItems": 3},
+        "stateMatrix": {"type": "object"},
+        "readiness": {"type": "object"},
+        "strategyDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

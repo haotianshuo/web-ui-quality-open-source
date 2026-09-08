@@ -1,0 +1,6 @@
+{
+  "outcome": "INCONCLUSIVE",
+  "independence": "UNASSESSED",
+  "blindingStatus": "REQUESTED",
+  "note": "An evaluator must complete this independently. WUQ must not auto-fill GOOD/BAD from Fixed Workflow output."
+}

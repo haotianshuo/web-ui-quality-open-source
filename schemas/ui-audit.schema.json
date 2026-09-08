@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.local/web-ui-quality/ui-audit.schema.json",
+  "title": "UI Audit Project Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "routes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "roles": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "viewports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "width", "height"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "width": {"type": "integer", "minimum": 1},
+          "height": {"type": "integer", "minimum": 1},
+          "deviceScaleFactor": {"type": "number", "exclusiveMinimum": 0}
+        }
+      }
+    },
+    "cssSources": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "finalizedPages": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "safeActions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "protectedActions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "adapters": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "normalTextContrast": {"type": "number", "minimum": 1, "default": 4.5},
+        "largeTextContrast": {"type": "number", "minimum": 1, "default": 3},
+        "mobileTouchTarget": {"type": "integer", "minimum": 24, "default": 44}
+      }
+    },
+    "journeys": {"type": "array", "maxItems": 15, "items": {"type": "string"}},
+    "acceptedDifferences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "scope", "category", "reason"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "scope": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

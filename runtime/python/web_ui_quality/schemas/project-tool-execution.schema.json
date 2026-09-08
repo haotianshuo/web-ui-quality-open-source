@@ -1,0 +1,121 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/project-tool-execution.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowedWriteRoots": {
+      "maxItems": 0,
+      "type": "array"
+    },
+    "argv": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "cwd": {
+      "const": "."
+    },
+    "evidenceAuthority": {
+      "const": "CONDITIONAL_PROJECT_TOOL_EVIDENCE"
+    },
+    "executable": {
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:[\\\\/])(?!/)(?!\\\\\\\\).+",
+      "type": "string"
+    },
+    "executableSha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "execution": {
+      "const": "HOST_GATED"
+    },
+    "filesystemPolicy": {
+      "const": "READ_ONLY_PROJECT"
+    },
+    "network": {
+      "const": "DENY_BY_DEFAULT"
+    },
+    "planDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "projectRoot": {
+      "const": "."
+    },
+    "resourcePolicy": {
+      "const": "HOST_ENFORCED"
+    },
+    "runBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "runId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sessionId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "taskId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "runId",
+        "taskId",
+        "sessionId"
+      ],
+      "type": "object"
+    },
+    "runtimeMayExecute": {
+      "const": false
+    },
+    "schemaVersion": {
+      "const": "2"
+    },
+    "timeoutSeconds": {
+      "maximum": 600,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "tool": {
+      "enum": [
+        "tsc",
+        "vue-tsc",
+        "eslint",
+        "vitest",
+        "jest",
+        "stylelint"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "projectRoot",
+    "tool",
+    "executable",
+    "executableSha256",
+    "argv",
+    "cwd",
+    "runBinding",
+    "network",
+    "filesystemPolicy",
+    "allowedWriteRoots",
+    "timeoutSeconds",
+    "resourcePolicy",
+    "execution",
+    "runtimeMayExecute",
+    "evidenceAuthority",
+    "planDigest"
+  ],
+  "type": "object"
+}

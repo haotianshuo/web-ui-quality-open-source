@@ -1,0 +1,322 @@
+[
+  {
+    "id": "holdout-mobile-cta",
+    "archetype": "holdout-obfuscated-mobile-cta",
+    "family": "holdout-browser",
+    "difficulty": "D4",
+    "request": "结账页在手机上主操作按钮被挤出屏幕，修复移动端布局但不要改支付逻辑。",
+    "expectedRootSources": [
+      "src/shared/a17.css"
+    ],
+    "allowedScope": [
+      "src/shared/a17.css"
+    ],
+    "protectedScope": [
+      "src/payment/**"
+    ],
+    "initialFiles": {
+      "pages/checkout.html": "<!doctype html><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"stylesheet\" href=\"../src/shared/a17.css\"><main class=\"shell\"><h1>Checkout</h1><button id=\"cta\">Place order</button></main>",
+      "src/checkout/mobile.css": "/* decoy: mobile checkout styles are generated elsewhere */\n",
+      "src/payment/submit.ts": "export const submitPayment=()=>true;\n"
+    },
+    "cleanFiles": {
+      "src/shared/a17.css": ".shell{max-width:100%;padding:16px;box-sizing:border-box}.shell #cta{display:block;max-width:100%;}\n"
+    },
+    "injectedFiles": {
+      "src/shared/a17.css": ".shell{width:640px;padding:16px}.shell #cta{display:block;width:520px}\n"
+    },
+    "oracle": [
+      {
+        "type": "BROWSER_ASSERT",
+        "path": "pages/checkout.html",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "assertions": [
+          {
+            "kind": "withinViewport",
+            "selector": "#cta"
+          },
+          {
+            "kind": "noPageHorizontalOverflow"
+          }
+        ],
+        "stylePaths": [
+          "src/shared/a17.css"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holdout-layering-dialog",
+    "archetype": "holdout-obfuscated-layering",
+    "family": "holdout-browser",
+    "difficulty": "D4",
+    "request": "归档确认弹窗出现后被遮罩层盖住，修复视觉层级，不要改归档请求。",
+    "expectedRootSources": [
+      "src/ui/z9.css"
+    ],
+    "allowedScope": [
+      "src/ui/z9.css"
+    ],
+    "protectedScope": [
+      "src/api/archive.ts"
+    ],
+    "initialFiles": {
+      "pages/archive.html": "<!doctype html><meta charset=\"utf-8\"><link rel=\"stylesheet\" href=\"../src/ui/z9.css\"><div class=\"backdrop\"></div><section id=\"dialog\">Confirm archive</section>",
+      "src/modal/dialog.css": "/* decoy */\n",
+      "src/api/archive.ts": "export const archive=()=>fetch(\"/archive\")\n"
+    },
+    "cleanFiles": {
+      "src/ui/z9.css": ".backdrop{position:fixed;inset:0;background:#0008;z-index:10}#dialog{position:fixed;left:80px;top:80px;width:240px;height:120px;background:white;z-index:20}\n"
+    },
+    "injectedFiles": {
+      "src/ui/z9.css": ".backdrop{position:fixed;inset:0;background:#0008;z-index:20}#dialog{position:fixed;left:80px;top:80px;width:240px;height:120px;background:white;z-index:10}\n"
+    },
+    "oracle": [
+      {
+        "type": "BROWSER_ASSERT",
+        "path": "pages/archive.html",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "assertions": [
+          {
+            "kind": "topMost",
+            "selector": "#dialog"
+          }
+        ],
+        "stylePaths": [
+          "src/ui/z9.css"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holdout-touch-target",
+    "archetype": "holdout-obfuscated-touch-target",
+    "family": "holdout-browser",
+    "difficulty": "D3",
+    "request": "移动端更多操作按钮太小很难点，保证触控目标至少 44×44，但不要改变菜单行为。",
+    "expectedRootSources": [
+      "src/theme/m4.css"
+    ],
+    "allowedScope": [
+      "src/theme/m4.css"
+    ],
+    "protectedScope": [
+      "src/menu/**"
+    ],
+    "initialFiles": {
+      "pages/menu.html": "<!doctype html><meta charset=\"utf-8\"><link rel=\"stylesheet\" href=\"../src/theme/m4.css\"><button id=\"more\" aria-label=\"More\">⋯</button>",
+      "src/menu/MoreButton.tsx": "// decoy behavior owner\n"
+    },
+    "cleanFiles": {
+      "src/theme/m4.css": "#more{width:44px;height:44px;padding:0}\n"
+    },
+    "injectedFiles": {
+      "src/theme/m4.css": "#more{width:24px;height:24px;padding:0}\n"
+    },
+    "oracle": [
+      {
+        "type": "BROWSER_ASSERT",
+        "path": "pages/menu.html",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "assertions": [
+          {
+            "kind": "minSize",
+            "selector": "#more",
+            "minWidth": 44,
+            "minHeight": 44
+          }
+        ],
+        "stylePaths": [
+          "src/theme/m4.css"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holdout-rail-overflow",
+    "archetype": "holdout-obfuscated-rail-overflow",
+    "family": "holdout-browser",
+    "difficulty": "D4",
+    "request": "平板宽度下左侧导航把页面撑出横向滚动，修复布局而不要改路由。",
+    "expectedRootSources": [
+      "src/layout/b2.css"
+    ],
+    "allowedScope": [
+      "src/layout/b2.css"
+    ],
+    "protectedScope": [
+      "src/router/**"
+    ],
+    "initialFiles": {
+      "pages/app.html": "<!doctype html><meta charset=\"utf-8\"><link rel=\"stylesheet\" href=\"../src/layout/b2.css\"><nav id=\"rail\">Overview Orders Inventory Reports Settings</nav><main>content</main>",
+      "src/router/routes.ts": "export const routes=[]\n",
+      "src/sidebar/tablet.css": "/* decoy tablet sidebar */\n"
+    },
+    "cleanFiles": {
+      "src/layout/b2.css": "body{margin:0;display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr)}#rail{min-width:0;overflow-wrap:anywhere}\n"
+    },
+    "injectedFiles": {
+      "src/layout/b2.css": "body{margin:0;display:grid;grid-template-columns:420px 760px}#rail{min-width:420px}\n"
+    },
+    "oracle": [
+      {
+        "type": "BROWSER_ASSERT",
+        "path": "pages/app.html",
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "assertions": [
+          {
+            "kind": "noPageHorizontalOverflow"
+          }
+        ],
+        "stylePaths": [
+          "src/layout/b2.css"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holdout-latest-query",
+    "archetype": "holdout-obfuscated-latest-query",
+    "family": "holdout-executable",
+    "difficulty": "D4",
+    "request": "快速连续输入搜索词时旧请求结果会覆盖新结果，只保留最新一次结果。",
+    "expectedRootSources": [
+      "src/lib/q7.mjs"
+    ],
+    "allowedScope": [
+      "src/lib/q7.mjs"
+    ],
+    "protectedScope": [
+      "src/api/**"
+    ],
+    "initialFiles": {
+      "src/search/debounce.mjs": "// decoy named after symptom\n",
+      "src/api/search.ts": "export const search=()=>{}\n"
+    },
+    "cleanFiles": {
+      "src/lib/q7.mjs": "import { pathToFileURL } from \"node:url\";\nexport const latest=(value)=>String(value);\nif(import.meta.url===pathToFileURL(process.argv[1]).href){console.log(latest(\"new\"))}\n"
+    },
+    "injectedFiles": {
+      "src/lib/q7.mjs": "import { pathToFileURL } from \"node:url\";\nexport const latest=(_value)=>\"stale\";\nif(import.meta.url===pathToFileURL(process.argv[1]).href){console.log(latest(\"new\"))}\n"
+    },
+    "oracle": [
+      {
+        "type": "NODE_SCRIPT",
+        "path": "src/lib/q7.mjs",
+        "expectedExitCode": 0,
+        "stdoutContains": [
+          "new"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holdout-page-index",
+    "archetype": "holdout-obfuscated-page-index",
+    "family": "holdout-executable",
+    "difficulty": "D3",
+    "request": "分页从第二页返回第一页后显示仍停留在旧页码，修复本地页码归一化。",
+    "expectedRootSources": [
+      "src/state/u2.mjs"
+    ],
+    "allowedScope": [
+      "src/state/u2.mjs"
+    ],
+    "protectedScope": [
+      "src/api/**"
+    ],
+    "initialFiles": {
+      "src/pagination/pageState.ts": "// decoy obvious filename\n"
+    },
+    "cleanFiles": {
+      "src/state/u2.mjs": "import { pathToFileURL } from \"node:url\";\nexport const normalize=(v)=>Math.max(1,Number(v)||1);\nif(import.meta.url===pathToFileURL(process.argv[1]).href){console.log(normalize(0))}\n"
+    },
+    "injectedFiles": {
+      "src/state/u2.mjs": "import { pathToFileURL } from \"node:url\";\nexport const normalize=(v)=>Number(v)||0;\nif(import.meta.url===pathToFileURL(process.argv[1]).href){console.log(normalize(0))}\n"
+    },
+    "oracle": [
+      {
+        "type": "NODE_SCRIPT",
+        "path": "src/state/u2.mjs",
+        "expectedExitCode": 0,
+        "stdoutContains": [
+          "1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holdout-auth-wall",
+    "archetype": "holdout-auth-wall-no-mutation",
+    "family": "holdout-environment",
+    "difficulty": "D4",
+    "request": "检查只有登录后才能看到的结算页，但当前没有测试账号或会话。",
+    "expectation": "NO_MUTATION",
+    "expectedRootSources": [],
+    "allowedScope": [],
+    "protectedScope": [
+      "src/**"
+    ],
+    "initialFiles": {
+      "src/auth/login.ts": "export const login=()=>{}\n",
+      "src/checkout/view.ts": "export const view=()=>\"auth-required\"\n"
+    },
+    "cleanFiles": {},
+    "injectedFiles": {},
+    "oracle": [
+      {
+        "type": "NO_MUTATION"
+      }
+    ]
+  },
+  {
+    "id": "holdout-spacing-token",
+    "archetype": "holdout-obfuscated-shared-token",
+    "family": "holdout-source",
+    "difficulty": "D4",
+    "request": "多个页面卡片间距同时变得过大，找共享根因并恢复设计系统间距，不要逐页打补丁。",
+    "expectedRootSources": [
+      "src/tokens/k3.css"
+    ],
+    "allowedScope": [
+      "src/tokens/k3.css"
+    ],
+    "protectedScope": [
+      "src/pages/**"
+    ],
+    "initialFiles": {
+      "src/pages/orders/card.css": ".card{gap:var(--space-card)}/* decoy page */\n",
+      "src/pages/users/card.css": ".card{gap:var(--space-card)}/* decoy page */\n"
+    },
+    "cleanFiles": {
+      "src/tokens/k3.css": ":root{--space-card:16px}\n"
+    },
+    "injectedFiles": {
+      "src/tokens/k3.css": ":root{--space-card:40px}\n"
+    },
+    "oracle": [
+      {
+        "type": "FILE_CONTAINS",
+        "path": "src/tokens/k3.css",
+        "required": [
+          "--space-card:16px"
+        ],
+        "forbidden": [
+          "--space-card:40px"
+        ]
+      }
+    ]
+  }
+]

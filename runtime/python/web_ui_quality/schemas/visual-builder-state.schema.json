@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "adapters": {
+      "type": "object"
+    },
+    "candidates": {
+      "type": "object"
+    },
+    "designIr": {
+      "$ref": "design-ir.schema.json"
+    },
+    "experience": {
+      "type": "object"
+    },
+    "production": {
+      "type": "object"
+    },
+    "schemaVersion": {
+      "const": "2.2"
+    },
+    "title": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "experience",
+    "designIr",
+    "candidates",
+    "production",
+    "adapters"
+  ],
+  "title": "Visual Builder State",
+  "type": "object"
+}

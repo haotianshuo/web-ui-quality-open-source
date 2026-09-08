@@ -1,0 +1,126 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/agent-benchmark-report.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "agentLoopStatus": {
+      "type": "string"
+    },
+    "caseCount": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "claimBoundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "comparability": {
+      "type": "string"
+    },
+    "completedRuns": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "conditionAuthority": {
+      "const": "CONTROLLER_PLANNED"
+    },
+    "conditionCohorts": {
+      "type": "array"
+    },
+    "empiricalPassAtK": {
+      "type": "object"
+    },
+    "falseVerified": {
+      "type": "object"
+    },
+    "fixtureVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "const": "REPORT"
+    },
+    "missingRuns": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "plannedRuns": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "protocolVersion": {
+      "const": "4"
+    },
+    "regressionEscape": {
+      "required": [
+        "count",
+        "rateAmongVerifiedClaims",
+        "rateAmongAttemptedRepairs",
+        "rateAmongSuccessfulRepairs",
+        "denominators"
+      ],
+      "type": "object"
+    },
+    "repairSuccessRate": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "repetitionsPerCase": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "rootCause": {
+      "required": [
+        "truePositive",
+        "falsePositive",
+        "falseNegative",
+        "precision",
+        "recall",
+        "claimBoundary"
+      ],
+      "type": "object"
+    },
+    "schemaVersion": {
+      "const": "4"
+    },
+    "scopePrecision": {
+      "required": [
+        "attemptedRepairRuns",
+        "meanAmongAttemptedRepairs",
+        "noOpExcluded"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "kind",
+    "protocolVersion",
+    "agentLoopStatus",
+    "plannedRuns",
+    "completedRuns",
+    "missingRuns",
+    "caseCount",
+    "repetitionsPerCase",
+    "conditionCohorts",
+    "conditionAuthority",
+    "comparability",
+    "repairSuccessRate",
+    "rootCause",
+    "scopePrecision",
+    "regressionEscape",
+    "falseVerified",
+    "empiricalPassAtK",
+    "claimBoundary"
+  ],
+  "title": "Web UI Quality Agent Benchmark Report v4",
+  "type": "object"
+}

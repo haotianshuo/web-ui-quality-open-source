@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 112" role="img" aria-label="Web UI Quality">
+  <rect width="112" height="112" rx="30" fill="#b9e3cf"/>
+  <path d="M25 34l14 48h13l7-25 7 25h13l11-48H78l-6 29-7-29H54l-7 29-7-29z" fill="#0f4234"/>
+  <circle cx="84" cy="27" r="9" fill="#166b4f"/>
+  <text x="138" y="52" fill="#f4f7f5" font-family="Inter,Segoe UI,sans-serif" font-size="31" font-weight="750">Web UI Quality</text>
+  <text x="138" y="82" fill="#b9c7c0" font-family="Inter,Segoe UI,sans-serif" font-size="17">Product Experience Consultant</text>
+</svg>

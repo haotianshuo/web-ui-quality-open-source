@@ -1,0 +1,88 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/capability-routing.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "activeCapabilities": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "intent": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mandatoryCapabilities": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "pageType": {
+      "type": "string"
+    },
+    "profile": {
+      "enum": [
+        "minimal",
+        "standard",
+        "full"
+      ]
+    },
+    "reasons": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "risk": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "skippedCapabilities": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "capability": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "capability",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "task": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "profile",
+    "pageType",
+    "task",
+    "intent",
+    "risk",
+    "activeCapabilities",
+    "skippedCapabilities",
+    "mandatoryCapabilities",
+    "reasons"
+  ],
+  "title": "Capability Routing",
+  "type": "object"
+}

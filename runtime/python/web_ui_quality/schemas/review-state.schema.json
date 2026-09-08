@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/review-state.schema.json",
+  "title": "Web UI Quality Review State",
+  "type": "object",
+  "required": ["schemaVersion", "reportDigest", "decision", "history", "historyDigest"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "reportDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "decision": {"enum": ["NOT_REVIEWED", "APPROVED", "CHANGES_REQUESTED", "REJECTED"]},
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["reviewer", "decision", "comment", "at", "previousHistoryDigest", "entryDigest"],
+        "properties": {
+          "reviewer": {"type": "string", "minLength": 1},
+          "decision": {"enum": ["NOT_REVIEWED", "APPROVED", "CHANGES_REQUESTED", "REJECTED"]},
+          "comment": {"type": "string"},
+          "at": {"type": "string"},
+          "previousHistoryDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "entryDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "historyDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

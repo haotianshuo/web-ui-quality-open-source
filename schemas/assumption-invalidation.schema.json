@@ -1,0 +1,141 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/assumption-invalidation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifactId": {
+            "type": "string"
+          },
+          "artifactType": {
+            "type": "string"
+          },
+          "assumptionIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "dependsOn": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "invalidationPolicy": {
+            "enum": [
+              "INVALIDATE",
+              "REVALIDATE",
+              "RETAIN"
+            ]
+          },
+          "status": {
+            "enum": [
+              "VALID",
+              "INVALIDATED",
+              "REQUIRES_REVALIDATION"
+            ]
+          }
+        },
+        "required": [
+          "artifactId",
+          "artifactType",
+          "assumptionIds",
+          "dependsOn",
+          "invalidationPolicy",
+          "status",
+          "createdAt"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "assumptions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "supersededBy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supersedes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value": {}
+        },
+        "required": [
+          "id",
+          "key",
+          "value",
+          "source",
+          "confidence",
+          "createdAt",
+          "supersedes",
+          "supersededBy"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "graphDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "invalidationLedger": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "runId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "updatedAt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "assumptions",
+    "artifacts",
+    "invalidationLedger",
+    "updatedAt",
+    "graphDigest"
+  ],
+  "title": "Assumption Invalidation Graph",
+  "type": "object"
+}

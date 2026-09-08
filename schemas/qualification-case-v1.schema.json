@@ -1,0 +1,142 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/qualification-case-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adaptiveEffect": {
+      "const": "NONE"
+    },
+    "authorityEffect": {
+      "const": "NONE"
+    },
+    "capturedAt": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "caseDigest": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "caseId": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "claimBoundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "dataOrigin": {
+      "enum": [
+        "PRODUCTION_SHADOW",
+        "CONTROLLED_BENCHMARK",
+        "SYNTHETIC_FIXTURE"
+      ]
+    },
+    "datasetRecord": {
+      "$ref": "shadow-signal-dataset-record-v1.schema.json"
+    },
+    "datasetRecordDigest": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "kernelBaseVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "packageVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "provenanceEvidenceDigest": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "provenanceIntegrity": {
+      "enum": [
+        "HOST_ATTESTED",
+        "BENCHMARK_CONTROLLER_ATTESTED",
+        "DECLARED_ONLY",
+        "TEST_ONLY"
+      ]
+    },
+    "qualificationVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "strata": {
+      "additionalProperties": false,
+      "properties": {
+        "hostId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "modelId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reasoningMode": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "repoScale": {
+          "enum": [
+            "SMALL",
+            "MEDIUM",
+            "LARGE",
+            "UNKNOWN"
+          ]
+        },
+        "riskTier": {
+          "enum": [
+            "T0",
+            "T1",
+            "T2",
+            "T3",
+            "T4",
+            "UNKNOWN"
+          ]
+        },
+        "taskFamily": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "taskFamily",
+        "hostId",
+        "modelId",
+        "reasoningMode",
+        "repoScale",
+        "riskTier"
+      ],
+      "type": "object"
+    },
+    "taskBinding": {
+      "$ref": "outcome-label-v1.schema.json#/$defs/binding"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "qualificationVersion",
+    "packageVersion",
+    "kernelBaseVersion",
+    "datasetRecordDigest",
+    "taskBinding",
+    "dataOrigin",
+    "provenanceIntegrity",
+    "provenanceEvidenceDigest",
+    "strata",
+    "datasetRecord",
+    "capturedAt",
+    "authorityEffect",
+    "adaptiveEffect",
+    "claimBoundary",
+    "caseDigest",
+    "caseId"
+  ],
+  "title": "WUQ Shadow Qualification Case v1",
+  "type": "object"
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/implementation-plan.schema.json",
+  "title": "Isolated implementation plan",
+  "type": "object",
+  "required": ["schemaVersion", "generator", "status", "sourceProjectChanged"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "generator": {"type": "object", "required": ["name", "version", "stage"]},
+    "status": {"enum": ["IMPLEMENTED_IN_ISOLATED_COPY", "FRAMEWORK_NOT_SUPPORTED"]},
+    "sourceProjectChanged": {"const": false},
+    "isolatedCopyChanged": {"type": "boolean"},
+    "before": {"type": "string"},
+    "after": {"type": "string"},
+    "patch": {"type": "string"},
+    "changedFiles": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "additionalProperties": true
+}

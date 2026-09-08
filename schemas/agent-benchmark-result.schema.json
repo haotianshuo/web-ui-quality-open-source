@@ -1,0 +1,213 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/agent-benchmark-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "caseId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "claimBoundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "conditionDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "conditions": {
+      "additionalProperties": false,
+      "properties": {
+        "authCondition": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "browserCondition": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "contextPolicy": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "fixtureVersion": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "os": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "permissionProfile": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reasoningMode": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "runtime": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "toolPolicy": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "wuqVersion": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "reasoningMode",
+        "permissionProfile",
+        "toolPolicy",
+        "browserCondition",
+        "authCondition",
+        "os",
+        "runtime",
+        "contextPolicy",
+        "wuqVersion",
+        "fixtureVersion"
+      ],
+      "type": "object"
+    },
+    "host": {
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "model"
+      ],
+      "type": "object"
+    },
+    "kind": {
+      "const": "HOST_RESULT"
+    },
+    "metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "costUsd": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "hostInteractions": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "inputTokens": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "outputTokens": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "wallTimeSeconds": {
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "wallTimeSeconds",
+        "inputTokens",
+        "outputTokens",
+        "costUsd",
+        "hostInteractions"
+      ],
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "enum": [
+            "VERIFIED",
+            "REVIEW_REQUIRED",
+            "NOT_VERIFIED",
+            "FAILED"
+          ]
+        },
+        "regressions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "rootCauseFiles": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "outcome",
+        "rootCauseFiles",
+        "regressions"
+      ],
+      "type": "object"
+    },
+    "protocolVersion": {
+      "const": "4"
+    },
+    "repetition": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "runId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "4"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "kind",
+    "protocolVersion",
+    "runId",
+    "caseId",
+    "repetition",
+    "conditionDigest",
+    "host",
+    "conditions",
+    "observation",
+    "metrics",
+    "claimBoundary"
+  ],
+  "title": "Web UI Quality External Host Agent Benchmark Result v4",
+  "type": "object"
+}

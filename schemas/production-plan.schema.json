@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "componentMappings": {
+      "type": "array"
+    },
+    "detectedFramework": {
+      "type": "string"
+    },
+    "frameworkSupport": {
+      "type": "object"
+    },
+    "implementationPhases": {
+      "type": "array"
+    },
+    "installPlan": {
+      "type": "object"
+    },
+    "limitations": {
+      "type": "array"
+    },
+    "planDigest": {
+      "type": "string"
+    },
+    "project": {
+      "type": "object"
+    },
+    "qualityGates": {
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "2.2"
+    },
+    "status": {
+      "enum": [
+        "REVIEW_REQUIRED",
+        "FRAMEWORK_NOT_SUPPORTED"
+      ]
+    },
+    "targetFramework": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "status",
+    "project",
+    "targetFramework",
+    "componentMappings",
+    "installPlan",
+    "qualityGates",
+    "planDigest"
+  ],
+  "title": "Production Plan",
+  "type": "object"
+}

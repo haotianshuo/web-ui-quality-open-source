@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "$id": "https://web-ui-quality.local/schemas/risk-tier.schema.json",
+  "title": "Mutation Risk Tier",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "tier", "label", "requiresExplicitUserApproval", "hostWriteStillRequired", "minimumVerificationProfile", "sourceScope", "reasons", "claimBoundary"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "tier": {"enum": ["T0", "T1", "T2", "T3", "T4"]},
+    "label": {"enum": ["COSMETIC", "LAYOUT_COMPONENT", "INTERACTION_LOCAL_STATE", "ROUTING_STATE_CONFIG", "AUTH_PAYMENT_PERMISSION_DATA"]},
+    "requiresExplicitUserApproval": {"type": "boolean"},
+    "hostWriteStillRequired": {"const": true},
+    "minimumVerificationProfile": {"enum": ["MINIMAL", "STANDARD", "FULL"]},
+    "sourceScope": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "reasons": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1},
+    "claimBoundary": {"type": "string", "minLength": 1}
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "adaptiveExplorationActive": false,
+  "adaptiveGuidanceActive": false,
+  "claimBoundary": "4.3.0 Release Integrity + Trust UX Closure identity and tree composition only; historical 4.1.1 evidence is not promoted into 4.3.0.",
+  "evidenceSchemaVersion": "3.0",
+  "kernelBaseVersion": "4.0.0-rc.1",
+  "kernelVersion": "4.2.3",
+  "nativeWindowsQualification": "NOT_MEASURED",
+  "packageStage": "4.3.0-stable",
+  "packageTreeDigest": "ce803f43bf511e29330c7b161cfec6b3727c22ef32ebdc27586473d884bd31ef",
+  "packageVersion": "4.3.0",
+  "pluginVersion": "4.3.0",
+  "product": "web-ui-quality",
+  "protocolVersion": "3.0",
+  "realCodexHostQualification": "NOT_MEASURED",
+  "receiptProtocolVersion": "3.0",
+  "schemaVersion": "2",
+  "v5Included": false
+}

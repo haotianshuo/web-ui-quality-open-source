@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.local/web-ui-quality/ui-inventory.schema.json",
+  "title": "UI Asset Inventory Report",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "producer",
+    "packageVersion",
+    "status",
+    "readOnly",
+    "mode",
+    "stats",
+    "pages",
+    "inventory"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "producer": {
+      "const": "web-ui-quality-ui-inventory"
+    },
+    "packageVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "NOT_VERIFIED",
+        "FAIL",
+        "BLOCKED"
+      ]
+    },
+    "readOnly": {
+      "const": true
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "quick",
+        "full"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "projectRoot": {"type": ["string", "null"], "enum": [".", null]}
+      }
+    },
+    "navigationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authenticated", "approvedRoutes", "discoveredLinksRecordedOnly"],
+      "properties": {
+        "authenticated": {"type": "boolean"},
+        "approvedRoutes": {"type": "array", "items": {"type": "string", "pattern": "^/"}},
+        "discoveredLinksRecordedOnly": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "stats": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "pagesDiscovered",
+        "pagesScanned",
+        "pagesFailed",
+        "pagesSkipped"
+      ],
+      "properties": {
+        "pagesDiscovered": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pagesScanned": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pagesFailed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pagesSkipped": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "components",
+        "colors",
+        "typography",
+        "radius",
+        "spacing",
+        "driftCandidates",
+        "pageProfiles"
+      ],
+      "properties": {
+        "components": {
+          "type": "object"
+        },
+        "colors": {
+          "type": "object"
+        },
+        "typography": {
+          "type": "object"
+        },
+        "radius": {
+          "type": "object"
+        },
+        "spacing": {
+          "type": "object"
+        },
+        "driftCandidates": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "pageProfiles": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

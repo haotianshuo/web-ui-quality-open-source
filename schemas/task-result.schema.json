@@ -1,0 +1,391 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/task-result.schema.json",
+  "title": "Web UI Quality TaskResult v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "executionId",
+    "kind",
+    "request",
+    "protectedScope",
+    "executionStatus",
+    "outcome",
+    "subjectStatus",
+    "coverage",
+    "observations",
+    "hypotheses",
+    "changes",
+    "verification",
+    "claims",
+    "uncertainties",
+    "nextAction",
+    "taskState",
+    "review",
+    "claimBoundary",
+    "repairStatus",
+    "repairReport"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "executionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "INSPECTION",
+        "REPAIR",
+        "MODERNIZATION"
+      ]
+    },
+    "request": {
+      "type": "string",
+      "minLength": 1
+    },
+    "protectedScope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "executionStatus": {
+      "const": "COMPLETED"
+    },
+    "outcome": {
+      "enum": [
+        "COMPLETED",
+        "VERIFIED",
+        "REVIEW_REQUIRED",
+        "NOT_VERIFIED",
+        "FAILED"
+      ]
+    },
+    "subjectStatus": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "patchScope",
+        "globalProject",
+        "target",
+        "criticalContext",
+        "claimBoundary"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "PATCH",
+            "PROJECT_OBSERVATION"
+          ]
+        },
+        "patchScope": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "globalProject": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "target": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN",
+            "INDETERMINATE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "criticalContext": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN",
+            "INDETERMINATE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "claimBoundary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "statement",
+          "status",
+          "evidenceRefs"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "INFERRED",
+              "NOT_VERIFIED"
+            ]
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overall",
+        "browser",
+        "projectTools",
+        "patchQuality",
+        "projectDrift",
+        "hostWrite"
+      ],
+      "properties": {
+        "overall": {
+          "type": "string",
+          "minLength": 1
+        },
+        "browser": {
+          "type": "string",
+          "minLength": 1
+        },
+        "projectTools": {
+          "type": "string",
+          "minLength": 1
+        },
+        "patchQuality": {
+          "type": "string",
+          "minLength": 1
+        },
+        "projectDrift": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hostWrite": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim",
+          "status",
+          "evidenceRefs"
+        ],
+        "properties": {
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "VERIFIED",
+              "OBSERVED",
+              "INFERRED",
+              "NOT_VERIFIED"
+            ]
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nextAction": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resumable",
+        "resumeHint"
+      ],
+      "properties": {
+        "resumable": {
+          "type": "boolean"
+        },
+        "resumeHint": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "claimBoundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repairStatus": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "repairReport": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "available",
+        "revertScope",
+        "revertPlanDigest",
+        "hostExecutionRequired",
+        "claimBoundary"
+      ],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "revertScope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revertPlanDigest": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "hostExecutionRequired": {
+          "type": "boolean"
+        },
+        "claimBoundary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "VERIFIED"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "claims": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "coverage",
+          "verification",
+          "claims",
+          "claimBoundary"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "REPAIR"
+          },
+          "outcome": {
+            "const": "VERIFIED"
+          }
+        },
+        "required": [
+          "kind",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage": {
+            "properties": {
+              "scope": {
+                "const": "PATCH"
+              },
+              "patchScope": {
+                "const": "COMPLETE"
+              },
+              "target": {
+                "const": "COMPLETE"
+              },
+              "criticalContext": {
+                "const": "COMPLETE"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

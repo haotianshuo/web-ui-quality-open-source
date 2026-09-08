@@ -1,0 +1,266 @@
+{
+  "$defs": {
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "hosts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "models": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "reasoningModes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "repoScales": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "riskTiers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "rowCount": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "taskFamilies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "rowCount",
+        "taskFamilies",
+        "hosts",
+        "models",
+        "reasoningModes",
+        "repoScales",
+        "riskTiers"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://web-ui-quality.local/schemas/qualification-report-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adaptiveEffect": {
+      "const": "NONE"
+    },
+    "analysisMode": {
+      "enum": [
+        "DEVELOPMENT_ONLY",
+        "EXPLICIT_HOLDOUT_ANALYSIS"
+      ]
+    },
+    "authoritative": {
+      "const": false
+    },
+    "authorityEffect": {
+      "const": "NONE"
+    },
+    "candidateSignals": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "falsePositiveRate": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "polarity": {
+            "enum": [
+              "POSITIVE",
+              "NEGATIVE"
+            ]
+          },
+          "precision": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "recall": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "support": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "polarity",
+          "support",
+          "precision",
+          "recall",
+          "falsePositiveRate"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "caseCount": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "claimBoundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "clampRecommendation": {
+      "const": "NOT_EVALUATED_UNTIL_PHASE3_5_GATE"
+    },
+    "controlledCoverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "controlledEvidenceStatus": {
+      "enum": [
+        "NOT_MEASURED_CONTROLLED",
+        "CONTROLLED_ORACLE_MEASURED"
+      ]
+    },
+    "controlledSignalValidity": {
+      "$ref": "signal-validity-report-v1.schema.json"
+    },
+    "coverageChecks": {
+      "additionalProperties": false,
+      "properties": {
+        "minimumHosts": {
+          "type": "boolean"
+        },
+        "minimumModels": {
+          "type": "boolean"
+        },
+        "minimumRealWorldRows": {
+          "type": "boolean"
+        },
+        "minimumTaskFamilies": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "minimumRealWorldRows",
+        "minimumTaskFamilies",
+        "minimumHosts",
+        "minimumModels"
+      ],
+      "type": "object"
+    },
+    "duplicateTaskBindingCount": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "excludedReasonCounts": {
+      "additionalProperties": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "type": "object"
+    },
+    "kernelBaseVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "packageVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "planDigest": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "profileRecommendation": {
+      "const": "NOT_EVALUATED_UNTIL_PHASE3_5_GATE"
+    },
+    "qualificationDecision": {
+      "enum": [
+        "NOT_READY_NO_REAL_WORLD_CASES",
+        "NOT_READY_COVERAGE_REQUIREMENTS",
+        "NOT_READY_NO_SIGNAL_MEETS_PREREGISTERED_THRESHOLDS",
+        "READY_FOR_PHASE3_5_PREREGISTRATION"
+      ]
+    },
+    "qualificationStatus": {
+      "enum": [
+        "NOT_MEASURED_REAL_WORLD",
+        "REAL_WORLD_DATA_INSUFFICIENT",
+        "REAL_WORLD_PRE_GATE_MEASURED"
+      ]
+    },
+    "qualificationVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "realWorldCoverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "realWorldEvidenceStatus": {
+      "enum": [
+        "NOT_MEASURED",
+        "MEASURED_PRE_GATE_ONLY"
+      ]
+    },
+    "realWorldSignalValidity": {
+      "$ref": "signal-validity-report-v1.schema.json"
+    },
+    "reportDigest": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "qualificationVersion",
+    "packageVersion",
+    "kernelBaseVersion",
+    "planDigest",
+    "analysisMode",
+    "authoritative",
+    "caseCount",
+    "duplicateTaskBindingCount",
+    "realWorldCoverage",
+    "controlledCoverage",
+    "excludedReasonCounts",
+    "coverageChecks",
+    "realWorldSignalValidity",
+    "controlledSignalValidity",
+    "candidateSignals",
+    "qualificationStatus",
+    "qualificationDecision",
+    "controlledEvidenceStatus",
+    "realWorldEvidenceStatus",
+    "profileRecommendation",
+    "clampRecommendation",
+    "authorityEffect",
+    "adaptiveEffect",
+    "claimBoundary",
+    "reportDigest"
+  ],
+  "title": "WUQ Independent Shadow Qualification Report v1",
+  "type": "object"
+}

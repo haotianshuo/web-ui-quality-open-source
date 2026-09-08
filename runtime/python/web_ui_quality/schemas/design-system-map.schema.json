@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/design-system-map.schema.json",
+  "title": "Project Design System Map",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "cssFiles",
+    "cssVariableCount",
+    "metrics",
+    "semanticAliases",
+    "inventory",
+    "dtcg",
+    "compatibilityCss",
+    "recommendations"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "cssFiles": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cssVariableCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "tokenReuseRatio",
+        "colourTokenRatio",
+        "spacingGridCoherence",
+        "consistencyScore"
+      ]
+    },
+    "semanticAliases": {
+      "type": "object"
+    },
+    "inventory": {
+      "type": "object"
+    },
+    "dtcg": {
+      "type": "object"
+    },
+    "compatibilityCss": {
+      "type": "string"
+    },
+    "recommendations": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}

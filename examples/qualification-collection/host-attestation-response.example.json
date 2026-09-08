@@ -1,0 +1,4 @@
+{
+  "verificationStatus": "EXTERNAL_PROVIDER_VERIFICATION_REQUIRED",
+  "note": "This example is intentionally non-authoritative. A real HostGovernanceProvider must define and verify its own integrity mechanism before alpha.6 may classify provenance as HOST_ATTESTED."
+}

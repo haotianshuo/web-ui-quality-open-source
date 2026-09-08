@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/production-validation-report.schema.json",
+  "title": "Production validation report",
+  "type": "object",
+  "required": ["schemaVersion", "status", "readiness"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "generator": {"type": "object"},
+    "status": {"enum": ["PASS", "PASS_WITH_WARNINGS", "FAIL", "NOT_AVAILABLE", "NOT_APPLICABLE"]},
+    "browserVersion": {"type": ["string", "null"]},
+    "records": {"type": "array"},
+    "journey": {"type": "array"},
+    "visualDiff": {"type": "array"},
+    "readiness": {"type": "object"}
+  },
+  "additionalProperties": true
+}

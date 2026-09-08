@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/autonomy-profile-v1.schema.json",
+  "title": "Autonomy Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "profileName",
+    "maxOpenHypotheses",
+    "checkpointEveryToolEvents",
+    "maxAutonomousReadExpansions",
+    "contextBudgetClass",
+    "maxNoProgressRounds",
+    "maxAutonomousReplan",
+    "maxAutonomousToolRetries",
+    "guidanceProtocol"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "profileName": {
+      "enum": [
+        "GUARDED",
+        "NORMAL",
+        "HIGH_AUTONOMY"
+      ]
+    },
+    "maxOpenHypotheses": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "checkpointEveryToolEvents": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "maxAutonomousReadExpansions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "contextBudgetClass": {
+      "enum": [
+        "SMALL",
+        "MEDIUM",
+        "LARGE"
+      ]
+    },
+    "maxNoProgressRounds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "maxAutonomousReplan": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "maxAutonomousToolRetries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "guidanceProtocol": {
+      "enum": [
+        "GUARDED",
+        "STRUCTURED",
+        "COMPACT"
+      ]
+    }
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "properties": {
+        "gates": {
+          "properties": {
+            "candidateCount": {
+              "properties": {
+                "actual": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3
+                },
+                "required": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3
+                },
+                "status": {
+                  "const": "PASS"
+                }
+              },
+              "required": [
+                "actual",
+                "required",
+                "status"
+              ],
+              "type": "object"
+            },
+            "candidateDirectionContractDifference": {
+              "const": "PASS"
+            },
+            "candidateStructuralDifference": {
+              "const": "PASS"
+            }
+          },
+          "required": [
+            "candidateCount",
+            "candidateDirectionContractDifference",
+            "candidateStructuralDifference"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "const": "DESIGN_PIPELINE_READY"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "status",
+        "experiencePlan",
+        "designCandidates",
+        "productionPlan",
+        "visualBuilder",
+        "auditResult",
+        "gates",
+        "pipelineDigest"
+      ]
+    },
+    {
+      "properties": {
+        "status": {
+          "const": "FRAMEWORK_NOT_SUPPORTED"
+        },
+        "reason": {
+          "const": "FRAMEWORK_NOT_SUPPORTED"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "status",
+        "reason",
+        "auditResult",
+        "productionPlan",
+        "productionScaffold",
+        "pipelineDigest"
+      ]
+    },
+    {
+      "properties": {
+        "status": {
+          "const": "NOT_APPLICABLE"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "status",
+        "reason",
+        "auditResult",
+        "gates",
+        "pipelineDigest"
+      ]
+    }
+  ],
+  "properties": {
+    "auditResult": {
+      "type": "string"
+    },
+    "componentRegistry": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "designArchetypes": {
+      "type": "string"
+    },
+    "designCandidates": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "experiencePlan": {
+      "type": "string"
+    },
+    "modernizationStrategy": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gates": {
+      "type": "object"
+    },
+    "pipelineDigest": {
+      "type": "string"
+    },
+    "productionPlan": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "productionScaffold": {
+      "type": "object"
+    },
+    "projectRoot": {
+      "type": "string"
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schemaVersion": {
+      "const": "2.2"
+    },
+    "selectedCandidate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "DESIGN_PIPELINE_READY",
+        "FRAMEWORK_NOT_SUPPORTED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "visualBuilder": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "visualInput": {},
+    "recommendedCandidate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "Design Pipeline Manifest",
+  "type": "object"
+}

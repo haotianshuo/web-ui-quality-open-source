@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/experience-proof.schema.json",
+  "title": "Web UI Quality Experience Proof",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "status",
+    "experienceModel",
+    "interactionIntelligence",
+    "recommendationCompilation",
+    "visualProof",
+    "evidenceBoundary",
+    "claimBoundary",
+    "experienceProofDigest"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "3.1"},
+    "status": {"enum": ["PROOF_READY", "IMPLEMENTATION_CANDIDATE", "DISCOVERY_REQUIRED"]},
+    "experienceModel": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "status",
+        "authority",
+        "pageType",
+        "primaryTask",
+        "visualFocus",
+        "layoutHierarchy",
+        "density",
+        "componentSystem",
+        "interactionPatterns",
+        "keyStates",
+        "maturitySignals",
+        "evidenceLedger",
+        "claimBoundary",
+        "digest"
+      ],
+      "properties": {
+        "schemaVersion": {"const": "3.1"},
+        "status": {"enum": ["OBSERVED_WITH_INFERENCES", "CANDIDATE_MODEL", "DISCOVERY_REQUIRED"]},
+        "authority": {"enum": ["TRUSTED_BROWSER_PLUS_CANDIDATES", "CANDIDATE_ONLY"]},
+        "evidenceLedger": {
+          "type": "array",
+          "minItems": 9,
+          "items": {
+            "type": "object",
+            "required": ["field", "observedFacts", "inference", "confidence", "verificationNeeded"],
+            "properties": {
+              "field": {"type": "string", "minLength": 1},
+              "observedFacts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "authority", "sourceRef", "value"],
+                  "properties": {
+                    "id": {"type": "string", "minLength": 1},
+                    "authority": {"type": "string", "minLength": 1},
+                    "sourceRef": {"type": "string", "minLength": 1}
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "inference": {"type": "string"},
+              "confidence": {"enum": ["low", "medium", "high"]},
+              "verificationNeeded": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          }
+        },
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "interactionIntelligence": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "taskFlows", "keyStates", "toolBoundaries", "claimBoundary"],
+      "properties": {
+        "status": {"enum": ["MEASURED", "CANDIDATE_ONLY"]},
+        "taskFlows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "states", "transitions", "metrics", "acceptanceSteps"]
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "recommendationCompilation": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "options", "selectionRule", "claimBoundary", "digest"],
+      "properties": {
+        "status": {"enum": ["OPTIONS_READY", "DISCOVERY_REQUIRED"]},
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "addresses",
+              "authority",
+              "changes",
+              "codeLocations",
+              "migrationRisk",
+              "acceptanceGates"
+            ],
+            "properties": {
+              "authority": {"const": "IMPLEMENTATION_CANDIDATE"},
+              "addresses": {"type": "array", "minItems": 1},
+              "codeLocations": {"type": "array", "minItems": 1},
+              "changes": {
+                "type": "object",
+                "required": ["components", "tokens", "layout", "interactionStates"]
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "visualProof": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "status",
+        "authority",
+        "coverage",
+        "artifacts",
+        "afterQuality",
+        "expertReview",
+        "toolBoundaries",
+        "requiredEvidence",
+        "claimBoundary",
+        "digest"
+      ],
+      "properties": {
+        "status": {"enum": ["PASS", "PASS_WITH_TOOL_BOUNDARIES", "FAIL", "INCOMPLETE", "PLANNED_NOT_CAPTURED"]},
+        "authority": {"enum": ["TRUSTED_BROWSER_EVIDENCE", "CANDIDATE_ONLY"]},
+        "coverage": {
+          "type": "object",
+          "required": ["viewports", "threeViewportPairs", "equalConditionPairs"]
+        },
+        "artifacts": {"type": "array"},
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "evidenceBoundary": {
+      "type": "object",
+      "required": [
+        "untrustedObservedInputDiscarded",
+        "browserAuthorityRequiresProcessLocalReceipt",
+        "screenshotIsNotOcr",
+        "userOutcomeMetricsMeasured"
+      ]
+    },
+    "claimBoundary": {"type": "string", "minLength": 1},
+    "experienceProofDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}

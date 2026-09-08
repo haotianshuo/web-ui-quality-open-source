@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://web-ui-quality.local/schemas/qualification-export-record-v1.schema.json",
+  "title":"WUQ Qualification Export Record v1","type":"object","additionalProperties":false,
+  "required":["schemaVersion","collectionVersion","packageVersion","kernelBaseVersion","taskBinding","requestToken","observedInput","fixedWorkflowObservation","signals","sourceObservationDigest","pseudonymization","redactionPolicyVersion","authorityEffect","adaptiveEffect","claimBoundary","exportRecordDigest"],
+  "properties":{
+    "schemaVersion":{"const":"1"},"collectionVersion":{"type":"string","minLength":1},"packageVersion":{"type":"string","minLength":1},"kernelBaseVersion":{"type":"string","minLength":1},
+    "taskBinding":{"type":"object","additionalProperties":false,"required":["runId","taskId","sessionId"],"properties":{"runId":{"type":"string","pattern":"^p_[0-9a-f]{64}$"},"taskId":{"type":"string","pattern":"^p_[0-9a-f]{64}$"},"sessionId":{"type":"string","pattern":"^p_[0-9a-f]{64}$"}}},
+    "requestToken":{"type":["string","null"],"pattern":"^r_[0-9a-f]{64}$"},
+    "observedInput":{"type":"object"},"fixedWorkflowObservation":{"type":"object"},
+    "signals":{"type":"array","items":{"type":"object"}},"sourceObservationDigest":{"type":"string","minLength":16},
+    "pseudonymization":{"const":"HMAC-SHA256-CALLER-KEY"},"redactionPolicyVersion":{"type":"string","minLength":1},
+    "authorityEffect":{"const":"NONE"},"adaptiveEffect":{"const":"NONE"},"claimBoundary":{"type":"string","minLength":1},"exportRecordDigest":{"type":"string","minLength":16}
+  }
+}

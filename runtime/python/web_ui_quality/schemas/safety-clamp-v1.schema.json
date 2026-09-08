@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/safety-clamp-v1.schema.json",
+  "title": "Safety Clamp v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "clampId",
+    "reasonCode",
+    "limits"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "clampId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reasonCode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "limits": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "maxOpenHypotheses": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "checkpointEveryToolEvents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxAutonomousReadExpansions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "contextBudgetClass": {
+          "enum": [
+            "SMALL",
+            "MEDIUM",
+            "LARGE"
+          ]
+        },
+        "maxNoProgressRounds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxAutonomousReplan": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxAutonomousToolRetries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "guidanceProtocol": {
+          "enum": [
+            "GUARDED",
+            "STRUCTURED",
+            "COMPACT"
+          ]
+        }
+      }
+    }
+  }
+}

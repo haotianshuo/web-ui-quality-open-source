@@ -1,0 +1,58 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/outcome-verification.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "criterion": {
+            "type": "string"
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_VERIFIED"
+            ]
+          }
+        },
+        "required": [
+          "criterion",
+          "result"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "claimBoundary": {
+      "type": "string"
+    },
+    "findingId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "status": {
+      "enum": [
+        "VERIFIED",
+        "NOT_VERIFIED",
+        "NOT_IMPROVED"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "findingId",
+    "status",
+    "checks",
+    "claimBoundary"
+  ],
+  "title": "Outcome Verification",
+  "type": "object"
+}

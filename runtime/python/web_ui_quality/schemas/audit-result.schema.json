@@ -1,0 +1,123 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/audit-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "businessContext": {
+      "type": "object"
+    },
+    "businessModel": {
+      "type": "object"
+    },
+    "coverageLedger": {
+      "type": "object"
+    },
+    "error": {
+      "type": "object"
+    },
+    "execution": {
+      "type": "object"
+    },
+    "executionStatus": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "experienceCore": {
+      "type": "object"
+    },
+    "findingSourceSummary": {
+      "type": "object"
+    },
+    "findings": {
+      "type": "array"
+    },
+    "overallStatus": {
+      "enum": [
+        "PASS",
+        "PARTIAL",
+        "FAIL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "planDigest": {
+      "type": "string"
+    },
+    "productizationPlan": {
+      "type": "object"
+    },
+    "providerRouting": {
+      "type": "object"
+    },
+    "qualityStatus": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "NOT_VERIFIED",
+        "FAIL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "runtimeBudget": {
+      "type": "object"
+    },
+    "schemaId": {
+      "const": "audit-result"
+    },
+    "schemaStatus": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "scope": {
+      "type": "object"
+    },
+    "sourceScopeFingerprint": {
+      "type": "string"
+    },
+    "sourceScopeManifest": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "PARTIAL",
+        "FAIL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "timing": {
+      "type": "object"
+    },
+    "uiProductCapability": {
+      "type": "object"
+    },
+    "verificationReport": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "schemaId",
+    "status",
+    "execution",
+    "scope",
+    "findings",
+    "experienceCore",
+    "verificationReport",
+    "sourceScopeManifest",
+    "sourceScopeFingerprint",
+    "planDigest",
+    "executionStatus",
+    "schemaStatus",
+    "qualityStatus",
+    "overallStatus",
+    "findingSourceSummary"
+  ],
+  "title": "Web UI Quality Audit Result",
+  "type": "object"
+}

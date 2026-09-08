@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/shadow-signal-dataset-record-v1.schema.json",
+  "title": "WUQ Shadow Signal Dataset Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion","datasetVersion","packageVersion","kernelBaseVersion","taskBinding","observationDigest","signalSetDigest","signals","label","authorityEffect","adaptiveEffect","claimBoundary","datasetRecordDigest"],
+  "properties": {
+    "schemaVersion":{"const":"1"},
+    "datasetVersion":{"type":"string","minLength":1},
+    "packageVersion":{"type":"string","minLength":1},
+    "kernelBaseVersion":{"type":"string","minLength":1},
+    "taskBinding":{"$ref":"outcome-label-v1.schema.json#/$defs/binding"},
+    "observationDigest":{"type":"string","minLength":16},
+    "signalSetDigest":{"type":"string"},
+    "signals":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["code","kind","polarity","capabilityEligible","present"],"properties":{"code":{"type":"string","minLength":1},"kind":{"type":"string","minLength":1},"polarity":{"enum":["POSITIVE","NEGATIVE","NEUTRAL"]},"capabilityEligible":{"type":"boolean"},"present":{"const":true}}}},
+    "label":{"anyOf":[{"type":"null"},{"$ref":"outcome-label-v1.schema.json"}]},
+    "authorityEffect":{"const":"NONE"},
+    "adaptiveEffect":{"const":"NONE"},
+    "claimBoundary":{"type":"string","minLength":1},
+    "datasetRecordDigest":{"type":"string","minLength":16}
+  }
+}

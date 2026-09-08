@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/authorization-ticket-v2.schema.json",
+  "title": "Authorization Ticket v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "ticketId",
+    "issuer",
+    "authoritySource",
+    "taskId",
+    "baselineDigest",
+    "targetDigest",
+    "nonce",
+    "issuedAt",
+    "expiresAt",
+    "singleUse",
+    "integrityMechanism",
+    "ticketDigest",
+    "integrityTag"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2"
+    },
+    "ticketId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issuer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authoritySource": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baselineDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "targetDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "changeSetDigest": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "writeDelegatedCeilingDigest": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "capabilitySnapshotDigest": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "nonce": {
+      "type": "string",
+      "minLength": 16
+    },
+    "issuedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "singleUse": {
+      "const": true
+    },
+    "concurrencySemantics": {
+      "enum": [
+        "SINGLE_WRITER_SERIALIZED",
+        "MULTI_PROCESS_CAS",
+        "DISTRIBUTED_AUTHORITY"
+      ]
+    },
+    "integrityMechanism": {
+      "enum": [
+        "HOST_SIGNATURE",
+        "HMAC_SHA256",
+        "OPAQUE_HOST_HANDLE"
+      ]
+    },
+    "keyId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ticketDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "integrityTag": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

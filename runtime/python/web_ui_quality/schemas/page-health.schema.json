@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/page-health.schema.json",
+  "title": "PageHealth",
+  "type": "object",
+  "required": ["pageStatus", "runtimeStatus", "networkStatus", "authStatus", "dataStatus", "taskStatus", "visualStatus", "visualCanOverride"],
+  "properties": {
+    "pageStatus": {"enum": ["REAL_PAGE_READY", "RESTRICTED_RENDER", "AUTH_REQUIRED", "DATA_NOT_READY", "SIMULATED_PREVIEW", "RUNTIME_BROKEN", "TASK_FAILED", "NOT_VERIFIED", "VISUAL_FINDINGS", "PASS"]},
+    "runtimeStatus": {"type": "string"},
+    "networkStatus": {"type": "string"},
+    "authStatus": {"type": "string"},
+    "dataStatus": {"type": "string"},
+    "taskStatus": {"type": "string"},
+    "visualStatus": {"type": "string"},
+    "visualCanOverride": {"const": false}
+  },
+  "additionalProperties": true
+}

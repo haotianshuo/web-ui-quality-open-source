@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/outcome-measurement.schema.json",
+  "title": "Web UI Quality outcome measurement report",
+  "type": "object",
+  "required": ["schemaVersion", "generator", "status", "provider", "eventContract", "baseline", "after", "comparison", "sampleReadiness", "decision", "causalClaim", "claimBoundary"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "generator": {"type": "object", "required": ["name", "version", "contractVersion", "stage"]},
+    "status": {"enum": ["PASS", "INSUFFICIENT_DATA"]},
+    "provider": {"enum": ["generic", "ga4", "mixpanel", "posthog"]},
+    "eventContract": {"type": "object"},
+    "baseline": {"type": "object", "required": ["startedSessions", "taskSuccessRate", "medianTaskDurationSeconds"]},
+    "after": {"type": "object", "required": ["startedSessions", "taskSuccessRate", "medianTaskDurationSeconds"]},
+    "comparison": {"type": "object"},
+    "sampleReadiness": {"type": "object", "required": ["status", "minimumStartedSessionsPerPeriod"]},
+    "decision": {"enum": ["IMPROVED", "REGRESSED", "INCONCLUSIVE", "INSUFFICIENT_DATA"]},
+    "causalClaim": {"const": false},
+    "claimBoundary": {"type": "string", "minLength": 1}
+  }
+}

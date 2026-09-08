@@ -1,0 +1,8 @@
+/* Alpha.14 keeps the historical fixture path but removes cross-page visual drift. */
+body[data-wuq-page="home"] button.save,
+body[data-wuq-page="users"] button.save,
+body[data-wuq-page="settings"] button.save {
+  background: var(--primary);
+  border-color: var(--primary);
+  border-radius: var(--control-radius);
+}

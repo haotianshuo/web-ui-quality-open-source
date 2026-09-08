@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://web-ui-quality.local/schemas/host-attestation-request-v1.schema.json",
+  "title":"WUQ Host Attestation Request v1","type":"object","additionalProperties":false,
+  "required":["schemaVersion","collectionVersion","packageVersion","kernelBaseVersion","taskBinding","exportRecordDigest","hostId","hostVersion","verificationStatus","integrityMechanism","attestationEvidenceDigest","verifierId","integrityTag","createdAt","authorityEffect","adaptiveEffect","claimBoundary","attestationRequestDigest"],
+  "properties":{"schemaVersion":{"const":"1"},"collectionVersion":{"type":"string"},"packageVersion":{"type":"string"},"kernelBaseVersion":{"type":"string"},"taskBinding":{"type":"object"},"exportRecordDigest":{"type":"string","minLength":16},"hostId":{"type":"string","minLength":1},"hostVersion":{"type":"string","minLength":1},"verificationStatus":{"const":"REQUESTED_NOT_VERIFIED"},"integrityMechanism":{"const":"HOST_PROVIDER_REQUIRED"},"attestationEvidenceDigest":{"type":"null"},"verifierId":{"type":"null"},"integrityTag":{"type":"null"},"createdAt":{"type":"string","minLength":1},"authorityEffect":{"const":"NONE"},"adaptiveEffect":{"const":"NONE"},"claimBoundary":{"type":"string","minLength":1},"attestationRequestDigest":{"type":"string","minLength":16}}
+}

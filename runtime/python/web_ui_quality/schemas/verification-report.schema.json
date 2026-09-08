@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.local/web-ui-quality/verification-report.schema.json",
+  "title": "Web UI Verification Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "result",
+    "execution",
+    "verifiedItems",
+    "unverifiedItems",
+    "hardMetrics",
+    "redactionStatus"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "result": {"type": "string", "enum": ["PASS", "PASS_WITH_WARNINGS", "FAIL", "NOT_VERIFIED"]},
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plane", "executionLayer", "riskLevel", "workMode", "designInterventionLevel", "writes"],
+      "properties": {
+        "plane": {"type": "string", "enum": ["build", "runtime"]},
+        "executionLayer": {"type": "string", "enum": ["Lite", "Safe Edit", "Standard"]},
+        "riskLevel": {"type": "string", "enum": ["R0", "R1", "R2", "R3"]},
+        "workMode": {"type": "string", "minLength": 1},
+        "designInterventionLevel": {"type": "integer", "minimum": 1, "maximum": 3},
+        "writes": {"type": "array", "maxItems": 0}
+      }
+    },
+    "verifiedItems": {"type": "array", "items": {"type": "string"}},
+    "unverifiedItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item", "applicability", "requiredForCurrentGate", "state", "reason", "currentRisk", "validationMethod", "passCriteria"],
+        "properties": {
+          "item": {"type": "string", "minLength": 1},
+          "applicability": {"type": "string", "enum": ["applicable", "not_applicable", "deferred"]},
+          "requiredForCurrentGate": {"type": "boolean"},
+          "state": {"const": "unverified"},
+          "reason": {"type": "string", "minLength": 1},
+          "currentRisk": {"type": "string", "minLength": 1},
+          "validationMethod": {"type": "string", "minLength": 1},
+          "passCriteria": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "hardMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unauthorizedWrites", "scopeEscapes", "userChangesOverwritten", "sensitiveInformationLeaks"],
+      "properties": {
+        "unauthorizedWrites": {"const": 0},
+        "scopeEscapes": {"const": 0},
+        "userChangesOverwritten": {"const": 0},
+        "sensitiveInformationLeaks": {"const": 0}
+      }
+    },
+    "redactionStatus": {"type": "string", "enum": ["PASS", "FAIL", "NOT_VERIFIED"]}
+  }
+}

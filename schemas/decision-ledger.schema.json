@@ -1,0 +1,155 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/decision-ledger.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "entries": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "constraints": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "decisionId": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array"
+          },
+          "expectedOutcome": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "issue": {
+            "type": "string"
+          },
+          "options": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "rejectedOptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "relatedFindings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "relatedPatches": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "riskTriggers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "risks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "selectedOption": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PROPOSED",
+              "SELECTED",
+              "VERIFICATION_PENDING",
+              "VERIFIED",
+              "REJECTED",
+              "SUPERSEDED"
+            ]
+          },
+          "supersededBy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supersedes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tradeoffs": {
+            "type": "array"
+          },
+          "verificationPlan": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "verificationUpdatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "decisionId",
+          "issue",
+          "evidence",
+          "constraints",
+          "options",
+          "tradeoffs",
+          "selectedOption",
+          "rationale",
+          "rejectedOptions",
+          "expectedOutcome",
+          "risks",
+          "riskTriggers",
+          "verificationPlan",
+          "status",
+          "relatedFindings",
+          "relatedPatches",
+          "supersedes",
+          "supersededBy",
+          "createdAt"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "ledgerDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "updatedAt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "entries",
+    "updatedAt",
+    "ledgerDigest"
+  ],
+  "title": "Decision Ledger",
+  "type": "object"
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "$id": "https://web-ui-quality.local/schemas/evidence-graph.schema.json",
+  "title": "Evidence Dependency Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "status", "mode", "nodes", "edges", "requiredMissing", "finalClaim", "claimBoundary", "graphDigest"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "status": {"enum": ["INCOMPLETE", "COMPLETE_VERIFIED_CHAIN", "COMPLETE_PENDING_OR_NONVERIFIED_CHAIN", "COMPLETE_OBSERVATION_CHAIN"]},
+    "mode": {"type": "string", "minLength": 1},
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "required", "status", "digest"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "required": {"type": "boolean"},
+          "status": {"type": "string", "minLength": 1},
+          "digest": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to"],
+        "properties": {"from": {"type": "string", "minLength": 1}, "to": {"type": "string", "minLength": 1}}
+      }
+    },
+    "requiredMissing": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "finalClaim": {"type": "string", "minLength": 1},
+    "claimBoundary": {"type": "string", "minLength": 1},
+    "graphDigest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

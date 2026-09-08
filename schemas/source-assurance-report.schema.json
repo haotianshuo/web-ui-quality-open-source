@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/source-assurance-report.schema.json",
+  "title": "Source Assurance P0-B-S Foundation Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "producer",
+    "packageVersion",
+    "generatedAt",
+    "status",
+    "scope",
+    "deterministicChecks",
+    "verificationPlan",
+    "sourceReview",
+    "externalReview",
+    "writeActions",
+    "claimBoundary",
+    "reportDigest"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2.3-p0bs"
+    },
+    "producer": {
+      "const": "web-ui-quality-source-assurance"
+    },
+    "packageVersion": {
+      "type": "string"
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "VERIFIED",
+        "VERIFIED_WITH_WARNINGS",
+        "PASS",
+        "FAIL",
+        "NOT_VERIFIED",
+        "NOT_APPLICABLE",
+        "BLOCKED"
+      ]
+    },
+    "scope": {
+      "type": "object"
+    },
+    "deterministicChecks": {
+      "type": "array"
+    },
+    "verificationPlan": {
+      "type": "object"
+    },
+    "sourceReview": {
+      "type": "object"
+    },
+    "externalReview": {
+      "type": "object"
+    },
+    "writeActions": {
+      "type": "object"
+    },
+    "claimBoundary": {
+      "type": "string"
+    },
+    "reportDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

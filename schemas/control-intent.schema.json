@@ -1,0 +1,111 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/control-intent.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "enum": [
+        "UNKNOWN",
+        "NEEDS_EXPLICIT_SCOPE",
+        "CHECK",
+        "FIX",
+        "CHECKPOINT",
+        "RESUME",
+        "REVISE_ASSUMPTION"
+      ]
+    },
+    "assumptionRevision": {
+      "type": "boolean"
+    },
+    "confidence": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "mutation": {
+      "enum": [
+        "FORBIDDEN",
+        "HOST_GATED"
+      ]
+    },
+    "profile": {
+      "enum": [
+        "minimal",
+        "standard",
+        "full",
+        null
+      ],
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "protectedScope": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "raw": {
+      "type": "string"
+    },
+    "reportDepth": {
+      "enum": [
+        "concise",
+        "detailed",
+        null
+      ],
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requiresHostApproval": {
+      "type": "boolean"
+    },
+    "resumeQuery": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resumeTarget": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "safeFallback": {
+      "type": "boolean"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "scope": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "raw",
+    "action",
+    "mutation",
+    "scope",
+    "profile",
+    "reportDepth",
+    "resumeTarget",
+    "resumeQuery",
+    "assumptionRevision",
+    "protectedScope",
+    "confidence",
+    "requiresHostApproval",
+    "safeFallback"
+  ],
+  "title": "Natural Language Control Intent",
+  "type": "object"
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/experience-evaluation.schema.json",
+  "title": "Web UI Quality Experience Evaluation",
+  "type": "object",
+  "required": ["status", "metrics", "dimensions", "measurementCoverage", "visualReviewStatus", "conclusion", "requiredNextEvidence"],
+  "properties": {
+    "status": {"enum": ["IMPROVED", "IMPROVEMENT_CANDIDATE", "MIXED", "REGRESSED", "NOT_MEASURED"]},
+    "metrics": {"type": "object"},
+    "dimensions": {"type": "object"},
+    "measurementCoverage": {"type": "number", "minimum": 0, "maximum": 100},
+    "visualReviewStatus": {"type": "string"},
+    "conclusion": {"type": "string"},
+    "requiredNextEvidence": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

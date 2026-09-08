@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.local/web-ui-quality/review-report.schema.json",
+  "title": "Stage Review Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "stage",
+    "baselineVersion",
+    "scopeStatus",
+    "plane",
+    "trustBoundary",
+    "browserSafety",
+    "implementationStatus",
+    "engineeringAcceptance",
+    "designAcceptance",
+    "uxAcceptance",
+    "businessInvariants",
+    "openFindings",
+    "unverifiedItems",
+    "deferredItems",
+    "notApplicableItems",
+    "redactionStatus",
+    "userChangesProtected",
+    "reviewer",
+    "reviewDecision",
+    "decisionEvidence",
+    "nextAction"
+  ],
+  "properties": {
+    "stage": {"type": "string", "minLength": 1},
+    "baselineVersion": {"const": "v1.1.3"},
+    "scopeStatus": {"type": "string", "enum": ["frozen", "stale"]},
+    "plane": {"type": "string", "enum": ["build", "runtime", "both"]},
+    "trustBoundary": {"$ref": "#/$defs/result"},
+    "browserSafety": {"type": "string", "enum": ["PASS", "FAIL", "NOT_VERIFIED", "NOT_APPLICABLE"]},
+    "implementationStatus": {"type": "string", "enum": ["complete", "incomplete"]},
+    "engineeringAcceptance": {"$ref": "#/$defs/result"},
+    "designAcceptance": {"$ref": "#/$defs/result"},
+    "uxAcceptance": {"type": "string", "enum": ["PASS", "PASS_WITH_WARNINGS", "FAIL", "NOT_VERIFIED", "NOT_APPLICABLE"]},
+    "businessInvariants": {"$ref": "#/$defs/result"},
+    "openFindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["P0", "P1", "P2", "P3"],
+      "properties": {
+        "P0": {"type": "array", "items": {"type": "string"}},
+        "P1": {"type": "array", "items": {"type": "string"}},
+        "P2": {"type": "array", "items": {"type": "string"}},
+        "P3": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "unverifiedItems": {"type": "array"},
+    "deferredItems": {"type": "array"},
+    "notApplicableItems": {"type": "array"},
+    "redactionStatus": {"$ref": "#/$defs/result"},
+    "userChangesProtected": {"type": "boolean"},
+    "reviewer": {"type": "string", "minLength": 1},
+    "reviewDecision": {"$ref": "#/$defs/result"},
+    "decisionEvidence": {"type": "array", "items": {"type": "string"}},
+    "nextAction": {"type": "string", "enum": ["align", "remediate", "supplement_evidence"]}
+  },
+  "$defs": {
+    "result": {"type": "string", "enum": ["PASS", "PASS_WITH_WARNINGS", "FAIL", "NOT_VERIFIED"]}
+  }
+}

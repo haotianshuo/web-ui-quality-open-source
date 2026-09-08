@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/outcome-proof.schema.json",
+  "title": "Outcome Proof",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "description",
+    "result",
+    "required",
+    "minimumSatisfied",
+    "satisfied",
+    "signals",
+    "beforeDigest",
+    "afterDigest",
+    "userVisibleChanged"
+  ],
+  "properties": {
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_VERIFIED"
+      ]
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "minimumSatisfied": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "satisfied": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "signals": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "beforeDigest": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "afterDigest": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "userVisibleChanged": {
+      "type": "boolean"
+    }
+  }
+}

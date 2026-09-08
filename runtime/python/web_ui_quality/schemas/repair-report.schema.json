@@ -1,0 +1,144 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/repair-report.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "answers": {
+      "additionalProperties": false,
+      "properties": {
+        "howVerified": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "remainingRiskOrUnknown": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "rootCause": {
+          "type": "string"
+        },
+        "whatChanged": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "whatWasReproduced": {
+          "type": "string"
+        },
+        "whatYouAsked": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "whatYouAsked",
+        "whatWasReproduced",
+        "rootCause",
+        "whatChanged",
+        "howVerified",
+        "remainingRiskOrUnknown"
+      ],
+      "type": "object"
+    },
+    "authentication": {
+      "type": "string"
+    },
+    "claimBoundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "nextAction": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "request": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "status": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "taskState": {
+      "additionalProperties": false,
+      "properties": {
+        "resumable": {
+          "type": "boolean"
+        },
+        "resumeHint": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "runId": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "runId",
+        "resumable",
+        "resumeHint"
+      ],
+      "type": "object"
+    },
+    "verificationSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "browser": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "hostWrite": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "overall": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "patchQuality": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "projectDrift": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "projectTools": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "overall",
+        "browser",
+        "projectTools",
+        "patchQuality",
+        "projectDrift",
+        "hostWrite"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "status",
+    "request",
+    "answers",
+    "authentication",
+    "taskState",
+    "claimBoundary",
+    "verificationSummary",
+    "nextAction"
+  ],
+  "type": "object"
+}

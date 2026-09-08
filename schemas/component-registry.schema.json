@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "required": [
+        "schemaVersion",
+        "status",
+        "sources",
+        "recipes"
+      ]
+    },
+    {
+      "required": [
+        "schemaVersion",
+        "status",
+        "framework",
+        "recommendations"
+      ]
+    }
+  ],
+  "properties": {
+    "framework": {
+      "type": "string"
+    },
+    "policy": {
+      "type": "object"
+    },
+    "project": {
+      "type": "object"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "recipes": {
+      "type": "object"
+    },
+    "recommendations": {
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "2.2"
+    },
+    "sources": {
+      "items": {
+        "properties": {
+          "frameworks": {
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "license",
+          "frameworks",
+          "mode"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "CATALOG_READY",
+        "READY",
+        "FRAMEWORK_NOT_SUPPORTED"
+      ]
+    }
+  },
+  "title": "Component Registry",
+  "type": "object"
+}

@@ -1,0 +1,176 @@
+{
+  "$id": "https://schemas.local/web-ui-quality/finding.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptedDifference": {
+      "type": "boolean"
+    },
+    "applicability": {
+      "enum": [
+        "applicable",
+        "not_applicable",
+        "deferred"
+      ],
+      "type": "string"
+    },
+    "category": {
+      "enum": [
+        "layout",
+        "interaction",
+        "logic",
+        "content",
+        "accessibility",
+        "security",
+        "productization",
+        "code-quality",
+        "coverage"
+      ],
+      "type": "string"
+    },
+    "evidenceSource": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "evidenceSummary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "goalRelevance": {
+      "enum": [
+        "DIRECT",
+        "SUPPORTING",
+        "UNRELATED"
+      ],
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[A-Z0-9]+(?:-[A-Z0-9]+)+$",
+      "type": "string"
+    },
+    "impact": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "instructionSource": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "location": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "line": {
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "route": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selector": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "viewport": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "route",
+        "viewport",
+        "selector",
+        "file",
+        "line"
+      ],
+      "type": "object"
+    },
+    "method": {
+      "items": {
+        "enum": [
+          "S",
+          "B",
+          "M"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "reasonCode": {
+      "pattern": "^[A-Z0-9_]+$",
+      "type": "string"
+    },
+    "recommendation": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "redactionApplied": {
+      "type": "boolean"
+    },
+    "requiredForCurrentGate": {
+      "type": "boolean"
+    },
+    "severity": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "verified",
+        "unverified"
+      ],
+      "type": "string"
+    },
+    "trustLevel": {
+      "enum": [
+        "platform_constraint",
+        "user_authorization",
+        "project_constraint",
+        "untrusted_evidence"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "category",
+    "severity",
+    "method",
+    "applicability",
+    "requiredForCurrentGate",
+    "location",
+    "instructionSource",
+    "evidenceSource",
+    "trustLevel",
+    "evidenceSummary",
+    "impact",
+    "recommendation",
+    "state",
+    "redactionApplied",
+    "acceptedDifference"
+  ],
+  "title": "Web UI Quality Finding",
+  "type": "object"
+}

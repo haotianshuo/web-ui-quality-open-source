@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/business-context.schema.json",
+  "title": "Explicit Business and Experience Context",
+  "type": "object",
+  "properties": {
+    "primaryRole": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primaryTask": {
+      "type": "string",
+      "minLength": 1
+    },
+    "successMetric": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frequency": {
+      "type": "string",
+      "minLength": 1
+    },
+    "environment": {
+      "type": "string"
+    },
+    "userExpertise": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expertise": {
+      "type": "string"
+    },
+    "taskType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risk": {
+      "type": "string",
+      "minLength": 1
+    },
+    "informationDensity": {
+      "type": "string",
+      "minLength": 1
+    },
+    "devicePriority": {
+      "type": "string",
+      "minLength": 1
+    },
+    "accessibilityPriority": {
+      "type": "string",
+      "minLength": 1
+    },
+    "brandPersonality": {
+      "type": "string"
+    },
+    "collaborationMode": {
+      "type": "string"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "highRiskActions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "mustPreserve": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "knownPainPoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "painPoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "visualDirection": {
+      "type": "string",
+      "enum": [
+        "enterprise-neutral",
+        "apple-clarity",
+        "modern-chinese-tech",
+        "warm-professional",
+        "dense-operations",
+        "field-friendly",
+        "ai-workspace"
+      ]
+    },
+    "patternOverride": {
+      "type": "string",
+      "enum": [
+        "data-workbench",
+        "review-approval",
+        "guided-form",
+        "operations-dashboard",
+        "settings-center",
+        "upload-processing",
+        "message-center",
+        "task-center",
+        "mobile-field",
+        "ai-workspace"
+      ]
+    },
+    "skeletonOverride": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact Experience Fusion page skeleton id selected by the user."
+    }
+  },
+  "additionalProperties": false
+}

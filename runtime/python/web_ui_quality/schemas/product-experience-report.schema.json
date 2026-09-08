@@ -1,0 +1,284 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/product-experience-report.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "businessSummary": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "claims": {
+      "additionalProperties": false,
+      "properties": {
+        "diagnosticInferenceUsed": {
+          "const": true
+        },
+        "measuredBusinessOutcome": {
+          "const": false
+        },
+        "verifiedProductionBeforeAfter": {
+          "const": false
+        }
+      },
+      "required": [
+        "measuredBusinessOutcome",
+        "verifiedProductionBeforeAfter",
+        "diagnosticInferenceUsed"
+      ],
+      "type": "object"
+    },
+    "diagnosticScore": {
+      "required": [
+        "experienceScore",
+        "status",
+        "method"
+      ],
+      "type": "object"
+    },
+    "executiveBrief": {
+      "required": [
+        "schemaVersion",
+        "recommendedTransformation",
+        "successMetrics",
+        "claimBoundary"
+      ],
+      "type": "object"
+    },
+    "generator": {
+      "additionalProperties": false,
+      "properties": {
+        "contractVersion": {
+          "const": "3.0"
+        },
+        "evidenceSchemaVersion": {
+          "const": "3.0"
+        },
+        "kernelBaseVersion": {
+          "const": "4.0.0-rc.1"
+        },
+        "kernelVersion": {
+          "const": "4.2.3"
+        },
+        "name": {
+          "const": "web-ui-quality"
+        },
+        "packageVersion": {
+          "const": "4.3.0"
+        },
+        "pluginVersion": {
+          "const": "4.3.0"
+        },
+        "protocolVersion": {
+          "const": "3.0"
+        },
+        "receiptProtocolVersion": {
+          "const": "3.0"
+        },
+        "stage": {
+          "const": "4.3.0-commercial-stable"
+        },
+        "workflowContractVersion": {
+          "const": "5"
+        }
+      },
+      "required": [
+        "name",
+        "pluginVersion",
+        "packageVersion",
+        "kernelVersion",
+        "kernelBaseVersion",
+        "protocolVersion",
+        "receiptProtocolVersion",
+        "evidenceSchemaVersion",
+        "contractVersion",
+        "workflowContractVersion",
+        "stage"
+      ],
+      "type": "object"
+    },
+    "handoff": {
+      "required": [
+        "status",
+        "sourceWriteAuthorized",
+        "explicitConfirmationRequired",
+        "implementationChecklist"
+      ],
+      "type": "object"
+    },
+    "journey": {
+      "properties": {
+        "criticalStageId": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "object"
+        },
+        "productType": {
+          "type": "string"
+        },
+        "schemaVersion": {
+          "const": "3.6"
+        },
+        "stages": {
+          "items": {
+            "required": [
+              "id",
+              "label",
+              "goal",
+              "status"
+            ],
+            "type": "object"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "productType",
+        "stages",
+        "criticalStageId",
+        "evidence"
+      ],
+      "type": "object"
+    },
+    "measurementLoop": {
+      "required": [
+        "schemaVersion",
+        "readiness",
+        "metrics",
+        "decisionRules",
+        "claimBoundary"
+      ],
+      "type": "object"
+    },
+    "opening": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "product": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "crm",
+            "saas",
+            "landing",
+            "commerce",
+            "ai-product",
+            "mobile"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "type": "object"
+    },
+    "readiness": {
+      "additionalProperties": false,
+      "properties": {
+        "commercialGA": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "consultation": {
+          "enum": [
+            "READY",
+            "DISCOVERY_REQUIRED"
+          ]
+        },
+        "implementation": {
+          "const": "NOT_RUN"
+        },
+        "productionBrowserValidation": {
+          "const": "NOT_VERIFIED"
+        }
+      },
+      "required": [
+        "consultation",
+        "implementation",
+        "productionBrowserValidation",
+        "commercialGA"
+      ],
+      "type": "object"
+    },
+    "schemaVersion": {
+      "const": "3.6"
+    },
+    "status": {
+      "enum": [
+        "PRODUCT_EXPERIENCE_READY",
+        "DISCOVERY_REQUIRED"
+      ]
+    },
+    "technicalEvidence": {
+      "type": "object"
+    },
+    "topProblems": {
+      "items": {
+        "type": "object"
+      },
+      "maxItems": 3,
+      "type": "array"
+    },
+    "transformation": {
+      "properties": {
+        "schemaVersion": {
+          "const": "3.6"
+        },
+        "selectedVariantId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "TRANSFORMATION_READY",
+            "DISCOVERY_REQUIRED"
+          ]
+        },
+        "variants": {
+          "items": {
+            "type": "object"
+          },
+          "maxItems": 3,
+          "type": "array"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "status",
+        "selectedVariantId",
+        "variants"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "generator",
+    "status",
+    "readiness",
+    "product",
+    "topProblems",
+    "journey",
+    "diagnosticScore",
+    "transformation",
+    "executiveBrief",
+    "measurementLoop",
+    "handoff",
+    "claims"
+  ],
+  "title": "Web UI Quality Product Experience Report 4.0.0-rc.1",
+  "type": "object"
+}

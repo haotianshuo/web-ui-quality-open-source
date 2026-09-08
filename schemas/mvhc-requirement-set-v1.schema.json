@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/mvhc-requirement-set-v1.schema.json",
+  "title": "Minimum Viable Host Contract Requirement Set v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "requirementSetId",
+    "requirements"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "requirementSetId": {
+      "const": "PHASE1_MVHC_V1"
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirementId",
+          "channelId",
+          "minimumLevel",
+          "purpose"
+        ],
+        "properties": {
+          "requirementId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channelId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minimumLevel": {
+            "enum": [
+              "UNKNOWN",
+              "UNAVAILABLE",
+              "ADVISORY",
+              "DETECT_ONLY",
+              "ENFORCED"
+            ]
+          },
+          "purpose": {
+            "enum": [
+              "WRITE_SAFETY",
+              "INTEGRITY",
+              "CONTEXT_ISOLATION_REQUIRED",
+              "MEASUREMENT",
+              "OPTIONAL_TELEMETRY",
+              "IDENTITY_REQUIRED"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/evidence-minimal-v1.schema.json",
+  "title": "Evidence Minimal v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evidenceId",
+    "taskId",
+    "kind",
+    "sourceRef",
+    "payloadDigest",
+    "freshnessCheckedAt",
+    "observedAt",
+    "stateEpoch"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "evidenceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "MODEL_INFERRED",
+        "HOST_OBSERVED",
+        "STALE"
+      ]
+    },
+    "observedSubtype": {
+      "enum": [
+        "SOURCE",
+        "RUNTIME",
+        "TEST",
+        "BROWSER",
+        "NETWORK",
+        "FILE_STATE"
+      ]
+    },
+    "sourceRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baselineDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "environmentFingerprint": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "payloadDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "freshnessCheckedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "staleReason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "stateEpoch": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "HOST_OBSERVED"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "observedSubtype"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "STALE"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "staleReason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "HOST_OBSERVED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stateEpoch": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "observedSubtype",
+          "stateEpoch",
+          "observedAt"
+        ]
+      }
+    }
+  ]
+}

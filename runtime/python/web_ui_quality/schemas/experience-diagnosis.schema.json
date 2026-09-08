@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/experience-diagnosis.schema.json",
+  "title": "Web UI Quality Experience Diagnosis",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "status",
+    "pageUnderstanding",
+    "layoutIntelligence",
+    "responsiveExperience",
+    "visualIntelligence",
+    "componentIntelligence",
+    "patternMatches",
+    "recommendations",
+    "previewPlan",
+    "evidenceSummary",
+    "claimBoundary",
+    "diagnosisDigest"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "3.1"},
+    "status": {"enum": ["DIAGNOSIS_READY", "DISCOVERY_REQUIRED", "NOT_APPLICABLE"]},
+    "pageUnderstanding": {
+      "type": "object",
+      "required": ["status", "pageType", "componentInventory", "provenance", "confidence", "unresolvedQuestions"],
+      "properties": {
+        "status": {"enum": ["CLASSIFIED", "AMBIGUOUS", "UNCLASSIFIED"]},
+        "pageType": {
+          "type": "object",
+          "required": ["id", "confidence"],
+          "properties": {
+            "id": {"type": "string"},
+            "confidence": {"type": ["string", "number"]}
+          },
+          "additionalProperties": true
+        },
+        "componentInventory": {"type": "array"},
+        "provenance": {"type": "object"},
+        "confidence": {"enum": ["low", "medium", "high"]},
+        "unresolvedQuestions": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "layoutIntelligence": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "model", "viewports", "findings", "claimBoundary"]
+    },
+    "responsiveExperience": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "compositionPlan", "findings", "claimBoundary"]
+    },
+    "visualIntelligence": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "analysisStatus", "model", "dimensions", "findings", "claimBoundary"]
+    },
+    "componentIntelligence": {
+      "type": "object",
+      "required": ["status", "recommendations", "policy"]
+    },
+    "patternMatches": {
+      "type": "object",
+      "required": ["matched", "candidates", "verificationNeeded"]
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "priority",
+          "category",
+          "title",
+          "userProblem",
+          "evidence",
+          "recommendation",
+          "implementation",
+          "verificationNeeded",
+          "claim"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "priority": {"enum": ["must-fix", "should-fix", "candidate"]},
+          "category": {"type": "string"},
+          "title": {"type": "string"},
+          "userProblem": {"type": "string"},
+          "evidence": {"type": ["object", "array", "string", "number", "null"]},
+          "recommendation": {"type": "string"},
+          "implementation": {"type": ["object", "array", "string"]},
+          "verificationNeeded": {"type": "array", "items": {"type": "string"}},
+          "claim": {"enum": ["observed-problem", "source-risk", "improvement-candidate"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "previewPlan": {
+      "type": "object",
+      "required": ["mode", "supportedChanges", "viewports", "states", "authority"]
+    },
+    "evidenceSummary": {
+      "type": "object",
+      "required": ["sourceFiles", "static", "screenshot", "renderedViewports", "browser"]
+    },
+    "claimBoundary": {"type": "string"},
+    "diagnosisDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}

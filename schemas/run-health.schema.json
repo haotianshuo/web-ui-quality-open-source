@@ -1,0 +1,115 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/run-health.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "accepted": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "activeCapabilities": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "appliedWrites": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "checkpoints": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "claimBoundary": {
+      "type": "string"
+    },
+    "evidenceStatus": {
+      "type": "object"
+    },
+    "findings": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "invalidatedArtifacts": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "patchCandidates": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "pending": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "phase": {
+      "type": "string"
+    },
+    "rejected": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "routesDiscovered": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "routesExecuted": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "runId": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "sourceAssurance": {
+      "type": "string"
+    },
+    "verified": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "runId",
+    "phase",
+    "routesDiscovered",
+    "routesExecuted",
+    "evidenceStatus",
+    "sourceAssurance",
+    "findings",
+    "accepted",
+    "rejected",
+    "patchCandidates",
+    "appliedWrites",
+    "verified",
+    "pending",
+    "invalidatedArtifacts",
+    "checkpoints",
+    "activeCapabilities",
+    "claimBoundary"
+  ],
+  "title": "Run Health",
+  "type": "object"
+}

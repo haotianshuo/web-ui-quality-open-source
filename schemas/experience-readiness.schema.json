@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/experience-readiness.schema.json",
+  "title": "Experience Plan Readiness",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "status",
+    "score",
+    "dimensions",
+    "gaps",
+    "meaning",
+    "nextGate",
+    "hardGates",
+    "blockers"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2.0"
+    },
+    "status": {
+      "enum": [
+        "IMPLEMENTATION_READY",
+        "REVIEW_READY",
+        "DISCOVERY_REQUIRED"
+      ]
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "dimensions": {
+      "type": "object"
+    },
+    "gaps": {
+      "type": "array"
+    },
+    "meaning": {
+      "type": "string"
+    },
+    "nextGate": {
+      "type": "string"
+    },
+    "hardGates": {
+      "type": "object"
+    },
+    "blockers": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": false
+}

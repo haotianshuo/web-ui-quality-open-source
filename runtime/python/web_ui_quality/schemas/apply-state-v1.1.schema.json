@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/apply-state-v1.1.schema.json",
+  "title": "Apply State v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "applyAttemptId",
+    "state",
+    "concurrencySemantics",
+    "ticketDigest",
+    "updatedAt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.1"
+    },
+    "applyAttemptId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "PROPOSED",
+        "PREPARED",
+        "RESERVED",
+        "APPLYING",
+        "COMMITTED",
+        "REJECTED",
+        "ABORTED",
+        "APPLY_PARTIAL",
+        "ROLLBACK_REQUIRED",
+        "ROLLING_BACK",
+        "ROLLED_BACK",
+        "ROLLBACK_FAILED",
+        "RECOVERY_REQUIRED"
+      ]
+    },
+    "concurrencySemantics": {
+      "enum": [
+        "SINGLE_WRITER_SERIALIZED",
+        "MULTI_PROCESS_CAS",
+        "DISTRIBUTED_AUTHORITY"
+      ]
+    },
+    "ticketDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reasonCode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

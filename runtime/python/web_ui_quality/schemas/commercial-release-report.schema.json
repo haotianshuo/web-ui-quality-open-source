@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/commercial-release-report.schema.json",
+  "title": "Commercial release workflow report",
+  "type": "object",
+  "required": ["schemaVersion", "generator", "status"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "generator": {"type": "object", "required": ["name", "version", "stage"]},
+    "status": {"enum": ["COMMERCIAL_WORKFLOW_PASS", "COMMERCIAL_WORKFLOW_NOT_VERIFIED", "NOT_APPLICABLE"]},
+    "gates": {"type": "object"},
+    "sourceProjectChanged": {"const": false},
+    "patchIntegrationAuthorized": {"const": false},
+    "artifacts": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

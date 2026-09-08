@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "$id": "https://web-ui-quality.local/schemas/change-budget.schema.json",
+  "title": "Change Budget",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "riskTier", "maxFiles", "maxChangedLines", "allowNewFiles", "allowDependencyChanges", "allowConfigChanges", "explicitSourceCeiling", "narrowRequest", "requiresHostReceipt", "claimBoundary"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "riskTier": {"enum": ["T0", "T1", "T2", "T3", "T4"]},
+    "maxFiles": {"type": "integer", "minimum": 0},
+    "maxChangedLines": {"type": "integer", "minimum": 0},
+    "allowNewFiles": {"type": "boolean"},
+    "allowDependencyChanges": {"type": "boolean"},
+    "allowConfigChanges": {"type": "boolean"},
+    "explicitSourceCeiling": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "narrowRequest": {"type": "boolean"},
+    "requiresHostReceipt": {"const": true},
+    "claimBoundary": {"type": "string", "minLength": 1}
+  }
+}

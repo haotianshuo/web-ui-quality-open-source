@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.local/web-ui-quality/change-set.schema.json",
+  "title": "Web UI Quality Safe Edit Change Set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "riskLevel",
+    "status",
+    "approvalStatus",
+    "approvalSource",
+    "approvalEvidenceRef",
+    "approvedPlanDigest",
+    "approvedScope",
+    "approvedExclusions",
+    "projectRootIdentity",
+    "sourceScopeFingerprint",
+    "sourceScopeManifest",
+    "plan",
+    "beforeHashes",
+    "afterHashes",
+    "changes",
+    "patch",
+    "verificationResults",
+    "unverifiedItems",
+    "rollbackPreview",
+    "rollbackPreviewDigest",
+    "changeSetDigest"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "taskId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "riskLevel": {"type": "string", "enum": ["R1", "R2"]},
+    "status": {"type": "string", "enum": ["prepared", "applied", "rolled_back"]},
+    "approvalStatus": {"const": "approved"},
+    "approvalSource": {"const": "user_current_conversation"},
+    "approvalEvidenceRef": {"type": "string", "pattern": "^current-conversation:[A-Za-z0-9._:/-]{1,192}$"},
+    "approvedPlanDigest": {"$ref": "#/$defs/sha256"},
+    "approvedScope": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/relativePath"}},
+    "approvedExclusions": {"type": "array", "items": {"type": "string"}},
+    "projectRootIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["device", "inode"],
+      "properties": {
+        "device": {"type": "string", "pattern": "^[0-9]+$"},
+        "inode": {"type": "string", "pattern": "^[0-9]+$"}
+      }
+    },
+    "sourceScopeFingerprint": {"$ref": "#/$defs/sha256"},
+    "sourceScopeManifest": {"$ref": "source-scope-manifest.schema.json"},
+    "plan": {"$ref": "productization-plan.schema.json"},
+    "beforeHashes": {"$ref": "#/$defs/hashMap"},
+    "afterHashes": {"$ref": "#/$defs/hashMap"},
+    "changes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "targetElement", "description", "beforeContent", "afterContent", "beforeSha256", "afterSha256", "patch"],
+        "properties": {
+          "path": {"$ref": "#/$defs/relativePath"},
+          "targetElement": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "beforeContent": {"type": "string"},
+          "afterContent": {"type": "string"},
+          "beforeSha256": {"$ref": "#/$defs/sha256"},
+          "afterSha256": {"$ref": "#/$defs/sha256"},
+          "patch": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "patch": {"type": "string", "minLength": 1},
+    "verificationResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "expectedSha256", "actualSha256", "result"],
+        "properties": {
+          "path": {"$ref": "#/$defs/relativePath"},
+          "expectedSha256": {"$ref": "#/$defs/sha256"},
+          "actualSha256": {"$ref": "#/$defs/sha256"},
+          "result": {"const": "PASS"}
+        }
+      }
+    },
+    "unverifiedItems": {"type": "array", "items": {"type": "string"}},
+    "rollbackPreview": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "expectedCurrentSha256", "restoreSha256", "delete"],
+        "properties": {
+          "path": {"$ref": "#/$defs/relativePath"},
+          "expectedCurrentSha256": {"$ref": "#/$defs/sha256"},
+          "restoreSha256": {"$ref": "#/$defs/sha256"},
+          "delete": {"const": false}
+        }
+      }
+    },
+    "rollbackPreviewDigest": {"$ref": "#/$defs/sha256"},
+    "changeSetDigest": {"$ref": "#/$defs/sha256"},
+    "executionReceiptDigest": {"$ref": "#/$defs/sha256"},
+    "rollbackReceiptDigest": {"$ref": "#/$defs/sha256"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "prepared"}}, "required": ["status"]},
+      "then": {
+        "properties": {"verificationResults": {"maxItems": 0}},
+        "not": {"anyOf": [{"required": ["executionReceiptDigest"]}, {"required": ["rollbackReceiptDigest"]}]}
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "applied"}}, "required": ["status"]},
+      "then": {
+        "required": ["executionReceiptDigest"],
+        "properties": {"verificationResults": {"minItems": 1}},
+        "not": {"required": ["rollbackReceiptDigest"]}
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "rolled_back"}}, "required": ["status"]},
+      "then": {
+        "required": ["executionReceiptDigest", "rollbackReceiptDigest"],
+        "properties": {"verificationResults": {"minItems": 1}}
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "relativePath": {"type": "string", "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "hashMap": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"$ref": "#/$defs/relativePath"},
+      "additionalProperties": {"$ref": "#/$defs/sha256"}
+    }
+  }
+}

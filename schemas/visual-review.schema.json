@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/visual-review.schema.json",
+  "title": "Qualitative Visual Review",
+  "type": "object",
+  "required": ["schemaVersion", "status", "dimensions"],
+  "properties": {
+    "schemaVersion": {"const": "1"},
+    "reviewerType": {"type": "string"},
+    "status": {"enum": ["NOT_REVIEWED", "APPROVED", "CHANGES_REQUESTED", "REJECTED"]},
+    "dimensions": {
+      "type": "object",
+      "required": ["task", "hierarchy", "composition", "rhythm", "visual", "interaction", "responsive", "projectFit"],
+      "additionalProperties": false,
+      "properties": {
+        "task": {"$ref": "#/$defs/dimension"}, "hierarchy": {"$ref": "#/$defs/dimension"},
+        "composition": {"$ref": "#/$defs/dimension"}, "rhythm": {"$ref": "#/$defs/dimension"},
+        "visual": {"$ref": "#/$defs/dimension"}, "interaction": {"$ref": "#/$defs/dimension"},
+        "responsive": {"$ref": "#/$defs/dimension"}, "projectFit": {"$ref": "#/$defs/dimension"}
+      }
+    },
+    "hardRedLines": {"type": "array", "items": {"type": "string"}},
+    "strengths": {"type": "array", "items": {"type": "string"}},
+    "changesRequired": {"type": "array", "items": {"type": "string"}},
+    "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+    "overallScore": {"type": ["integer", "null"], "minimum": 0, "maximum": 100}
+  },
+  "$defs": {"dimension": {"type": "object", "required": ["score", "reason"], "properties": {"score": {"type": ["integer", "null"], "minimum": 0, "maximum": 100}, "reason": {"type": "string"}}, "additionalProperties": false}},
+  "additionalProperties": false
+}

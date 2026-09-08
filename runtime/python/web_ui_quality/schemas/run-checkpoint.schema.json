@@ -1,0 +1,138 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/run-checkpoint.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "acceptedFindings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "activeCapabilities": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "appliedWrites": {
+      "type": "array"
+    },
+    "assumptions": {
+      "type": "array"
+    },
+    "baselineIdentity": {
+      "type": "object"
+    },
+    "checkpointDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "checkpointId": {
+      "pattern": "^checkpoint-[0-9]{4,}$",
+      "type": "string"
+    },
+    "claimBoundary": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "currentPhase": {
+      "type": "string"
+    },
+    "decisions": {
+      "type": "array"
+    },
+    "findings": {
+      "type": "array"
+    },
+    "integrityMac": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "journeyIdentity": {
+      "type": "object"
+    },
+    "parentCheckpoint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "patchCandidates": {
+      "type": "array"
+    },
+    "pendingVerification": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "rejectedFindings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "targetIdentity": {
+      "type": "object"
+    },
+    "taskGoal": {
+      "type": "object"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "verifiedWrites": {
+      "type": "array"
+    },
+    "writeAuthority": {
+      "const": "HOST_APPROVAL_REQUIRED"
+    },
+    "writeAuthorization": {
+      "const": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "checkpointId",
+    "sequence",
+    "runId",
+    "taskId",
+    "targetIdentity",
+    "currentPhase",
+    "taskGoal",
+    "assumptions",
+    "activeCapabilities",
+    "baselineIdentity",
+    "journeyIdentity",
+    "findings",
+    "acceptedFindings",
+    "rejectedFindings",
+    "patchCandidates",
+    "appliedWrites",
+    "verifiedWrites",
+    "pendingVerification",
+    "decisions",
+    "claimBoundary",
+    "createdAt",
+    "parentCheckpoint",
+    "writeAuthorization",
+    "writeAuthority",
+    "checkpointDigest",
+    "integrityMac"
+  ],
+  "title": "Run Checkpoint",
+  "type": "object"
+}

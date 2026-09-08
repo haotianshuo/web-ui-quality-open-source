@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/experience-modernization.schema.json",
+  "title": "Web UI Quality Experience Modernization Strategy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "positioning", "northStar", "decisionRule", "capabilityCenters", "priorityBacklog", "criticalJourneys", "stateMatrix", "investmentPortfolio", "verificationLadder", "deferredInfrastructure", "readiness", "protectedBoundaries", "strategyDigest"],
+  "properties": {
+    "schemaVersion": {"const": "3.0"},
+    "positioning": {"type": "string", "minLength": 1},
+    "northStar": {"type": "string", "minLength": 1},
+    "decisionRule": {"type": "string", "minLength": 1},
+    "capabilityCenters": {"type": "array", "minItems": 8, "maxItems": 8, "items": {"$ref": "#/$defs/capabilityCenter"}},
+    "priorityBacklog": {"$ref": "#/$defs/backlog"},
+    "criticalJourneys": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/journey"}},
+    "stateMatrix": {"$ref": "#/$defs/stateMatrix"},
+    "investmentPortfolio": {"$ref": "#/$defs/investmentPortfolio"},
+    "verificationLadder": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/evidenceLevel"}},
+    "deferredInfrastructure": {"type": "array", "items": {"$ref": "#/$defs/deferredItem"}},
+    "readiness": {"$ref": "#/$defs/readiness"},
+    "protectedBoundaries": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "strategyDigest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"readiness": {"properties": {"status": {"const": "PLAN_READY"}}}}},
+      "then": {"properties": {"criticalJourneys": {"items": {"properties": {"userIntent": {"$ref": "#/$defs/nonEmpty"}, "steps": {"minItems": 1}}}}}}
+    }
+  ],
+  "$defs": {
+    "nonEmpty": {"type": "string", "minLength": 1},
+    "capabilityCenter": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "status", "owns", "completionEvidence", "failureIsolation"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "name": {"$ref": "#/$defs/nonEmpty"},
+        "status": {"type": "string", "enum": ["PLAN_READY", "REPAIR_REQUIRED", "CANDIDATE_READY", "MAPPING_REQUIRED", "GENERATION_READY", "OPTIONAL_INPUT", "READY", "DISCOVERY_REQUIRED", "CANDIDATE_ONLY", "CATALOG_AVAILABLE", "NOT_ASSESSED"]},
+        "owns": {"$ref": "#/$defs/nonEmpty"},
+        "completionEvidence": {"$ref": "#/$defs/nonEmpty"},
+        "failureIsolation": {"$ref": "#/$defs/nonEmpty"}
+      }
+    },
+    "backlogItem": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "score", "delivery", "userValue", "category", "source", "evidence", "userImpact", "action", "fallback", "completionEvidence", "isolation", "rank"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmpty"}, "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "delivery": {"type": "string", "enum": ["must-fix", "should-fix", "later", "acceptance-gate"]},
+        "userValue": {"type": "string", "enum": ["daily-user-impact", "high-user-impact", "maintenance-or-polish"]},
+        "category": {"$ref": "#/$defs/nonEmpty"}, "source": {"$ref": "#/$defs/nonEmpty"},
+        "evidence": {"anyOf": [{"type": "string"}, {"type": "array"}, {"type": "object"}, {"type": "null"}]},
+        "userImpact": {"$ref": "#/$defs/nonEmpty"}, "action": {"$ref": "#/$defs/nonEmpty"},
+        "modernOption": {"type": ["string", "null"]}, "fallback": {"$ref": "#/$defs/nonEmpty"},
+        "completionEvidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmpty"}},
+        "isolation": {"$ref": "#/$defs/nonEmpty"}, "rank": {"type": "integer", "minimum": 1}
+      }
+    },
+    "backlog": {
+      "type": "object", "additionalProperties": false, "required": ["now", "next", "later", "acceptanceGates"],
+      "properties": {
+        "now": {"type": "array", "items": {"$ref": "#/$defs/backlogItem"}},
+        "next": {"type": "array", "items": {"$ref": "#/$defs/backlogItem"}},
+        "later": {"type": "array", "items": {"$ref": "#/$defs/backlogItem"}},
+        "acceptanceGates": {"type": "array", "items": {"$ref": "#/$defs/backlogItem"}}
+      }
+    },
+    "journeyStep": {"type": "object", "additionalProperties": true},
+    "journey": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "userIntent", "steps", "completionSignal", "recovery", "metrics"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmpty"}, "type": {"type": "string", "enum": ["first-time", "repeat-use", "recovery"]},
+        "userIntent": {"type": ["string", "null"]}, "steps": {"type": "array", "items": {"$ref": "#/$defs/journeyStep"}},
+        "completionSignal": {"$ref": "#/$defs/nonEmpty"}, "recovery": {"$ref": "#/$defs/nonEmpty"},
+        "metrics": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmpty"}}
+      }
+    },
+    "stateRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "reason", "presentation", "recoveryAction", "contextPersistence", "accessibility", "completionEvidence"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmpty"}, "reason": {"$ref": "#/$defs/nonEmpty"}, "presentation": {"$ref": "#/$defs/nonEmpty"},
+        "recoveryAction": {"$ref": "#/$defs/nonEmpty"}, "contextPersistence": {"$ref": "#/$defs/nonEmpty"}, "accessibility": {"$ref": "#/$defs/nonEmpty"},
+        "completionEvidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmpty"}}
+      }
+    },
+    "stateIncomplete": {
+      "type": "object", "additionalProperties": false, "required": ["id", "missing"],
+      "properties": {"id": {"$ref": "#/$defs/nonEmpty"}, "missing": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmpty"}}}
+    },
+    "stateMatrix": {
+      "type": "object", "additionalProperties": false, "required": ["covered", "incomplete", "gateStatus"],
+      "properties": {
+        "covered": {"type": "array", "items": {"$ref": "#/$defs/stateRow"}},
+        "incomplete": {"type": "array", "items": {"$ref": "#/$defs/stateIncomplete"}},
+        "gateStatus": {"type": "string", "enum": ["PASS", "FAIL"]}
+      }
+    },
+    "investmentPortfolio": {
+      "type": "object", "additionalProperties": false,
+      "required": ["uiUx", "componentEcosystem", "screenshotFigmaDesignIr", "visualStudio", "browserExperienceVerification", "infrastructure"],
+      "properties": {
+        "uiUx": {"type": "integer", "minimum": 0, "maximum": 100}, "componentEcosystem": {"type": "integer", "minimum": 0, "maximum": 100},
+        "screenshotFigmaDesignIr": {"type": "integer", "minimum": 0, "maximum": 100}, "visualStudio": {"type": "integer", "minimum": 0, "maximum": 100},
+        "browserExperienceVerification": {"type": "integer", "minimum": 0, "maximum": 100}, "infrastructure": {"type": "integer", "minimum": 0, "maximum": 100}
+      }
+    },
+    "evidenceLevel": {
+      "type": "object", "additionalProperties": false, "required": ["level", "status", "proves", "cannotProve"],
+      "properties": {
+        "level": {"type": "string", "enum": ["static", "browser", "expert-review", "field-user"]},
+        "status": {"$ref": "#/$defs/nonEmpty"}, "proves": {"$ref": "#/$defs/nonEmpty"}, "cannotProve": {"$ref": "#/$defs/nonEmpty"}
+      }
+    },
+    "deferredItem": {
+      "type": "object", "additionalProperties": false, "required": ["name", "policy", "reason"],
+      "properties": {"name": {"$ref": "#/$defs/nonEmpty"}, "policy": {"const": "maintain-only"}, "reason": {"$ref": "#/$defs/nonEmpty"}}
+    },
+    "readiness": {
+      "type": "object", "additionalProperties": false, "required": ["status", "hardGates", "blockers", "implementationAuthorization", "meaning"],
+      "properties": {
+        "status": {"type": "string", "enum": ["PLAN_READY", "DISCOVERY_REQUIRED"]},
+        "hardGates": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "boolean"}},
+        "blockers": {"type": "array", "items": {"$ref": "#/$defs/nonEmpty"}},
+        "implementationAuthorization": {"type": "boolean"}, "meaning": {"$ref": "#/$defs/nonEmpty"}
+      }
+    }
+  }
+}

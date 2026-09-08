@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/unified-report.schema.json",
+  "title": "Unified Web UI Quality Report",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "overallResult",
+    "browserComparisonReport",
+    "professionalEngines",
+    "scorecard",
+    "reportDigest",
+    "experienceCore",
+    "experienceEvaluation"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2.0"
+    },
+    "overallResult": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "FAIL",
+        "NOT_VERIFIED"
+      ]
+    },
+    "maturity": {
+      "type": "string"
+    },
+    "browserComparisonReport": {
+      "type": "object"
+    },
+    "professionalEngines": {
+      "type": "object"
+    },
+    "professionalFindings": {
+      "type": "array"
+    },
+    "visualReview": {
+      "type": "object"
+    },
+    "scorecard": {
+      "type": "object"
+    },
+    "artifacts": {
+      "type": "object"
+    },
+    "reportDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "visualJudgment": {
+      "type": "object"
+    },
+    "experienceCore": {
+      "type": "object"
+    },
+    "experienceEvaluation": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

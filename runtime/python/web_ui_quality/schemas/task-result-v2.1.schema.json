@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/task-result-v2.1.schema.json",
+  "title": "TaskResult v2.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "taskContractDigest",
+    "requiredClaimIds",
+    "optionalClaimIds",
+    "claimDigests",
+    "capabilitySnapshotDigest",
+    "environmentFingerprint",
+    "status",
+    "terminationReason",
+    "resourceDisposition",
+    "reasonCodes",
+    "kernelVersion",
+    "taskResultDigest"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2.1"
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskContractDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "requiredClaimIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "optionalClaimIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "claimDigests": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "uniqueItems": true
+    },
+    "capabilitySnapshotDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "environmentFingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "status": {
+      "enum": [
+        "VERIFIED",
+        "PARTIAL",
+        "NOT_VERIFIED",
+        "NOT_MEASURED",
+        "BLOCKED",
+        "FAILED"
+      ]
+    },
+    "terminationReason": {
+      "enum": [
+        "NONE",
+        "DEADLOCK_DETECTED",
+        "TOKEN_LIMIT_REACHED",
+        "COST_LIMIT_REACHED",
+        "TIMEOUT",
+        "TOOL_UNAVAILABLE",
+        "RECOVERY_REQUIRED",
+        "AUTHORITY_REQUIRED",
+        "HOST_CAPABILITY_INSUFFICIENT",
+        "LEDGER_RECOVERY_REQUIRED",
+        "INVALID_TASK_CONTRACT",
+        "AGGREGATION_INCOMPLETE",
+        "REQUIRED_CLAIM_INVALIDATED"
+      ]
+    },
+    "resourceDisposition": {
+      "enum": [
+        "SUFFICIENT",
+        "EXHAUSTED",
+        "UNKNOWN",
+        "MORE_RESOURCE_REQUIRED"
+      ]
+    },
+    "reasonCodes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "kernelVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskResultDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FAILED"
+          },
+          "terminationReason": {
+            "const": "INVALID_TASK_CONTRACT"
+          }
+        },
+        "required": [
+          "status",
+          "terminationReason"
+        ]
+      },
+      "else": {
+        "properties": {
+          "requiredClaimIds": {
+            "minItems": 1
+          },
+          "claimDigests": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

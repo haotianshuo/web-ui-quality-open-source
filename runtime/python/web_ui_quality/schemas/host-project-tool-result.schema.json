@@ -1,0 +1,118 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/host-project-tool-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "argv": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "cwd": {
+      "const": "."
+    },
+    "executableSha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "exitCode": {
+      "type": "integer"
+    },
+    "filesystemPolicy": {
+      "const": "READ_ONLY_PROJECT"
+    },
+    "filesystemPolicyEnforced": {
+      "type": "boolean"
+    },
+    "networkPolicyEnforced": {
+      "type": "boolean"
+    },
+    "planDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "resourcePolicyEnforced": {
+      "type": "boolean"
+    },
+    "runBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "runId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sessionId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "taskId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "runId",
+        "taskId",
+        "sessionId"
+      ],
+      "type": "object"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "stderr": {
+      "type": "string"
+    },
+    "stdout": {
+      "type": "string"
+    },
+    "timedOut": {
+      "type": "boolean"
+    },
+    "tool": {
+      "enum": [
+        "tsc",
+        "vue-tsc",
+        "eslint",
+        "vitest",
+        "jest",
+        "stylelint"
+      ]
+    },
+    "unexpectedWrites": {
+      "items": {
+        "minLength": 1,
+        "pattern": "^(?![A-Za-z]:[\\\\/])(?!/)(?!\\\\\\\\)(?!\\.\\./).+",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "planDigest",
+    "tool",
+    "executableSha256",
+    "argv",
+    "cwd",
+    "runBinding",
+    "exitCode",
+    "stdout",
+    "stderr",
+    "timedOut",
+    "networkPolicyEnforced",
+    "resourcePolicyEnforced",
+    "filesystemPolicy",
+    "filesystemPolicyEnforced",
+    "unexpectedWrites"
+  ],
+  "type": "object"
+}

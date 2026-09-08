@@ -1,0 +1,65 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/task-goal.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "createdAt": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "goal": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "goalDigest": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "nonGoals": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "scopeChanges": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "successCriteria": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "taskId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "updatedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "goal",
+    "successCriteria",
+    "nonGoals",
+    "scopeChanges",
+    "createdAt",
+    "updatedAt",
+    "goalDigest"
+  ],
+  "title": "Task Goal Anchor",
+  "type": "object"
+}

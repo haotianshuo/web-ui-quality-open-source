@@ -1,0 +1,62 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/mutation-verification.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "integrationVerificationRequired": {
+      "const": true
+    },
+    "mutations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "findingId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "risk": {
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ]
+          },
+          "sequence": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "verifyBeforeNext": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "sequence",
+          "findingId",
+          "risk",
+          "verifyBeforeNext"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "strategy": {
+      "enum": [
+        "SERIAL",
+        "BATCH_WITH_INTEGRATION_VERIFICATION"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "strategy",
+    "mutations",
+    "integrationVerificationRequired"
+  ],
+  "title": "Serial Mutation Verification Plan",
+  "type": "object"
+}

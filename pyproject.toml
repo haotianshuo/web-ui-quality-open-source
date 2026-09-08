@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "web-ui-quality"
+version = "4.3.0"
+description = "Trust control layer for AI-assisted Web changes with bounded scope, Host-gated writes, evidence-backed verification, and release-integrity checks."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Web UI Quality Contributors"}]
+keywords = ["web-ui", "accessibility", "product-design", "playwright", "codex-skill"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: End Users/Desktop",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = ["Pillow>=10,<13"]
+
+
+[project.optional-dependencies]
+browser = ["playwright>=1.50,<2"]
+full = ["playwright>=1.50,<2"]
+core-test = ["pytest>=8,<10"]
+release-full = ["pytest>=8,<10", "playwright>=1.50,<2"]
+dev = ["build>=1.2"]
+validation = ["jsonschema>=4.20"]
+
+[project.scripts]
+web-ui-quality = "web_ui_quality.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "runtime/python"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["runtime/python"]
+include = ["web_ui_quality*"]
+
+[tool.setuptools.package-data]
+web_ui_quality = ["schemas/*.json", "browser_runner.cjs", "public-compatibility-baseline.json"]
+
+[tool.web-ui-quality]
+runtime-path = "runtime/python"
+baseline-version = "v2.3-p0a"
+default-execution-layer = "Lite"
+commercial-release-stage = "4.3.0-commercial-stable"
+experimental-package-stage = "4.4.0-alpha.18-shadow"
+kernel-version = "4.2.3"
+kernel-base-version = "4.0.0-rc.1"
+protocol-version = "3.0"
+receipt-protocol-version = "3.0"
+evidence-schema-version = "3.0"

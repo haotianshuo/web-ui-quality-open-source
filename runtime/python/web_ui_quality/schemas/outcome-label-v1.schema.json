@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/outcome-label-v1.schema.json",
+  "title": "WUQ Outcome Label v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion","packageVersion","kernelBaseVersion","taskBinding","labelSource","outcome","independence","split","evaluatorId","evidenceDigest","createdAt","authorityEffect","adaptiveEffect","claimBoundary","labelDigest","labelId"],
+  "properties": {
+    "schemaVersion": {"const":"1"},
+    "packageVersion": {"type":"string","minLength":1},
+    "kernelBaseVersion": {"type":"string","minLength":1},
+    "taskBinding": {"$ref":"#/$defs/binding"},
+    "labelSource": {"enum":["EXTERNAL_ORACLE","HOST_ACCEPTANCE","HUMAN_BLIND_REVIEW","FIXED_WORKFLOW_PROXY","SYNTHETIC_FIXTURE"]},
+    "outcome": {"enum":["GOOD","BAD","INCONCLUSIVE"]},
+    "independence": {"enum":["INDEPENDENT","POTENTIALLY_DEPENDENT","UNKNOWN"]},
+    "split": {"enum":["DEVELOPMENT","HOLDOUT","EXTERNAL"]},
+    "evaluatorId": {"type":"string","minLength":1},
+    "evidenceDigest": {"type":"string","minLength":16},
+    "createdAt": {"type":"string","minLength":1},
+    "authorityEffect": {"const":"NONE"},
+    "adaptiveEffect": {"const":"NONE"},
+    "claimBoundary": {"type":"string","minLength":1},
+    "labelDigest": {"type":"string","minLength":16},
+    "labelId": {"type":"string","minLength":16}
+  },
+  "$defs": {"binding": {"type":"object","additionalProperties":false,"required":["runId","taskId","sessionId"],"properties":{"runId":{"type":"string","minLength":1},"taskId":{"type":"string","minLength":1},"sessionId":{"type":"string","minLength":1}}}}
+}

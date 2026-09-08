@@ -1,0 +1,6 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://web-ui-quality.local/schemas/independent-label-request-v1.schema.json",
+  "title":"WUQ Independent Label Request v1","type":"object","additionalProperties":false,
+  "required":["schemaVersion","collectionVersion","packageVersion","kernelBaseVersion","taskBinding","exportRecordDigest","requestedLabelSource","split","outcome","independence","evaluatorPseudonym","evidenceDigest","blindingStatus","createdAt","authorityEffect","adaptiveEffect","claimBoundary","labelRequestDigest"],
+  "properties":{"schemaVersion":{"const":"1"},"collectionVersion":{"type":"string"},"packageVersion":{"type":"string"},"kernelBaseVersion":{"type":"string"},"taskBinding":{"type":"object"},"exportRecordDigest":{"type":"string","minLength":16},"requestedLabelSource":{"enum":["EXTERNAL_ORACLE","HOST_ACCEPTANCE","HUMAN_BLIND_REVIEW"]},"split":{"enum":["DEVELOPMENT","HOLDOUT","EXTERNAL"]},"outcome":{"type":"null"},"independence":{"const":"UNASSESSED"},"evaluatorPseudonym":{"type":"null"},"evidenceDigest":{"type":"null"},"blindingStatus":{"const":"REQUESTED"},"createdAt":{"type":"string","minLength":1},"authorityEffect":{"const":"NONE"},"adaptiveEffect":{"const":"NONE"},"claimBoundary":{"type":"string","minLength":1},"labelRequestDigest":{"type":"string","minLength":16}}
+}

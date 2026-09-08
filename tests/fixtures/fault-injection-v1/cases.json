@@ -1,0 +1,92 @@
+[
+  {
+    "id": "mobile-table-overflow",
+    "difficulty": "D1",
+    "request": "订单表格在手机上被裁掉，先定位 mobile table overflow 的根因",
+    "rootSource": "src/components/TableContainer.css",
+    "cleanContent": ".orders-table { overflow-x: auto; } /* mobile table overflow safe */\n",
+    "injectedContent": ".orders-table { overflow-x: hidden; } /* mobile table overflow fault */\n",
+    "protectedScope": ["src/auth/**", "src/payments/**"]
+  },
+  {
+    "id": "login-error-feedback",
+    "difficulty": "D2",
+    "request": "登录失败后没有错误提示，检查 LoginForm error feedback",
+    "rootSource": "src/auth/LoginForm.tsx",
+    "cleanContent": "export const LoginForm = () => 'login error feedback visible';\n",
+    "injectedContent": "export const LoginForm = () => 'login error feedback hidden fault';\n",
+    "protectedScope": ["src/payments/**"]
+  },
+  {
+    "id": "shared-button-disabled-state",
+    "difficulty": "D3",
+    "request": "多个页面的主按钮 disabled state 都不对，查 shared PrimaryButton",
+    "rootSource": "src/components/PrimaryButton.tsx",
+    "cleanContent": "export const PrimaryButton = () => 'shared primary button disabled state safe';\n",
+    "injectedContent": "export const PrimaryButton = () => 'shared primary button disabled state fault';\n",
+    "protectedScope": ["src/auth/**"]
+  },
+  {
+    "id": "orders-pagination-stale",
+    "difficulty": "D2",
+    "request": "订单翻页后仍显示上一页，定位 PaginationController stale pagination",
+    "rootSource": "src/orders/PaginationController.ts",
+    "cleanContent": "export const pagination = 'orders pagination fresh state';\n",
+    "injectedContent": "export const pagination = 'orders pagination stale fault';\n",
+    "protectedScope": ["src/auth/**"]
+  },
+  {
+    "id": "design-token-color-drift",
+    "difficulty": "D1",
+    "request": "主色突然不一致，检查 design token primary color drift",
+    "rootSource": "src/styles/tokens.css",
+    "cleanContent": ":root { --primary-color: #2255aa; } /* design token primary color */\n",
+    "injectedContent": ":root { --primary-color: #ff00ff; } /* design token color drift fault */\n",
+    "protectedScope": []
+  },
+  {
+    "id": "checkout-loading-state",
+    "difficulty": "D2",
+    "request": "结账提交后 loading 一直不结束，检查 CheckoutState loading state",
+    "rootSource": "src/checkout/CheckoutState.ts",
+    "cleanContent": "export const checkoutLoading = 'settles after submit';\n",
+    "injectedContent": "export const checkoutLoading = 'loading state stuck fault';\n",
+    "protectedScope": ["src/payments/gateway/**"]
+  },
+  {
+    "id": "sidebar-breakpoint",
+    "difficulty": "D2",
+    "request": "平板宽度 sidebar breakpoint 折叠错误，定位 layout Sidebar",
+    "rootSource": "src/layout/Sidebar.tsx",
+    "cleanContent": "export const Sidebar = () => 'tablet breakpoint responsive';\n",
+    "injectedContent": "export const Sidebar = () => 'tablet breakpoint collapse fault';\n",
+    "protectedScope": ["src/auth/**"]
+  },
+  {
+    "id": "form-validation-rules",
+    "difficulty": "D2",
+    "request": "注册表单 validation rules 把合法邮箱判错了",
+    "rootSource": "src/forms/ValidationRules.ts",
+    "cleanContent": "export const emailRule = 'form validation rules valid email';\n",
+    "injectedContent": "export const emailRule = 'form validation rules reject valid email fault';\n",
+    "protectedScope": ["src/auth/session/**"]
+  },
+  {
+    "id": "shared-modal-stacking",
+    "difficulty": "D3",
+    "request": "多个页面的 Modal 都被 header 盖住，检查 shared modal z-index stacking",
+    "rootSource": "src/components/Modal.css",
+    "cleanContent": ".modal { z-index: 1000; } /* shared modal stacking */\n",
+    "injectedContent": ".modal { z-index: 1; } /* shared modal z-index stacking fault */\n",
+    "protectedScope": []
+  },
+  {
+    "id": "route-loading-spinner",
+    "difficulty": "D4",
+    "request": "路由切换偶尔永久 spinner，定位 RouteLoading route loading state",
+    "rootSource": "src/router/RouteLoading.tsx",
+    "cleanContent": "export const RouteLoading = () => 'route loading spinner settles';\n",
+    "injectedContent": "export const RouteLoading = () => 'route loading spinner permanent fault';\n",
+    "protectedScope": ["src/auth/**", "src/payments/**"]
+  }
+]

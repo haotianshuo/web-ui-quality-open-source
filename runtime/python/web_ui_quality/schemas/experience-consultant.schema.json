@@ -1,0 +1,606 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/experience-consultant.schema.json",
+  "title": "Web UI Quality Experience Consultant",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "status",
+    "audience",
+    "supportedIntents",
+    "selectedIntent",
+    "intentSelection",
+    "opening",
+    "businessSummary",
+    "topProblems",
+    "directions",
+    "selectedDirectionId",
+    "preview",
+    "guidedFlow",
+    "implementationHandoff",
+    "progressiveDisclosure",
+    "technicalAppendix",
+    "clarificationQuestion",
+    "claims",
+    "claimBoundary",
+    "consultantDigest"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "3.2"
+    },
+    "status": {
+      "enum": [
+        "CONSULTATION_READY",
+        "DISCOVERY_REQUIRED"
+      ]
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1
+    },
+    "supportedIntents": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "web-experience",
+              "crm-saas",
+              "screenshot",
+              "mobile",
+              "user-flow"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "selectedIntent": {
+      "enum": [
+        "web-experience",
+        "crm-saas",
+        "screenshot",
+        "mobile",
+        "user-flow"
+      ]
+    },
+    "intentSelection": {
+      "type": "object",
+      "required": [
+        "mode",
+        "rationale"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "user-selected",
+            "inferred"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "opening": {
+      "type": "string",
+      "minLength": 1
+    },
+    "businessSummary": {
+      "type": "object",
+      "required": [
+        "pageType",
+        "pageTypeLabel",
+        "primaryTask",
+        "plainLanguage",
+        "confidence",
+        "verificationNeeded"
+      ],
+      "properties": {
+        "pageType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pageTypeLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primaryTask": {
+          "type": "string",
+          "minLength": 1
+        },
+        "plainLanguage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "verificationNeeded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "topProblems": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "whyItMatters",
+          "suggestion",
+          "impact",
+          "confidence",
+          "verificationNeeded",
+          "sourceFindingIds",
+          "whyThisAdvice"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "whyItMatters": {
+            "type": "string",
+            "minLength": 1
+          },
+          "suggestion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "impact": {
+            "type": "object",
+            "required": [
+              "level",
+              "label"
+            ],
+            "properties": {
+              "level": {
+                "enum": [
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW"
+                ]
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "verificationNeeded": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceFindingIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "whyThisAdvice": {
+            "type": "object",
+            "required": [
+              "summary",
+              "needsConfirmation"
+            ],
+            "properties": {
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "needsConfirmation": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "directions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "summary",
+          "bestFor",
+          "tradeoff",
+          "recommended",
+          "whyRecommended",
+          "actionLabel",
+          "changes",
+          "sourceOptionId",
+          "previewStatus",
+          "automaticWriteAuthorized",
+          "technical"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bestFor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tradeoff": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recommended": {
+            "type": "boolean"
+          },
+          "whyRecommended": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actionLabel": {
+            "const": "选择这个方向"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceOptionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "previewStatus": {
+            "type": "string",
+            "minLength": 1
+          },
+          "automaticWriteAuthorized": {
+            "const": false
+          },
+          "technical": {
+            "type": "object"
+          },
+          "userScenario": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expectedExperienceChange": {
+            "type": "string",
+            "minLength": 1
+          },
+          "businessValue": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "selectedDirectionId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "preview": {
+      "type": "object",
+      "required": [
+        "mode",
+        "status",
+        "proofStatus",
+        "authority",
+        "viewports",
+        "states",
+        "toolBoundaries",
+        "referenceScreenshotRole",
+        "beforeLabel",
+        "afterLabel",
+        "claimBoundary",
+        "userOutcomeMeasured"
+      ],
+      "properties": {
+        "mode": {
+          "const": "before-after"
+        },
+        "status": {
+          "enum": [
+            "BROWSER_VERIFIED",
+            "CONCEPT_PREVIEW"
+          ]
+        },
+        "proofStatus": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "viewports": {
+          "const": [
+            1440,
+            768,
+            390
+          ]
+        },
+        "states": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "toolBoundaries": {
+          "type": "object"
+        },
+        "referenceScreenshotRole": {
+          "enum": [
+            "REFERENCE_ONLY",
+            "NONE"
+          ]
+        },
+        "beforeLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "afterLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claimBoundary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "userOutcomeMeasured": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "guidedFlow": {
+      "type": "object",
+      "required": [
+        "steps",
+        "currentStep",
+        "nextAction",
+        "apply"
+      ],
+      "properties": {
+        "steps": {
+          "const": [
+            "understand",
+            "issues",
+            "directions",
+            "preview",
+            "confirm",
+            "apply",
+            "verify"
+          ]
+        },
+        "currentStep": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nextAction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "apply": {
+          "type": "object",
+          "required": [
+            "requiresExplicitApproval",
+            "automaticWriteAuthorized",
+            "status"
+          ],
+          "properties": {
+            "requiresExplicitApproval": {
+              "const": true
+            },
+            "automaticWriteAuthorized": {
+              "const": false
+            },
+            "status": {
+              "const": "AWAITING_APPROVAL"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "implementationHandoff": {
+      "type": "object",
+      "required": [
+        "status",
+        "automaticWriteAuthorized",
+        "explicitConfirmationRequired",
+        "userMessage",
+        "confirmLabel",
+        "applyLabel"
+      ],
+      "properties": {
+        "status": {
+          "const": "PREVIEW_ONLY"
+        },
+        "automaticWriteAuthorized": {
+          "const": false
+        },
+        "explicitConfirmationRequired": {
+          "const": true
+        },
+        "userMessage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confirmLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "applyLabel": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "progressiveDisclosure": {
+      "type": "object",
+      "required": [
+        "defaultSections",
+        "hiddenByDefault",
+        "technicalLabel"
+      ],
+      "properties": {
+        "defaultSections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hiddenByDefault": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "technicalLabel": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "technicalAppendix": {
+      "type": "object",
+      "required": [
+        "hiddenByDefault",
+        "experienceProofDigest",
+        "evidenceRefs",
+        "verificationNeeded",
+        "diagnosisRef",
+        "proofRef"
+      ],
+      "properties": {
+        "hiddenByDefault": {
+          "const": true
+        },
+        "experienceProofDigest": {
+          "type": "string"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "verificationNeeded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "diagnosisRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "proofRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "clarificationQuestion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "claims": {
+      "type": "object",
+      "required": [
+        "userOutcomeMetricsMeasured",
+        "taskTimeMeasured",
+        "conversionMeasured",
+        "preferenceMeasured"
+      ],
+      "properties": {
+        "userOutcomeMetricsMeasured": {
+          "const": false
+        },
+        "taskTimeMeasured": {
+          "const": false
+        },
+        "conversionMeasured": {
+          "const": false
+        },
+        "preferenceMeasured": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "claimBoundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "consultantDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,161 @@
+{
+  "$id": "https://web-ui-quality.local/schemas/qualification-plan-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adaptiveEffect": {
+      "const": "NONE"
+    },
+    "analysisSplit": {
+      "const": "DEVELOPMENT"
+    },
+    "authorityEffect": {
+      "const": "NONE"
+    },
+    "claimBoundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "createdAt": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "holdoutPolicy": {
+      "const": "EXCLUDE_UNTIL_PREREGISTERED_GATE"
+    },
+    "kernelBaseVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "minimums": {
+      "additionalProperties": false,
+      "properties": {
+        "hosts": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "models": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "realWorldRows": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "signalSupport": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "taskFamilies": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "realWorldRows",
+        "taskFamilies",
+        "hosts",
+        "models",
+        "signalSupport"
+      ],
+      "type": "object"
+    },
+    "packageVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "planDigest": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "planId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "qualificationVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "realWorldEligibility": {
+      "additionalProperties": false,
+      "properties": {
+        "allowedLabelSources": {
+          "items": {
+            "enum": [
+              "EXTERNAL_ORACLE",
+              "HOST_ACCEPTANCE",
+              "HUMAN_BLIND_REVIEW"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "dataOrigin": {
+          "const": "PRODUCTION_SHADOW"
+        },
+        "requiredLabelIndependence": {
+          "const": "INDEPENDENT"
+        },
+        "requiredProvenanceIntegrity": {
+          "const": "HOST_ATTESTED"
+        }
+      },
+      "required": [
+        "dataOrigin",
+        "requiredProvenanceIntegrity",
+        "requiredLabelIndependence",
+        "allowedLabelSources"
+      ],
+      "type": "object"
+    },
+    "schemaVersion": {
+      "const": "1"
+    },
+    "signalThresholds": {
+      "additionalProperties": false,
+      "properties": {
+        "maximumFalsePositiveRate": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "minimumPrecision": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "minimumRecall": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "minimumPrecision",
+        "minimumRecall",
+        "maximumFalsePositiveRate"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "qualificationVersion",
+    "packageVersion",
+    "kernelBaseVersion",
+    "planId",
+    "analysisSplit",
+    "holdoutPolicy",
+    "realWorldEligibility",
+    "minimums",
+    "signalThresholds",
+    "createdAt",
+    "authorityEffect",
+    "adaptiveEffect",
+    "claimBoundary",
+    "planDigest"
+  ],
+  "title": "WUQ Shadow Qualification Plan v1",
+  "type": "object"
+}

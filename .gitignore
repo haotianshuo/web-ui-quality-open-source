@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.test-workspace/
+build/
+dist/
+*.egg-info/
+.env
+.env.*
+!.env.example
+artifacts/
+reports/
+release-evidence-*/

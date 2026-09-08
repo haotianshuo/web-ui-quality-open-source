@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/ux-repair-recipe.schema.json",
+  "title": "UX Repair Recipe",
+  "type": "object",
+  "required": ["repairId", "findingIds", "userImpact", "recommendedRepair", "modernOption", "compatibilityFallback", "verification", "confidence", "repairClass", "sourceScope", "evidenceRefs", "evidenceClass"],
+  "properties": {
+    "repairId": {"type": "string"},
+    "findingIds": {"type": "array", "items": {"type": "string"}},
+    "userImpact": {"type": "string"},
+    "recommendedRepair": {"type": "string"},
+    "modernOption": {"type": "string"},
+    "compatibilityFallback": {"type": "string"},
+    "verification": {"type": "array", "items": {"type": "string"}},
+    "confidence": {"enum": ["HIGH", "MEDIUM", "LOW"]},
+    "repairClass": {"enum": ["QUICK_WIN", "STRUCTURAL_REPAIR"]},
+    "sourceScope": {"type": "array", "items": {"type": "string"}},
+    "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+    "evidenceClass": {"enum": ["REPAIR_HINT", "FORMAL_FINDING"]}
+  },
+  "additionalProperties": false
+}

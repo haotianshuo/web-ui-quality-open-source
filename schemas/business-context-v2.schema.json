@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/schemas/business-context-v2.schema.json",
+  "title": "Web UI Quality Versioned Business Context v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "contextVersion",
+    "parentVersion",
+    "createdAt",
+    "createdReason",
+    "facts",
+    "sources",
+    "confirmedFields",
+    "inferredFields",
+    "status",
+    "summary"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2"
+    },
+    "contextVersion": {
+      "type": "string",
+      "pattern": "^ctx-[0-9a-f]{16}$"
+    },
+    "parentVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "createdReason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "facts": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "confirmedFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "inferredFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "STALE"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

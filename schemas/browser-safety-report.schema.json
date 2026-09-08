@@ -1,0 +1,542 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.local/web-ui-quality/browser-safety-report.schema.json",
+  "title": "Web UI Quality Browser Candidate Safety Report v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "taskId", "candidateResult", "candidateErrorCode", "result", "effectiveResult",
+    "errorCode", "authorityVerified", "executionLayer", "environmentClass", "approvedOrigins", "approvedRoutes",
+    "contractDigest", "digestPurpose", "productionReadOnly", "sideEffectPolicy", "downloadPolicy",
+    "networkEvidenceMode", "networkGuardMode", "runBindingDigest", "expectedFinalUrl", "finalUrl", "tabDelta",
+    "browserContext", "capabilityProbe", "navigationEvidence", "interactionEvidence", "geometryEvidence",
+    "screenshotEvidence", "consoleEvidence", "networkEvidence", "serverRequestLog",
+    "controlledFixtureManifestDigest", "networkSetDigest", "blockedActions", "cleanup", "redactionMetrics",
+    "hostEvidenceRef", "hostEvidenceDigest", "authorityMode", "receiptBound", "verifiedItems", "unverifiedItems",
+    "hardMetrics", "redactionStatus", "reportDigest"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "3"},
+    "taskId": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9._:-]{2,95}$"},
+    "candidateResult": {"enum": ["PASS", "NOT_VERIFIED"]},
+    "candidateErrorCode": {"type": ["string", "null"], "pattern": "^[A-Z0-9_]+$"},
+    "result": {"const": "NOT_VERIFIED"},
+    "effectiveResult": {"const": "NOT_VERIFIED"},
+    "errorCode": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+    "authorityVerified": {"const": false},
+    "executionLayer": {"const": "Lite"},
+    "environmentClass": {"enum": ["local", "test", "staging", "production"]},
+    "approvedOrigins": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/origin"}},
+    "approvedRoutes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/route"}},
+    "contractDigest": {"$ref": "#/$defs/sha256"},
+    "digestPurpose": {"const": "consistency_only"},
+    "productionReadOnly": {"const": true},
+    "sideEffectPolicy": {"const": "read_only"},
+    "downloadPolicy": {"const": "block"},
+    "networkEvidenceMode": {"const": "metadata_enum_only"},
+    "networkGuardMode": {"const": "controlled_loopback_manifest"},
+    "runBindingDigest": {"$ref": "#/$defs/sha256"},
+    "expectedFinalUrl": {"type": "string", "pattern": "^http://127\\.0\\.0\\.1(?::[0-9]{1,5})?/$"},
+    "finalUrl": {"type": ["string", "null"], "pattern": "^http://127\\.0\\.0\\.1(?::[0-9]{1,5})?/$"},
+    "tabDelta": {"const": 0},
+    "browserContext": {"$ref": "#/$defs/browserContext"},
+    "capabilityProbe": {"$ref": "#/$defs/capabilityProbe"},
+    "navigationEvidence": {"type": "array", "items": {"$ref": "#/$defs/navigation"}},
+    "interactionEvidence": {"type": "array", "items": {"$ref": "#/$defs/interaction"}},
+    "geometryEvidence": {"type": "array", "items": {"$ref": "#/$defs/geometry"}},
+    "screenshotEvidence": {"type": "array", "items": {"$ref": "#/$defs/screenshot"}},
+    "consoleEvidence": {"type": "array", "items": {"$ref": "#/$defs/console"}},
+    "networkEvidence": {"type": "array", "items": {"$ref": "#/$defs/network"}},
+    "serverRequestLog": {"type": "array", "items": {"$ref": "#/$defs/serverRequest"}},
+    "controlledFixtureManifestDigest": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "networkSetDigest": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "blockedActions": {"type": "array", "items": {"$ref": "#/$defs/blockedAction"}},
+    "cleanup": {"$ref": "#/$defs/cleanup"},
+    "redactionMetrics": {"$ref": "#/$defs/redactionMetrics"},
+    "hostEvidenceRef": {"$ref": "#/$defs/safeRef"},
+    "hostEvidenceDigest": {"$ref": "#/$defs/sha256"},
+    "authorityMode": {"const": "external_tool_review_required"},
+    "receiptBound": {"const": true},
+    "verifiedItems": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "unverifiedItems": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[A-Z0-9_]+$"}},
+    "hardMetrics": {"$ref": "#/$defs/hardMetrics"},
+    "redactionStatus": {"const": "PASS"},
+    "reportDigest": {"$ref": "#/$defs/sha256"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"candidateResult": {"const": "PASS"}}, "required": ["candidateResult"]},
+      "then": {
+        "properties": {
+          "candidateErrorCode": {"type": "null"},
+          "errorCode": {"const": "HOST_ATTESTATION_UNAVAILABLE"},
+          "finalUrl": {"type": "string"},
+          "navigationEvidence": {"minItems": 2},
+          "interactionEvidence": {"minItems": 4, "maxItems": 4},
+          "geometryEvidence": {"minItems": 3, "maxItems": 3},
+          "screenshotEvidence": {"minItems": 6, "maxItems": 6},
+          "consoleEvidence": {"minItems": 2},
+          "networkEvidence": {"minItems": 4},
+          "serverRequestLog": {"minItems": 4},
+          "blockedActions": {"minItems": 2, "maxItems": 2},
+          "controlledFixtureManifestDigest": {"$ref": "#/$defs/sha256"},
+          "networkSetDigest": {"$ref": "#/$defs/sha256"},
+          "unverifiedItems": {
+            "minItems": 1,
+            "maxItems": 1,
+            "prefixItems": [{"const": "HOST_ATTESTATION_UNAVAILABLE"}],
+            "items": false
+          },
+          "verifiedItems": {
+            "minItems": 7,
+            "maxItems": 7,
+            "prefixItems": [
+              {"const": "candidate: process-local Browser contract/session consistency"},
+              {"const": "candidate: controlled loopback manifest and bidirectional network reconciliation"},
+              {"const": "candidate: DOM-bound menu/input/loading-success/loading-error interactions"},
+              {"const": "candidate: six V1 cropped screenshot byte hashes with selector exclusion"},
+              {"const": "candidate: V2 three-viewport geometry, overflow and occlusion"},
+              {"const": "candidate: fixed-enum console/network redaction and controlled 503"},
+              {"const": "candidate: task resource finalization fields"}
+            ],
+            "items": false
+          },
+          "browserContext": {
+            "properties": {
+              "browserName": {"const": "Codex In-app Browser"},
+              "browserType": {"const": "iab"},
+              "engine": {"const": "Chromium"},
+              "isolationKind": {"const": "task_context"}
+            }
+          },
+          "capabilityProbe": {
+            "properties": {
+              "result": {"const": "PASS"},
+              "errorCode": {"type": "null"},
+              "executionLayer": {"const": "Standard"},
+              "browserName": {"const": "Codex In-app Browser"},
+              "browserType": {"const": "iab"},
+              "engine": {"const": "Chromium"},
+              "isolationKind": {"const": "task_context"},
+              "features": {"$ref": "#/$defs/allFeaturesAvailable"}
+            },
+            "not": {"required": ["missingCapabilities"]}
+          },
+          "navigationEvidence": {
+            "allOf": [
+              {"contains": {"properties": {"kind": {"const": "navigation"}}, "required": ["kind"]}, "minContains": 1},
+              {"contains": {"properties": {"kind": {"const": "final"}, "route": {"const": "/"}}, "required": ["kind", "route"]}, "minContains": 1, "maxContains": 1}
+            ]
+          },
+          "interactionEvidence": {
+            "allOf": [
+              {"contains": {"$ref": "#/$defs/menuInteraction"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/searchInteraction"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/successInteraction"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/failureInteraction"}, "minContains": 1, "maxContains": 1}
+            ]
+          },
+          "geometryEvidence": {
+            "allOf": [
+              {"contains": {"properties": {"viewport": {"const": {"width": 375, "height": 812}}}, "required": ["viewport"]}, "minContains": 1, "maxContains": 1},
+              {"contains": {"properties": {"viewport": {"const": {"width": 768, "height": 1024}}}, "required": ["viewport"]}, "minContains": 1, "maxContains": 1},
+              {"contains": {"properties": {"viewport": {"const": {"width": 1440, "height": 900}}}, "required": ["viewport"]}, "minContains": 1, "maxContains": 1}
+            ]
+          },
+          "screenshotEvidence": {
+            "allOf": [
+              {"contains": {"$ref": "#/$defs/shot375Before"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/shot375After"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/shot768Before"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/shot768After"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/shot1440Before"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/shot1440After"}, "minContains": 1, "maxContains": 1}
+            ]
+          },
+          "consoleEvidence": {
+            "allOf": [
+              {"contains": {"$ref": "#/$defs/successConsole"}, "minContains": 1, "maxContains": 1},
+              {"contains": {"$ref": "#/$defs/failureConsole"}, "minContains": 1, "maxContains": 1}
+            ]
+          },
+          "networkEvidence": {
+            "allOf": [
+              {"contains": {"properties": {"route": {"const": "/"}}, "required": ["route"]}, "minContains": 1},
+              {"contains": {"properties": {"route": {"const": "/styles.css"}}, "required": ["route"]}, "minContains": 1},
+              {"contains": {"properties": {"route": {"const": "/app.js"}}, "required": ["route"]}, "minContains": 1},
+              {"contains": {"properties": {"method": {"const": "GET"}, "route": {"const": "/api/fail"}, "status": {"const": 503}}, "required": ["method", "route", "status"]}, "minContains": 1}
+            ]
+          },
+          "serverRequestLog": {
+            "contains": {
+              "properties": {"method": {"const": "GET"}, "route": {"const": "/api/fail"}, "status": {"const": 503}},
+              "required": ["method", "route", "status"]
+            },
+            "minContains": 1
+          },
+          "blockedActions": {
+            "allOf": [
+              {"contains": {"properties": {"target": {"const": "external-link"}, "code": {"const": "ORIGIN_NOT_APPROVED"}}, "required": ["target", "code"]}, "minContains": 1, "maxContains": 1},
+              {"contains": {"properties": {"target": {"const": "approval-action"}, "code": {"const": "SIDE_EFFECT_BLOCKED"}}, "required": ["target", "code"]}, "minContains": 1, "maxContains": 1}
+            ]
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "candidateErrorCode": {"enum": ["BROWSER_ISOLATION_UNAVAILABLE", "BROWSER_ENGINE_UNVERIFIED", "BROWSER_CAPABILITY_UNAVAILABLE"]},
+          "finalUrl": {"type": "null"},
+          "navigationEvidence": {"maxItems": 0},
+          "interactionEvidence": {"maxItems": 0},
+          "geometryEvidence": {"maxItems": 0},
+          "screenshotEvidence": {"maxItems": 0},
+          "consoleEvidence": {"maxItems": 0},
+          "networkEvidence": {"maxItems": 0},
+          "serverRequestLog": {"maxItems": 0},
+          "blockedActions": {"maxItems": 0},
+          "controlledFixtureManifestDigest": {"type": "null"},
+          "networkSetDigest": {"type": "null"},
+          "verifiedItems": {
+            "minItems": 2,
+            "maxItems": 2,
+            "prefixItems": [
+              {"const": "candidate: Browser safety contract"},
+              {"const": "candidate: task resource finalization fields"}
+            ],
+            "items": false
+          }
+        },
+        "oneOf": [
+          {"$ref": "#/$defs/isolationUnavailableCandidate"},
+          {"$ref": "#/$defs/engineUnverifiedCandidate"},
+          {"$ref": "#/$defs/capabilityUnavailableCandidate"}
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "safeRef": {"type": "string", "pattern": "^[A-Za-z0-9._:/-]{1,160}$"},
+    "origin": {"type": "string", "pattern": "^http://127\\.0\\.0\\.1(?::[0-9]{1,5})?$"},
+    "route": {"type": "string", "pattern": "^/(?!.*(?:^|/)\\.\\.(?:/|$))[^?#\\\\]*$"},
+    "viewport": {
+      "type": "object", "additionalProperties": false, "required": ["width", "height"],
+      "properties": {"width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1}}
+    },
+    "rect": {
+      "type": "object", "additionalProperties": false, "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "number", "minimum": 0}, "y": {"type": "number", "minimum": 0},
+        "width": {"type": "number", "exclusiveMinimum": 0}, "height": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "features": {
+      "type": "object", "additionalProperties": false,
+      "required": ["pageAccess", "viewportAndDpr", "domGeometry", "click", "input", "screenshot", "console", "networkFailure", "isolatedContext", "networkRedaction", "screenshotRedaction", "sideEffectClassification"],
+      "properties": {
+        "pageAccess": {"type": "boolean"}, "viewportAndDpr": {"type": "boolean"},
+        "domGeometry": {"type": "boolean"}, "click": {"type": "boolean"}, "input": {"type": "boolean"},
+        "screenshot": {"type": "boolean"}, "console": {"type": "boolean"}, "networkFailure": {"type": "boolean"},
+        "isolatedContext": {"type": "boolean"}, "networkRedaction": {"type": "boolean"},
+        "screenshotRedaction": {"type": "boolean"}, "sideEffectClassification": {"type": "boolean"}
+      }
+    },
+    "allFeaturesAvailable": {
+      "type": "object",
+      "properties": {
+        "pageAccess": {"const": true}, "viewportAndDpr": {"const": true},
+        "domGeometry": {"const": true}, "click": {"const": true}, "input": {"const": true},
+        "screenshot": {"const": true}, "console": {"const": true}, "networkFailure": {"const": true},
+        "isolatedContext": {"const": true}, "networkRedaction": {"const": true},
+        "screenshotRedaction": {"const": true}, "sideEffectClassification": {"const": true}
+      }
+    },
+    "evidenceViewport": {
+      "oneOf": [
+        {"const": {"width": 375, "height": 812}},
+        {"const": {"width": 768, "height": 1024}},
+        {"const": {"width": 1440, "height": 900}}
+      ]
+    },
+    "consoleSource": {
+      "oneOf": [
+        {"type": "object", "maxProperties": 0},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["origin", "route"],
+          "properties": {
+            "origin": {"$ref": "#/$defs/origin"},
+            "route": {"$ref": "#/$defs/route"}
+          }
+        }
+      ]
+    },
+    "menuInteraction": {
+      "allOf": [
+        {"$ref": "#/$defs/interaction"},
+        {
+          "properties": {
+            "target": {"const": "menu-toggle"},
+            "operation": {"const": "click"},
+            "observedStates": {"const": ["expanded:true", "expanded:false"]}
+          }
+        }
+      ]
+    },
+    "searchInteraction": {
+      "allOf": [
+        {"$ref": "#/$defs/interaction"},
+        {
+          "properties": {
+            "target": {"const": "task-search"},
+            "operation": {"const": "fill"},
+            "observedStates": {"const": ["filtered:1"]}
+          }
+        }
+      ]
+    },
+    "successInteraction": {
+      "allOf": [
+        {"$ref": "#/$defs/interaction"},
+        {
+          "properties": {
+            "target": {"const": "load-status"},
+            "operation": {"const": "click"},
+            "observedStates": {"const": ["loading", "success"]}
+          }
+        }
+      ]
+    },
+    "failureInteraction": {
+      "allOf": [
+        {"$ref": "#/$defs/interaction"},
+        {
+          "properties": {
+            "target": {"const": "simulate-failure"},
+            "operation": {"const": "click"},
+            "observedStates": {"const": ["loading", "error"]}
+          }
+        }
+      ]
+    },
+    "shot375Before": {
+      "allOf": [
+        {"$ref": "#/$defs/screenshot"},
+        {"properties": {"viewport": {"const": {"width": 375, "height": 812}}, "label": {"const": "before"}}}
+      ]
+    },
+    "shot375After": {
+      "allOf": [
+        {"$ref": "#/$defs/screenshot"},
+        {"properties": {"viewport": {"const": {"width": 375, "height": 812}}, "label": {"const": "after"}}}
+      ]
+    },
+    "shot768Before": {
+      "allOf": [
+        {"$ref": "#/$defs/screenshot"},
+        {"properties": {"viewport": {"const": {"width": 768, "height": 1024}}, "label": {"const": "before"}}}
+      ]
+    },
+    "shot768After": {
+      "allOf": [
+        {"$ref": "#/$defs/screenshot"},
+        {"properties": {"viewport": {"const": {"width": 768, "height": 1024}}, "label": {"const": "after"}}}
+      ]
+    },
+    "shot1440Before": {
+      "allOf": [
+        {"$ref": "#/$defs/screenshot"},
+        {"properties": {"viewport": {"const": {"width": 1440, "height": 900}}, "label": {"const": "before"}}}
+      ]
+    },
+    "shot1440After": {
+      "allOf": [
+        {"$ref": "#/$defs/screenshot"},
+        {"properties": {"viewport": {"const": {"width": 1440, "height": 900}}, "label": {"const": "after"}}}
+      ]
+    },
+    "successConsole": {
+      "allOf": [
+        {"$ref": "#/$defs/console"},
+        {
+          "properties": {
+            "eventCode": {"const": "ASYNC_SUCCESS"},
+            "relatedTarget": {"const": "load-status"},
+            "relatedMethod": {"const": null},
+            "relatedRoute": {"const": null},
+            "relatedStatus": {"const": null}
+          }
+        }
+      ]
+    },
+    "failureConsole": {
+      "allOf": [
+        {"$ref": "#/$defs/console"},
+        {
+          "properties": {
+            "eventCode": {"const": "NETWORK_FAILURE_503"},
+            "relatedTarget": {"const": "simulate-failure"},
+            "relatedMethod": {"const": "GET"},
+            "relatedRoute": {"const": "/api/fail"},
+            "relatedStatus": {"const": 503}
+          }
+        }
+      ]
+    },
+    "isolationUnavailableCandidate": {
+      "type": "object",
+      "required": ["candidateResult", "candidateErrorCode", "errorCode", "unverifiedItems", "capabilityProbe"],
+      "properties": {
+        "candidateResult": {"const": "NOT_VERIFIED"},
+        "candidateErrorCode": {"const": "BROWSER_ISOLATION_UNAVAILABLE"},
+        "errorCode": {"const": "BROWSER_ISOLATION_UNAVAILABLE"},
+        "unverifiedItems": {"const": ["BROWSER_ISOLATION_UNAVAILABLE"]},
+        "capabilityProbe": {
+          "properties": {
+            "result": {"const": "NOT_VERIFIED"},
+            "errorCode": {"const": "BROWSER_ISOLATION_UNAVAILABLE"},
+            "executionLayer": {"const": "Lite"}
+          },
+          "not": {"required": ["missingCapabilities"]}
+        }
+      }
+    },
+    "engineUnverifiedCandidate": {
+      "type": "object",
+      "required": ["candidateResult", "candidateErrorCode", "errorCode", "unverifiedItems", "capabilityProbe"],
+      "properties": {
+        "candidateResult": {"const": "NOT_VERIFIED"},
+        "candidateErrorCode": {"const": "BROWSER_ENGINE_UNVERIFIED"},
+        "errorCode": {"const": "BROWSER_ENGINE_UNVERIFIED"},
+        "unverifiedItems": {"const": ["BROWSER_ENGINE_UNVERIFIED"]},
+        "capabilityProbe": {
+          "properties": {
+            "result": {"const": "NOT_VERIFIED"},
+            "errorCode": {"const": "BROWSER_ENGINE_UNVERIFIED"},
+            "executionLayer": {"const": "Lite"}
+          },
+          "not": {"required": ["missingCapabilities"]}
+        }
+      }
+    },
+    "capabilityUnavailableCandidate": {
+      "type": "object",
+      "required": ["candidateResult", "candidateErrorCode", "errorCode", "unverifiedItems", "capabilityProbe"],
+      "properties": {
+        "candidateResult": {"const": "NOT_VERIFIED"},
+        "candidateErrorCode": {"const": "BROWSER_CAPABILITY_UNAVAILABLE"},
+        "errorCode": {"const": "BROWSER_CAPABILITY_UNAVAILABLE"},
+        "unverifiedItems": {"const": ["BROWSER_CAPABILITY_UNAVAILABLE"]},
+        "capabilityProbe": {
+          "required": ["missingCapabilities"],
+          "properties": {
+            "result": {"const": "NOT_VERIFIED"},
+            "errorCode": {"const": "BROWSER_CAPABILITY_UNAVAILABLE"},
+            "executionLayer": {"const": "Lite"}
+          }
+        }
+      }
+    },
+    "capabilityProbe": {
+      "type": "object", "additionalProperties": false,
+      "required": ["result", "errorCode", "executionLayer", "browserName", "browserType", "engine", "isolationKind", "sessionBindingDigest", "runId", "contextEvidenceRef", "tabOwnedByTask", "initialControlledTabs", "personalProfileUsed", "userTabClaimed", "historyRead", "cookiesRead", "storageRead", "features"],
+      "properties": {
+        "result": {"enum": ["PASS", "NOT_VERIFIED"]},
+        "errorCode": {"enum": [null, "BROWSER_ISOLATION_UNAVAILABLE", "BROWSER_ENGINE_UNVERIFIED", "BROWSER_CAPABILITY_UNAVAILABLE"]},
+        "executionLayer": {"enum": ["Lite", "Standard"]}, "browserName": {"type": "string"},
+        "browserType": {"type": "string"}, "engine": {"type": "string"}, "isolationKind": {"type": "string"},
+        "sessionBindingDigest": {"$ref": "#/$defs/sha256"}, "runId": {"$ref": "#/$defs/safeRef"},
+        "contextEvidenceRef": {"$ref": "#/$defs/safeRef"}, "tabOwnedByTask": {"const": true},
+        "initialControlledTabs": {"const": 0}, "personalProfileUsed": {"const": false},
+        "userTabClaimed": {"const": false}, "historyRead": {"const": false}, "cookiesRead": {"const": false},
+        "storageRead": {"const": false}, "features": {"$ref": "#/$defs/features"},
+        "missingCapabilities": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"enum": ["pageAccess", "viewportAndDpr", "domGeometry", "click", "input", "screenshot", "console", "networkFailure", "isolatedContext", "networkRedaction", "screenshotRedaction", "sideEffectClassification"]}
+        }
+      }
+    },
+    "browserContext": {
+      "type": "object", "additionalProperties": false,
+      "required": ["role", "browserName", "browserType", "engine", "isolationKind", "sessionBindingDigest", "contextEvidenceRef", "tabOwnedByTask", "initialControlledTabs", "personalProfileUsed", "userTabClaimed", "historyRead", "cookiesRead", "storageRead"],
+      "properties": {
+        "role": {"type": "string", "pattern": ".*\\S.*"}, "browserName": {"type": "string"},
+        "browserType": {"type": "string"}, "engine": {"type": "string"}, "isolationKind": {"type": "string"},
+        "sessionBindingDigest": {"$ref": "#/$defs/sha256"}, "contextEvidenceRef": {"$ref": "#/$defs/safeRef"},
+        "tabOwnedByTask": {"const": true}, "initialControlledTabs": {"const": 0},
+        "personalProfileUsed": {"const": false}, "userTabClaimed": {"const": false},
+        "historyRead": {"const": false}, "cookiesRead": {"const": false}, "storageRead": {"const": false}
+      }
+    },
+    "navigation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "kind", "origin", "route", "decision"],
+      "properties": {"runBindingDigest": {"$ref": "#/$defs/sha256"}, "kind": {"enum": ["navigation", "final"]}, "origin": {"$ref": "#/$defs/origin"}, "route": {"$ref": "#/$defs/route"}, "decision": {"const": "allow"}}
+    },
+    "interaction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "target", "operation", "actionKind", "targetSnapshotDigest", "observedStates", "result"],
+      "properties": {"runBindingDigest": {"$ref": "#/$defs/sha256"}, "target": {"enum": ["menu-toggle", "task-search", "load-status", "simulate-failure"]}, "operation": {"enum": ["click", "fill"]}, "actionKind": {"const": "local_ui_state"}, "targetSnapshotDigest": {"$ref": "#/$defs/sha256"}, "observedStates": {"type": "array", "minItems": 1, "items": {"type": "string"}}, "result": {"const": "PASS"}}
+    },
+    "geometry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "viewport", "dpr", "document", "criticalElements"],
+      "properties": {
+        "runBindingDigest": {"$ref": "#/$defs/sha256"}, "viewport": {"$ref": "#/$defs/evidenceViewport"},
+        "dpr": {"type": "number", "exclusiveMinimum": 0},
+        "document": {"type": "object", "additionalProperties": false, "required": ["scrollWidth", "clientWidth", "horizontalOverflow"], "properties": {"scrollWidth": {"type": "number", "minimum": 0}, "clientWidth": {"type": "number", "minimum": 0}, "horizontalOverflow": {"const": false}}},
+        "criticalElements": {
+          "type": "array", "minItems": 6,
+          "items": {"type": "object", "additionalProperties": false, "required": ["id", "rect", "visible", "occluded"], "properties": {"id": {"type": "string"}, "rect": {"$ref": "#/$defs/rect"}, "visible": {"const": true}, "occluded": {"const": false}}},
+          "allOf": [
+            {"contains": {"properties": {"id": {"const": "app-header"}}, "required": ["id"]}, "minContains": 1, "maxContains": 1},
+            {"contains": {"properties": {"id": {"const": "evidence-panel"}}, "required": ["id"]}, "minContains": 1, "maxContains": 1},
+            {"contains": {"properties": {"id": {"const": "task-search"}}, "required": ["id"]}, "minContains": 1, "maxContains": 1},
+            {"contains": {"properties": {"id": {"const": "load-status"}}, "required": ["id"]}, "minContains": 1, "maxContains": 1},
+            {"contains": {"properties": {"id": {"const": "simulate-failure"}}, "required": ["id"]}, "minContains": 1, "maxContains": 1},
+            {"contains": {"properties": {"id": {"const": "status-region"}}, "required": ["id"]}, "minContains": 1, "maxContains": 1}
+          ]
+        }
+      }
+    },
+    "screenshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "label", "viewport", "clip", "pixelSize", "sensitiveSelectorMatchCounts", "sensitiveRects", "coordinateSpace", "scrollX", "scrollY", "sha256", "size", "persisted"],
+      "properties": {"runBindingDigest": {"$ref": "#/$defs/sha256"}, "label": {"enum": ["before", "after"]}, "viewport": {"$ref": "#/$defs/evidenceViewport"}, "clip": {"$ref": "#/$defs/rect"}, "pixelSize": {"$ref": "#/$defs/viewport"}, "sensitiveSelectorMatchCounts": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1}}, "sensitiveRects": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/rect"}}, "coordinateSpace": {"const": "viewport_css_pixels"}, "scrollX": {"const": 0}, "scrollY": {"const": 0}, "sha256": {"$ref": "#/$defs/sha256"}, "size": {"type": "integer", "minimum": 9}, "persisted": {"const": false}}
+    },
+    "console": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "level", "eventCode", "source", "relatedTarget", "relatedMethod", "relatedRoute", "relatedStatus", "redactionApplied"],
+      "properties": {"runBindingDigest": {"$ref": "#/$defs/sha256"}, "level": {"enum": ["debug", "info", "log", "warn", "error"]}, "eventCode": {"enum": ["ASYNC_SUCCESS", "NETWORK_FAILURE_503", "REDACTED_CONSOLE_EVENT", "AUTH_BEARER_REDACTED", "EMAIL_REDACTED", "PHONE_REDACTED", "ID_REDACTED", "FIXTURE_MARKER_REDACTED", "PASSWORD_REDACTED"]}, "source": {"$ref": "#/$defs/consoleSource"}, "relatedTarget": {"type": ["string", "null"]}, "relatedMethod": {"type": ["string", "null"], "enum": ["GET", "HEAD", null]}, "relatedRoute": {"anyOf": [{"$ref": "#/$defs/route"}, {"type": "null"}]}, "relatedStatus": {"type": ["integer", "null"], "minimum": 0, "maximum": 599}, "redactionApplied": {"const": true}}
+    },
+    "network": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "origin", "route", "resourceType", "method", "status", "durationMs", "responseClass", "redactionCode", "redactionApplied"],
+      "properties": {"runBindingDigest": {"$ref": "#/$defs/sha256"}, "origin": {"$ref": "#/$defs/origin"}, "route": {"$ref": "#/$defs/route"}, "resourceType": {"enum": ["document", "stylesheet", "script", "fetch", "xhr", "image", "font", "other"]}, "method": {"enum": ["GET", "HEAD"]}, "status": {"type": "integer", "minimum": 0, "maximum": 599, "not": {"minimum": 300, "maximum": 399}}, "durationMs": {"type": "number", "minimum": 0}, "responseClass": {"enum": ["network_error", "success", "client_error", "server_error"]}, "redactionCode": {"enum": ["METADATA_ONLY", "AUTH_BEARER_REDACTED", "EMAIL_REDACTED", "PHONE_REDACTED", "ID_REDACTED", "FIXTURE_MARKER_REDACTED", "PASSWORD_REDACTED"]}, "redactionApplied": {"type": "boolean"}}
+    },
+    "serverRequest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "method", "route", "status"],
+      "properties": {"runBindingDigest": {"$ref": "#/$defs/sha256"}, "method": {"enum": ["GET", "HEAD"]}, "route": {"$ref": "#/$defs/route"}, "status": {"type": "integer", "minimum": 0, "maximum": 599, "not": {"minimum": 300, "maximum": 399}}}
+    },
+    "blockedAction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runBindingDigest", "target", "operation", "targetSnapshotDigest", "code", "guardAppliedBeforeAction", "actionExecuted", "tabDelta", "networkRequests", "urlChanged"],
+      "properties": {"runBindingDigest": {"$ref": "#/$defs/sha256"}, "target": {"enum": ["external-link", "approval-action"]}, "operation": {"const": "click"}, "targetSnapshotDigest": {"$ref": "#/$defs/sha256"}, "code": {"enum": ["ORIGIN_NOT_APPROVED", "SIDE_EFFECT_BLOCKED"]}, "guardAppliedBeforeAction": {"const": true}, "actionExecuted": {"const": false}, "tabDelta": {"const": 0}, "networkRequests": {"const": 0}, "urlChanged": {"const": false}}
+    },
+    "cleanup": {
+      "type": "object", "additionalProperties": false,
+      "required": ["browserTabsClosed", "finalControlledTabs", "serverStopped", "portReleased", "tempRootRemoved", "viewportReset", "downloadsRemoved", "rawScreenshotsAbsent", "finalized", "finalizeEvidenceRef", "lastBrowserAction", "browserActionsAfterFinalize"],
+      "properties": {"browserTabsClosed": {"const": true}, "finalControlledTabs": {"const": 0}, "serverStopped": {"const": true}, "portReleased": {"const": true}, "tempRootRemoved": {"const": true}, "viewportReset": {"const": true}, "downloadsRemoved": {"const": true}, "rawScreenshotsAbsent": {"const": true}, "finalized": {"const": true}, "finalizeEvidenceRef": {"$ref": "#/$defs/safeRef"}, "lastBrowserAction": {"const": "browser.tabs.finalize"}, "browserActionsAfterFinalize": {"const": 0}}
+    },
+    "redactionMetrics": {
+      "type": "object", "additionalProperties": false, "required": ["inputCount", "outputCount", "rawOccurrences"],
+      "properties": {"inputCount": {"type": "integer", "minimum": 0}, "outputCount": {"type": "integer", "minimum": 0}, "rawOccurrences": {"const": 0}}
+    },
+    "hardMetrics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["unauthorizedWrites", "originEscapes", "personalProfileReads", "sensitiveInformationLeaks", "unclearedTaskResources"],
+      "properties": {"unauthorizedWrites": {"const": 0}, "originEscapes": {"const": 0}, "personalProfileReads": {"const": 0}, "sensitiveInformationLeaks": {"const": 0}, "unclearedTaskResources": {"const": 0}}
+    }
+  }
+}

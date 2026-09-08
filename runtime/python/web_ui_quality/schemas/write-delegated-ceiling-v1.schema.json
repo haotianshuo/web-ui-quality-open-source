@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-ui-quality.local/4.1/write-delegated-ceiling-v1.schema.json",
+  "title": "Write Delegated Ceiling v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "ceilingId",
+    "taskId",
+    "allowedWriteRoots",
+    "allowedOperations",
+    "allowedIntent",
+    "forbiddenWriteRoots",
+    "expiresAt",
+    "ceilingDigest"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "ceilingId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "allowedWriteRoots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "allowedOperations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "CREATE",
+          "EDIT",
+          "DELETE",
+          "RENAME"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "allowedIntent": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "forbiddenWriteRoots": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ceilingDigest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
