@@ -11,3 +11,10 @@ dist/
 artifacts/
 reports/
 release-evidence-*/
+
+# Private recovery, browser, and evolution evidence
+evolution/
+external-challenge-track/
+codex-sessions/
+browser-state/
+LevelDB/

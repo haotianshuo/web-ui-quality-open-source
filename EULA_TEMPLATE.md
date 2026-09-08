@@ -2,6 +2,11 @@
 
 # Web UI Quality Commercial Use License Agreement
 
+> **Open-source boundary:** This is a commercial/historical template. It does
+> not apply to the MIT-licensed source in this public repository and cannot
+> reduce the rights granted by `LICENSE`. Use it only for a separately defined
+> commercial offering after legal review.
+
 Effective package: Web UI Quality 4.3.0.
 
 This Commercial Use License Agreement (the “Agreement”) applies to the Web UI

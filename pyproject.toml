@@ -35,6 +35,11 @@ validation = ["jsonschema>=4.20"]
 [project.scripts]
 web-ui-quality = "web_ui_quality.__main__:main"
 
+[project.urls]
+Homepage = "https://github.com/haotianshuo/web-ui-quality-open-source"
+Repository = "https://github.com/haotianshuo/web-ui-quality-open-source"
+Issues = "https://github.com/haotianshuo/web-ui-quality-open-source/issues"
+
 [tool.setuptools]
 package-dir = {"" = "runtime/python"}
 include-package-data = true

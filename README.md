@@ -10,6 +10,28 @@ records, browser storage, external worktrees, and internal evolution evidence
 are intentionally outside this repository. See [PUBLICATION.md](PUBLICATION.md)
 for the boundary and provenance record.
 
+## Install and try it
+
+From a local checkout:
+
+```bash
+python -m pip install -e .
+web-ui-quality doctor
+```
+
+Run the self-contained public checks with:
+
+```bash
+python -B -m pytest -q
+```
+
+## Contact
+
+For project questions, provenance corrections, or contribution coordination,
+contact `xrlcom@126.com`. Do not send passwords, API keys, cookies, storage
+state, private customer data, or other secrets by email. Security reports
+should follow [SECURITY.md](SECURITY.md).
+
 ## 4.3.0 Commercial Stable status
 
 4.3.0 preserves the 4.2.3 Trust Kernel and V3 receipt/evidence authority while adding a bounded, non-authoritative intelligence extension: Task Fingerprint/Graph observations, execution budgets, design intent routing, candidate arena binding, evidence-qualified design gates, and memory-authority decisions. These additions cannot write project files or promote VERIFIED claims by themselves.

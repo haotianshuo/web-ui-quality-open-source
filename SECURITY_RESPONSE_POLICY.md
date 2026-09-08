@@ -8,11 +8,12 @@ the customer’s incident-response plan.
 
 ## 1. Report privately
 
-Submit a suspected vulnerability through the commercial order or distribution
-channel that supplied the package, using its private security-reporting path.
-If that channel supplies a repository security-advisory mechanism, use that
-mechanism. Do not disclose secrets, live credentials, private customer data, or
-an exploitable production payload in a public issue.
+For this open-source repository, use GitHub's private Security Advisory channel
+when it is available, or email `xrlcom@126.com` with the subject
+`Security report — web-ui-quality`. Do not disclose secrets, live credentials,
+private customer data, or an exploitable production payload in a public issue.
+If the report concerns a separately supplied commercial package, use the
+private security-reporting path named by that package's signed order.
 
 ## 2. Useful report contents
 

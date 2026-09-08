@@ -2,7 +2,7 @@ include README.md LICENSE THIRD_PARTY_NOTICES.md CHANGELOG.md SECURITY.md KNOWN_
 include PRODUCT_EXPERIENCE_CONSULTANT_3.6.md COMMERCIAL_RELEASE_CHECKLIST.md COMPATIBILITY_MATRIX.md
 recursive-include .codex-plugin *.json
 recursive-include assets *.svg
-recursive-include evolution *
+prune evolution
 recursive-include runtime/python/web_ui_quality *.py
 include runtime/python/web_ui_quality/browser_runner.cjs
 recursive-include runtime/python/web_ui_quality/schemas *.json
