@@ -1,7 +1,7 @@
 {
   "claimBoundary": "This manifest proves deterministic package-tree composition. The final archive SHA-256 is external and is not self-referenced here; Real Codex Host qualification is not implied.",
   "evidenceSchemaVersion": "3.0",
-  "fileCount": 533,
+  "fileCount": 534,
   "files": [
     {
       "bytes": 4200,
@@ -64,9 +64,9 @@
       "sha256": "7ee1e2fab15d3043e2b78f1bb1ac0840d47c6ed7b10f13bcc25e21a56731e10e"
     },
     {
-      "bytes": 1095,
+      "bytes": 1036,
       "path": "MANIFEST.in",
-      "sha256": "eb9bb8ad0c3354f6341b7edb8f20debfa75d2ecf52a6903ba6eecb8400891ac7"
+      "sha256": "109c823d2b256bcb5426932116e0d63c4afe3843b5e2758f8d894e33b52666a7"
     },
     {
       "bytes": 1142,
@@ -99,9 +99,9 @@
       "sha256": "15c489163b454d70844a326f3d7cfe16753db0fa6d24b7e53dfdf9aacedd1528"
     },
     {
-      "bytes": 4475,
+      "bytes": 5340,
       "path": "SECURITY.md",
-      "sha256": "373587fbbc03d3da3be102ddc333fdf80ebbbbe97c3eb404b67c3df6cd611753"
+      "sha256": "3dc21fc006239fc489718cf23b25e96372f6692b837b86ab5ff6421f7e4b92a1"
     },
     {
       "bytes": 2437,
@@ -2344,6 +2344,11 @@
       "sha256": "a6344e3d93ebf869d3ee124f01c3740af89c897c24d7accbd9acb4681f380296"
     },
     {
+      "bytes": 700,
+      "path": "tests/README.md",
+      "sha256": "3862a4fcfb76f7cd6cb83da95a1e6e9331b14cc2e34ccc038fea3900366fbd85"
+    },
+    {
       "bytes": 1232,
       "path": "tests/conftest.py",
       "sha256": "2a3597205724b6333738ca19adc9f59768757bc3b1841b09ca6574c03a4cc12a"
@@ -2672,7 +2677,7 @@
   "kernelBaseVersion": "4.0.0-rc.1",
   "kernelVersion": "4.2.3",
   "packageStage": "4.3.0-stable",
-  "packageTreeDigest": "157b432018de79d32e4951231595d69d0a3c9f69b47c1259f56f79f5fb7fbf87",
+  "packageTreeDigest": "e27e626b9172a3481b11b1ca6a045ab7f24081ce312748bf5bf1344f27dd6f36",
   "packageVersion": "4.3.0",
   "pluginVersion": "4.3.0",
   "product": "web-ui-quality",

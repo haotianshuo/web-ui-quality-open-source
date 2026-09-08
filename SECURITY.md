@@ -4,6 +4,22 @@
 
 The package identity is 4.3.0; the Trust Kernel identity is 4.2.3.
 
+## Reporting a Vulnerability
+
+If you discover a security vulnerability in this open-source repository, report
+it privately through one of these channels:
+
+- **GitHub Security Advisories:** [open a private report](https://github.com/haotianshuo/web-ui-quality-open-source/security/advisories/new)
+- **Email:** `xrlcom@126.com` with the subject `[SECURITY] web-ui-quality`
+
+Do not disclose credentials, private customer data, or an exploitable payload in
+a public issue. Please include the affected version, operating system, a
+minimal sanitized reproduction, impact, and any relevant file or gate name.
+See [SECURITY_RESPONSE_POLICY.md](SECURITY_RESPONSE_POLICY.md) for the handling
+boundary. Response timing and public acknowledgements depend on the report and
+available maintainer capacity; this project does not promise an unconditional
+service-level agreement.
+
 
 - Runtime cannot invent, infer, deserialize or cache source-write authority.
 - Runtime produces Patch Candidates only; the Host owns actual project writes and repair-scope restoration.
