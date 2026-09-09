@@ -347,20 +347,14 @@ def _verify_composite_release(root: Path) -> None:
     digest=_tree_digest_from_rows(rows)
     if digest != release.get("packageTreeDigest") or digest != composite.get("packageTreeDigest"):
         raise RuntimeError("package tree digest mismatch")
-    # The private commercial candidate ships its evolution ledger. The public
-    # source snapshot intentionally does not, so its manifest is verified only
-    # against the files in the public package boundary.
-    if (root / "evolution").is_dir():
-        listed = {str(row.get("path") or "") for row in rows}
-        missing = sorted(EXPECTED_EVOLUTION_ARTIFACTS - listed)
-        if missing:
-            raise RuntimeError("release manifest omits required evolution artifacts: " + ", ".join(missing))
+    listed = {str(row.get("path") or "") for row in rows}
+    missing = sorted(EXPECTED_EVOLUTION_ARTIFACTS - listed)
+    if missing:
+        raise RuntimeError("release manifest omits required evolution artifacts: " + ", ".join(missing))
 
 
 def _verify_evolution_contract(root: Path) -> None:
     """Verify the shipped planning contract is present and fail-closed."""
-    if not (root / "evolution").is_dir():
-        return
     paths = {name: root / name for name in EXPECTED_EVOLUTION_ARTIFACTS}
     missing = sorted(name for name, path in paths.items() if not path.is_file())
     if missing:
@@ -408,18 +402,11 @@ def verify(browser_executable: Path | None = None, *, release_run_id: str | None
         raise RuntimeError("plugin root and manifest name do not match")
     if manifest.get("version") != EXPECTED_VERSION or f'version = "{EXPECTED_VERSION}"' not in pyproject:
         raise RuntimeError("distribution package version identity is inconsistent")
-    if manifest.get("license") != "MIT" or 'license = "MIT"' not in pyproject:
-        raise RuntimeError("public source license identity is inconsistent")
     if PACKAGE_VERSION != EXPECTED_VERSION or KERNEL_VERSION != EXPECTED_KERNEL_VERSION or KERNEL_BASE_VERSION != EXPECTED_KERNEL_BASE_VERSION:
         raise RuntimeError("runtime package/kernel identity is inconsistent")
     _verify_composite_release(ROOT)
     _verify_evolution_contract(ROOT)
-    detail = f"package {EXPECTED_VERSION} / kernel {EXPECTED_KERNEL_VERSION} / base {EXPECTED_KERNEL_BASE_VERSION} / composite manifest"
-    if (ROOT / "evolution").is_dir():
-        detail += " / evolution contract"
-    else:
-        detail += " / public boundary (private evolution excluded)"
-    checks.append({"id": "DIST-001", "status": "PASS", "detail": detail})
+    checks.append({"id": "DIST-001", "status": "PASS", "detail": f"package {EXPECTED_VERSION} / kernel {EXPECTED_KERNEL_VERSION} / base {EXPECTED_KERNEL_BASE_VERSION} / composite manifest / evolution contract"})
 
     doctor = _json_output(_run(_runtime_command("doctor", "--compact")), "doctor")
     if doctor.get("runtime") != "PASS" or doctor.get("schemaStatus") != "PASS":
@@ -536,6 +523,7 @@ def verify(browser_executable: Path | None = None, *, release_run_id: str | None
             product_confirmation=packet,
             approval_receipt=trusted,
             browser_executable=effective_browser,
+            design_ui=True,
         )
         if browser_available:
             if commercial.get("status") != "COMMERCIAL_WORKFLOW_PASS":
@@ -635,7 +623,7 @@ def verify(browser_executable: Path | None = None, *, release_run_id: str | None
         "status": "PASS",
         "version": EXPECTED_VERSION,
         "releaseRunId": release_run_id,
-        "scope": "PUBLIC_SOURCE_DISTRIBUTION" if not (ROOT / "evolution").is_dir() else "COMMERCIAL_RELEASE_WORKFLOW",
+        "scope": "COMMERCIAL_RELEASE_WORKFLOW",
         "checks": checks,
         "browserQualification": browser_qualification,
         "environmentBoundaries": ["patch integration", "authenticated production mutation", "causal business claim", "distributor legal terms"],

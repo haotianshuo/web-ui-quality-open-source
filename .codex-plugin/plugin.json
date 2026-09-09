@@ -1,8 +1,9 @@
 {
   "author": {
-    "name": "Web UI Quality Contributors"
+    "name": "Web UI Quality Contributors",
+    "email": "xrlcom@126.com"
   },
-  "description": "Web UI Quality 4.3.0: 4.2.3 Trust Kernel plus bounded, non-authoritative intelligence for task control, design intent, candidate routing, evidence qualification, and memory authority.",
+  "description": "Web UI Quality 4.3.0: an Apache-2.0 candidate that helps AI-assisted Web changes stay scoped, reviewable, and evidence-backed.",
   "interface": {
     "brandColor": "#166B4F",
     "capabilities": [
@@ -27,13 +28,13 @@
     "defaultPrompt": [
       "直接描述目标：检查/点评默认只读；修复/改好进入受控修复与验证；意图不明确时默认只读。",
       "普通项目内已授权修复不重复确认；新增依赖、凭据、项目外写入、生产访问、Git/发布或降低安全隔离必须显式确认。",
-      "Web UI Quality 4.3.0（Trust Kernel 4.2.3） 负责范围、Host Receipt、Drift、Browser 证据与最终 Claim；证据不足必须保持部分未验证或需要用户处理。"
+      "Web UI Quality 4.3.0（Trust Kernel 4.2.3）负责范围、Host Receipt、Drift、Browser 证据与最终 Claim；证据不足必须保持部分未验证或需要用户处理。"
     ],
-    "developerName": "Web UI Quality Contributors",
+    "developerName": "Web UI Quality contributors",
     "displayName": "Web UI Quality",
     "logo": "./assets/logo.svg",
     "logoDark": "./assets/logo-dark.svg",
-    "longDescription": "Web UI Quality 4.3.0 preserves the 4.2.3 Trust Kernel for Host-gated writes, V3 receipts, secure Browser evidence and claim boundaries, while adding bounded non-authoritative intelligence for task graphs, budgets, design intent, candidate routing, evidence qualification and memory authority.",
+    "longDescription": "Web UI Quality is a safety and evidence layer around AI-assisted Web changes. It keeps scope, Host-gated writes, receipts, Browser evidence, drift checks, and verification claims separate from the Host model that reasons about the code.",
     "shortDescription": "一句话让 AI 受控修 Web Bug、调 UI、改老项目；明确范围、证据、回归和未知项。"
   },
   "keywords": [
@@ -43,8 +44,7 @@
     "browser-safety",
     "codex-skill"
   ],
-  "license": "MIT",
-  "longDescription": "Web UI Quality 4.3.0 preserves the 4.2.3 Trust Kernel for Host-gated writes, V3 receipts, secure Browser evidence and claim boundaries, while adding bounded non-authoritative intelligence for task graphs, budgets, design intent, candidate routing, evidence qualification and memory authority.",
+  "license": "Apache-2.0",
   "name": "web-ui-quality",
   "skills": "./skills/",
   "version": "4.3.0"

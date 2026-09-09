@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from pathlib import Path
+
+from _ui_inventory_acceptance import run_ui_inventory_acceptance
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,18 +16,7 @@ def test_inventory_demo_save_button_uses_one_shared_visual_contract() -> None:
     assert "border-radius: var(--control-radius)" in fixture
     assert fixture.count("button.save") == 3
 
-    completed = subprocess.run(
-        [sys.executable, "-B", "scripts/ui_inventory_acceptance.py"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        timeout=60,
-    )
-    assert completed.returncode == 0, completed.stderr or completed.stdout
-    result = json.loads(completed.stdout)
-    assert result["status"] == "PASS"
+    run_ui_inventory_acceptance()
 
     report = json.loads((ROOT / "examples/ui-inventory-evidence/ui-inventory.json").read_text(encoding="utf-8"))
     inventory = report["inventory"]

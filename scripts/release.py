@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate and reproducibly package the Web UI Quality public source release."""
+"""Validate and reproducibly package the Web UI Quality Apache source candidate."""
 from __future__ import annotations
 
 import argparse
@@ -28,17 +28,19 @@ from web_ui_quality.release_info import (PRODUCT_NAME, PACKAGE_STAGE, PACKAGE_VE
 
 
 ROOT_FILES = {
-    "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "CHANGELOG.md", "SECURITY.md",
-    "KNOWN_LIMITATIONS.md", "ARCHITECTURE.md", "COMMERCIAL_RELEASE_CHECKLIST.md",
-    "COMPATIBILITY_MATRIX.md", "REPAIR_MODERNIZATION_ACCEPTANCE.md", "GUIDED_REPAIR_QUICKSTART.md", "AGENT_BENCHMARK_PROTOCOL.md",
+    "README.md", "LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md", "CHANGELOG.md",
+    "SECURITY.md", "SECURITY_RESPONSE_POLICY.md", "PUBLICATION.md", "SOURCE_PROVENANCE.md",
+    "TRADEMARKS.md", "CONTRIBUTING.md", "pytest.ini", "MANIFEST.in", "pyproject.toml",
+    "setup.cfg", "run_tests.py", "KNOWN_LIMITATIONS.md", "ARCHITECTURE.md",
+    "COMPATIBILITY_MATRIX.md", "REPAIR_MODERNIZATION_ACCEPTANCE.md",
+    "GUIDED_REPAIR_QUICKSTART.md", "AGENT_BENCHMARK_PROTOCOL.md",
     "ADAPTIVE_TRUST_KERNEL_RFC.md", "PRODUCT_MEASUREMENT_SPEC.md",
-    "EULA_TEMPLATE.md", "PRIVACY_NOTICE_TEMPLATE.md", "SUPPORT_POLICY_TEMPLATE.md", "SECURITY_RESPONSE_POLICY.md",
-    "MANIFEST.in", "pyproject.toml", "setup.cfg", "run_tests.py",
-    "PUBLICATION.md", "NOTICE.md", "CONTRIBUTING.md", "pytest.ini",
+    "FINAL_PUBLIC_SOURCE_MANIFEST.json",
+    ".gitignore",
 }
 # The public snapshot deliberately excludes the private evolution ledger and
 # external challenge evidence. Public packaging must use this same boundary.
-ROOT_DIRS = {".codex-plugin", "assets", "examples", "references", "runtime", "schemas", "scripts", "skills", "tests"}
+ROOT_DIRS = {".codex-plugin", ".github", "assets", "examples", "references", "runtime", "schemas", "scripts", "skills", "tests"}
 EXCLUDED_PARTS = {
     ".git", ".pytest_cache", ".test-workspace", "__pycache__", "build", "dist",
     "external-proof", "reports",
@@ -52,17 +54,27 @@ FULL_RELEASE_GATE_TIMEOUT_SECONDS = 960
 
 CURRENT_USER_DOCS = {
     "README.md", "ARCHITECTURE.md", "KNOWN_LIMITATIONS.md", "COMPATIBILITY_MATRIX.md",
-    "COMMERCIAL_RELEASE_CHECKLIST.md", "REPAIR_MODERNIZATION_ACCEPTANCE.md", "GUIDED_REPAIR_QUICKSTART.md", "SECURITY.md", "AGENT_BENCHMARK_PROTOCOL.md",
+    "REPAIR_MODERNIZATION_ACCEPTANCE.md", "GUIDED_REPAIR_QUICKSTART.md", "SECURITY.md", "AGENT_BENCHMARK_PROTOCOL.md",
     "ADAPTIVE_TRUST_KERNEL_RFC.md", "PRODUCT_MEASUREMENT_SPEC.md",
 }
 
-COMMERCIAL_DOCUMENTS = {
-    "EULA_TEMPLATE.md", "PRIVACY_NOTICE_TEMPLATE.md", "SUPPORT_POLICY_TEMPLATE.md", "SECURITY_RESPONSE_POLICY.md",
+COMMERCIAL_DOCUMENTS: set[str] = set()
+PUBLIC_RELEASE_EXCLUDED_FILES = {
+    "tests/test_411_ga_identity_closure.py",
+    "tests/test_41_ga_release.py",
+    "tests/test_420_execution_contract.py",
+    "tests/test_43_controlled_intelligence.py",
+    "tests/test_evolution_governance.py",
+    "tests/test_phase1_boundary_closure_release.py",
+    "tests/test_rc1_closure.py",
+    "tests/test_shadow_candidate_packaging.py",
 }
 
 
 def _is_included(path: Path) -> bool:
     rel = path.relative_to(ROOT)
+    if rel.as_posix() in PUBLIC_RELEASE_EXCLUDED_FILES:
+        return False
     if path.is_dir() or any(
         part in EXCLUDED_PARTS
         or part.endswith(".egg-info")
@@ -168,11 +180,14 @@ def parse_release_doc_identity(text: str) -> dict[str, str | None]:
 def _validate_identity() -> None:
     plugin = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
     runtime_info = (ROOT / "runtime" / "python" / "web_ui_quality" / "release_info.py").read_text(encoding="utf-8")
-    if ROOT.name != PRODUCT_NAME or plugin.get("name") != PRODUCT_NAME:
-        raise SystemExit("plugin folder and manifest name must both be web-ui-quality")
-    if plugin.get("license") != "MIT" or 'license = "MIT"' not in pyproject:
-        raise SystemExit("public source license metadata is inconsistent")
+    if plugin.get("name") != PRODUCT_NAME:
+        raise SystemExit("plugin manifest name must be web-ui-quality")
+    if plugin.get("license") != "Apache-2.0" or 'license = "Apache-2.0"' not in pyproject:
+        raise SystemExit("Apache source license metadata is inconsistent")
+    if not (license_text.lstrip().startswith("Apache License") and "TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION" in license_text):
+        raise SystemExit("LICENSE is not the standard Apache-2.0 text")
     if plugin.get("version") != PACKAGE_VERSION: raise SystemExit("plugin manifest version is inconsistent")
     if f'version = "{PACKAGE_VERSION}"' not in pyproject: raise SystemExit("pyproject version is inconsistent")
     checks = {
@@ -181,7 +196,7 @@ def _validate_identity() -> None:
     }
     for field, value in checks.items():
         if f'{field} = "{value}"' not in runtime_info: raise SystemExit(f"runtime identity mismatch: {field}")
-    if f'commercial-release-stage = "{RELEASE_STAGE}"' not in pyproject: raise SystemExit("release stage is inconsistent")
+    if f'open-source-release-stage = "{RELEASE_STAGE}"' not in pyproject: raise SystemExit("release stage is inconsistent")
     public_dir, runtime_dir = ROOT / "schemas", ROOT / "runtime" / "python" / "web_ui_quality" / "schemas"
     public = {p.name: p.read_bytes() for p in public_dir.glob("*.json")}
     packaged = {p.name: p.read_bytes() for p in runtime_dir.glob("*.json")}
@@ -191,7 +206,7 @@ def _validate_identity() -> None:
     if schema_version != PACKAGE_VERSION: raise SystemExit("product report schema package identity mismatch")
     expected_doc_identity = {
         "packageVersion": PACKAGE_VERSION,
-        "packageStage": "Commercial Stable",
+        "packageStage": "4.3.0-open-source",
         "kernelVersion": KERNEL_VERSION,
         "kernelBaseVersion": KERNEL_BASE_VERSION,
         "receiptProtocol": RECEIPT_PROTOCOL_VERSION,
@@ -371,7 +386,12 @@ def validate() -> dict[str, object]:
     return {
         "status": "PASS",
         "commercialGA": "NOT_ESTABLISHED",
+        "openSourceLicense": "Apache-2.0",
+        "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
+        "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
+        "publicationStatus": "HOLD_PUBLIC_GITHUB_RELEASE",
         "promotionStatus": "CANDIDATE_ONLY",
+        "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
         "version": PACKAGE_VERSION,
         "packageStage": PACKAGE_STAGE,
         "stage": RELEASE_STAGE,
@@ -425,7 +445,12 @@ def main() -> int:
         print(json.dumps({
             "status": "PASS",
             "commercialGA": "NOT_ESTABLISHED",
+            "openSourceLicense": "Apache-2.0",
+            "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
+            "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
+            "publicationStatus": "HOLD_PUBLIC_GITHUB_RELEASE",
             "promotionStatus": "CANDIDATE_ONLY",
+            "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
             "version": PACKAGE_VERSION,
             "packageStage": PACKAGE_STAGE,
             "stage": RELEASE_STAGE,

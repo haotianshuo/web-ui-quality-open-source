@@ -56,7 +56,8 @@ from .design_intelligence import archetype_catalog, generate_design_candidates
 from .production_mapper import build_production_plan, generate_production_scaffold
 from .visual_builder import generate_visual_builder
 from .product_experience_consultant import build_product_experience_report, export_product_experience_report
-from .commercial_upgrade import run_commercial_upgrade
+from .commercial_upgrade import refresh_commercial_ui_state, run_commercial_upgrade
+from .design_gallery import render_design_gallery
 from .smart_product_discovery import (
     apply_cached_product_confirmation,
     build_product_discovery,
@@ -106,6 +107,7 @@ _EXPERT_COMMAND_DESCRIPTIONS = {
     "product-consult": "complete product journey and planning workflow",
     "upgrade": "read-only product diagnosis or explicitly requested isolated upgrade",
     "commercial-upgrade": "advanced full isolated candidate workflow",
+    "design-ui": "render the optional decision workbench on demand",
     "finalize-design": "promote a selected isolated design candidate",
     "validate-transformation": "validate runnable Before/After candidates",
     "measure-outcome": "compare observational event exports",
@@ -156,6 +158,7 @@ def _add_product_discovery_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--mode", choices=("diagnose", "full"), help="diagnose is the safe default; full creates isolated design candidates only when explicitly requested")
     parser.add_argument("--model-profile", help="optional host capability profile or model label; unknown values fall back to the baseline contract")
     parser.add_argument("--security-audit", action="store_true", help="opt in to the separate static security findings; off by default in product consultation")
+    parser.add_argument("--design-ui", action="store_true", help="opt in to rendering the local design decision workbench")
     # Kept parseable for old callers, but never accepted as authorization.
     parser.add_argument("--assume-discovery", action="store_true", help=argparse.SUPPRESS)
 
@@ -524,6 +527,13 @@ def _parser() -> argparse.ArgumentParser:
     finalize_design.add_argument("upgrade_output")
     finalize_design.add_argument("decision", type=Path, help="design-decision.json downloaded from the gallery")
     finalize_design.add_argument("--compact", action="store_true")
+
+    design_ui = subparsers.add_parser(
+        "design-ui",
+        help="按需渲染隔离升级输出中的设计决策工作台；默认流程不会启动 UI",
+    )
+    design_ui.add_argument("upgrade_output", help="包含 design-gallery/design-review.json 的升级输出目录")
+    design_ui.add_argument("--compact", action="store_true")
 
     validate_transformation_cmd = subparsers.add_parser(
         "validate-transformation",
@@ -1517,6 +1527,7 @@ def main(argv: list[str] | None = None) -> int:
                 mode=normalize_mode(args.mode, default="diagnose"),
                 security_audit=bool(getattr(args, "security_audit", False)),
                 model_profile=getattr(args, "model_profile", None),
+                design_ui=bool(getattr(args, "design_ui", False)),
             )
             if result.get("mode") == "diagnose":
                 _emit({
@@ -1528,12 +1539,18 @@ def main(argv: list[str] | None = None) -> int:
                     "gates": result.get("gates"), "sourceProjectChanged": False, "patchIntegrationAuthorized": False,
                 }, compact=args.compact)
                 return 0 if result.get("status") == "PRODUCT_DIAGNOSIS_READY" else 1
+            ui = result.get("ui") if isinstance(result.get("ui"), Mapping) else {}
+            open_artifact = (
+                str(output / str(ui.get("artifact")))
+                if ui.get("status") == "RENDERED" and ui.get("artifact")
+                else None
+            )
             _emit({
                 "status": result.get("status"), "mode": result.get("mode"), "product": result.get("product"), "selectedVariantId": result.get("selectedVariantId"),
                 "message": "已生成隔离设计候选；现在只需要比较并确认一个方向。",
-                "open": str(output / "design-gallery" / "index.html"), "openFirst": str(output / "design-gallery" / "index.html"),
+                "open": open_artifact, "openFirst": open_artifact, "ui": ui,
                 "report": str(output / "commercial-release-report.html"), "decision": result.get("decision"),
-                "nextAction": "比较候选并确认方向；技术集成仍需单独明确授权。",
+                "nextAction": (result.get("decision") or {}).get("nextActions", ["按需运行 design-ui"])[0],
                 "nonTechnicalSteps": ["比较候选作品", "切换 Before / After 与设备", "确认方向", "交给 Codex 定稿"],
                 "gates": result.get("gates"), "sourceProjectChanged": False, "patchIntegrationAuthorized": False,
             }, compact=args.compact)
@@ -1576,6 +1593,13 @@ def main(argv: list[str] | None = None) -> int:
                 mode=normalize_mode(args.mode, default="full"),
                 security_audit=bool(getattr(args, "security_audit", False)),
                 model_profile=getattr(args, "model_profile", None),
+                design_ui=bool(getattr(args, "design_ui", False)),
+            )
+            ui = result.get("ui") if isinstance(result.get("ui"), Mapping) else {}
+            open_artifact = (
+                str(Path(output) / str(ui.get("artifact")))
+                if result.get("mode") == "full" and ui.get("status") == "RENDERED" and ui.get("artifact")
+                else ("consultation/product-experience-brief/index.html" if result.get("mode") != "full" else None)
             )
             _emit({
                 "status": result.get("status"),
@@ -1583,14 +1607,51 @@ def main(argv: list[str] | None = None) -> int:
                 "product": result.get("product"),
                 "decision": result.get("decision"),
                 "gates": result.get("gates"),
-                "open": "design-gallery/index.html" if result.get("mode") == "full" else "consultation/product-experience-brief/index.html",
-                "openFirst": "design-gallery/index.html" if result.get("mode") == "full" else "consultation/product-experience-brief/index.html",
-                "nextAction": "比较候选作品并确认方向；技术集成仍需明确授权。" if result.get("mode") == "full" else "先确认只读诊断与推荐方向。",
+                "open": open_artifact,
+                "openFirst": open_artifact,
+                "ui": ui,
+                "nextAction": ((result.get("decision") or {}).get("nextActions") or ["按需运行 design-ui"])[0] if result.get("mode") == "full" else "先确认只读诊断与推荐方向。",
                 "report": "commercial-release-report.json",
                 "sourceProjectChanged": result.get("sourceProjectChanged"),
                 "patchIntegrationAuthorized": result.get("patchIntegrationAuthorized"),
             }, compact=args.compact)
             return 0 if result.get("status") == "COMMERCIAL_WORKFLOW_PASS" else 1
+
+        if args.command == "design-ui":
+            upgrade_output = Path(args.upgrade_output).expanduser().resolve()
+            gallery_dir = upgrade_output / "design-gallery"
+            report_path = gallery_dir / "design-review.json"
+            if not report_path.is_file():
+                raise ContractViolation(
+                    "DESIGN_REVIEW_REQUIRED",
+                    [f"$: missing {report_path}; run an isolated upgrade first"],
+                )
+            report_value = load_json(report_path)
+            if not isinstance(report_value, Mapping):
+                raise ContractViolation("DESIGN_REVIEW_INVALID", ["$: design-review.json must contain an object"])
+            rendered_report = dict(report_value)
+            rendered_report["ui"] = {"requested": True, "status": "RENDERED"}
+            ui_state = {"requested": True, **render_design_gallery(rendered_report, gallery_dir)}
+            rendered_report["ui"] = ui_state
+            report_path.write_text(
+                json.dumps(rendered_report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            release = refresh_commercial_ui_state(upgrade_output, ui_state)
+            _emit({
+                "status": "DESIGN_UI_RENDERED",
+                "mode": "on-demand",
+                "open": str(gallery_dir / "index.html"),
+                "openFirst": str(gallery_dir / "index.html"),
+                "artifacts": {
+                    "workbench": str(gallery_dir / "index.html"),
+                    "brief": str(gallery_dir / "executive-decision-brief.md"),
+                    "designReview": str(report_path),
+                },
+                "releaseReportUpdated": release is not None,
+                "sourceProjectChanged": False,
+            }, compact=args.compact)
+            return 0
 
         if args.command == "finalize-design":
             result = finalize_design_selection(args.upgrade_output, args.decision)

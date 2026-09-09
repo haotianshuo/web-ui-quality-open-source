@@ -1,4 +1,4 @@
-"""Release identity for Web UI Quality 4.3.0 with the sealed 4.2.3 Trust Kernel.
+"""Release identity for the Web UI Quality 4.3.0 Apache-2.0 source candidate.
 
 Package, current kernel, protocol, evidence schema, and historical kernel-base
 identity are deliberately separate.  Legacy evidence may reference the base
@@ -12,7 +12,7 @@ import sys
 PRODUCT_NAME = "web-ui-quality"
 PLUGIN_VERSION = "4.3.0"
 PACKAGE_VERSION = PLUGIN_VERSION
-PACKAGE_STAGE = "4.3.0-stable"
+PACKAGE_STAGE = "4.3.0-open-source"
 KERNEL_VERSION = "4.2.3"
 KERNEL_BASE_VERSION = "4.0.0-rc.1"
 LEGACY_PRODUCT_VERSION = KERNEL_BASE_VERSION
@@ -21,11 +21,11 @@ RECEIPT_PROTOCOL_VERSION = "3.0"
 EVIDENCE_SCHEMA_VERSION = "3.0"
 CONTRACT_VERSION = "3.0"
 WORKFLOW_CONTRACT_VERSION = "5"
-RELEASE_STAGE = "4.3.0-commercial-stable"
-# Experimental capabilities are tracked separately so the 4.2.3 Trust Kernel
-# identity and compatibility claims remain unchanged.
-EXPERIMENTAL_VERSION = "4.4.0-alpha.18-shadow"
-EXPERIMENTAL_STAGE = "4.4.0-alpha.18-shadow"
+RELEASE_STAGE = "4.3.0-open-source"
+# The shadow archive used for this migration is kept outside the public
+# package identity. It must not make a stable public release mutable.
+EXPERIMENTAL_VERSION = "NOT_INCLUDED"
+EXPERIMENTAL_STAGE = "NOT_INCLUDED"
 
 
 def configure_stdout() -> None:

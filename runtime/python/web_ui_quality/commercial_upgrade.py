@@ -71,9 +71,53 @@ def _release_html(report: Mapping[str, Any]) -> str:
     artifacts = "".join(f"<li>{escape(str(item))}</li>" for item in report.get("artifacts", []))
     alternatives = "".join(f"<article><span>备选方向</span><b>{escape(str(item.get('name')))}</b><small>{escape(str(item.get('tradeoff') or '需要负责人确认'))}</small></article>" for item in decision.get("alternatives", []) if isinstance(item, Mapping))
     risks = "".join(f"<li>{escape(str(item))}</li>" for item in decision.get("risks", []))
+    ui = report.get("ui") if isinstance(report.get("ui"), Mapping) else {}
+    if ui.get("status") == "RENDERED":
+        ui_action = '<a class="open" href="design-gallery/index.html">进入设计决策工作台 →</a>'
+    else:
+        ui_action = (
+            '<p>设计决策工作台当前未启动。需要视觉比较时运行 '
+            f'<code>{escape(str(ui.get("command") or "web-ui-quality design-ui <upgrade-output>"))}</code>。</p>'
+        )
     return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>体验升级决策摘要 · {status}</title><style>
 :root{{--ink:#16211d;--muted:#65726c;--line:#d9e4de;--paper:#f3f7f5;--brand:#145f46;font-family:Inter,"Segoe UI","PingFang SC",sans-serif}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink)}}main{{max-width:1120px;margin:auto;padding:34px 20px 80px}}header{{padding:clamp(30px,6vw,58px);border-radius:26px;background:radial-gradient(circle at 90% 0,#2b806260,transparent 35%),var(--ink);color:white}}h1{{font-size:clamp(38px,7vw,70px);margin:10px 0;letter-spacing:-.05em}}header p{{max-width:780px;color:#bdd0c7;line-height:1.6}}.status{{display:inline-block;background:#cdf1dc;color:#0d5039;border-radius:99px;padding:7px 10px;font-weight:800;font-size:12px}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0}}article,section,details{{background:white;border:1px solid var(--line);border-radius:18px;padding:20px}}article span,article small{{display:block;color:var(--muted);font-size:12px;line-height:1.5}}article b{{display:block;font-size:18px;margin:10px 0}}section{{margin:20px 0}}section h2{{margin-top:0}}li{{margin:9px 0;color:var(--muted);line-height:1.55}}.open{{display:inline-block;margin-top:18px;padding:13px 16px;border-radius:12px;background:#dff3e9;color:#0d5039;text-decoration:none;font-weight:800}}.recommend{{border:2px solid #7fc9a8}}details summary{{cursor:pointer;font-weight:800}}details .grid{{margin-bottom:0}}
-</style></head><body><main><header><span class="status">{escape(str(decision.get('status') or status))}</span><h1>现在只需要决定一个方向</h1><p>{escape(str(decision.get('question') or '哪套体验方向最适合产品下一阶段？'))}</p><a class="open" href="design-gallery/index.html">进入设计决策工作台 →</a></header><section><h2>系统推荐</h2><div class="grid"><article class="recommend"><span>{escape(str(recommended.get('id') or '待确认'))}</span><b>{escape(str(recommended.get('name') or '尚未形成推荐'))}</b><small>{escape(str(recommended.get('why') or '请先完成视觉评审。'))}</small></article><article><span>适合</span><b>{escape(str(recommended.get('fit') or '当前核心用户任务'))}</b><small>推荐来自产品诊断和浏览器证据，最终决定仍由负责人做出。</small></article><article><span>需要接受</span><b>明确取舍</b><small>{escape(str(recommended.get('tradeoff') or '仍需确认品牌与实施偏好'))}</small></article></div></section><section><h2>其他可选方向</h2><div class="grid">{alternatives}</div></section><section><h2>不会擅自做什么</h2><ul>{risks}</ul></section><details><summary>查看技术验证与完整交付物</summary><div class="grid">{cards}</div><ul>{artifacts}</ul></details></main></body></html>"""
+</style></head><body><main><header><span class="status">{escape(str(decision.get('status') or status))}</span><h1>现在只需要决定一个方向</h1><p>{escape(str(decision.get('question') or '哪套体验方向最适合产品下一阶段？'))}</p>{ui_action}</header><section><h2>系统推荐</h2><div class="grid"><article class="recommend"><span>{escape(str(recommended.get('id') or '待确认'))}</span><b>{escape(str(recommended.get('name') or '尚未形成推荐'))}</b><small>{escape(str(recommended.get('why') or '请先完成视觉评审。'))}</small></article><article><span>适合</span><b>{escape(str(recommended.get('fit') or '当前核心用户任务'))}</b><small>推荐来自产品诊断和浏览器证据，最终决定仍由负责人做出。</small></article><article><span>需要接受</span><b>明确取舍</b><small>{escape(str(recommended.get('tradeoff') or '仍需确认品牌与实施偏好'))}</small></article></div></section><section><h2>其他可选方向</h2><div class="grid">{alternatives}</div></section><section><h2>不会擅自做什么</h2><ul>{risks}</ul></section><details><summary>查看技术验证与完整交付物</summary><div class="grid">{cards}</div><ul>{artifacts}</ul></details></main></body></html>"""
+
+
+def refresh_commercial_ui_state(
+    upgrade_output: str | Path,
+    ui_state: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Record an on-demand UI render in the existing release evidence."""
+    root = Path(upgrade_output).expanduser().resolve()
+    report_path = root / "commercial-release-report.json"
+    if not report_path.is_file():
+        return None
+    value = json.loads(report_path.read_text(encoding="utf-8"))
+    if not isinstance(value, Mapping):
+        return None
+    report = dict(value)
+    state = dict(ui_state)
+    report["ui"] = state
+    decision = dict(report.get("decision")) if isinstance(report.get("decision"), Mapping) else {}
+    decision["ui"] = state
+    decision["nextActions"] = ["打开设计决策工作台", "切换角色与设备比较", "确认方向并下载决策", "交给 Codex 定稿并复验"]
+    report["decision"] = decision
+    gates = dict(report.get("gates")) if isinstance(report.get("gates"), Mapping) else {}
+    design_gate = dict(gates.get("designGallery")) if isinstance(gates.get("designGallery"), Mapping) else {}
+    design_gate["artifact"] = "design-gallery/index.html"
+    design_gate["ui"] = state.get("status")
+    gates["designGallery"] = design_gate
+    report["gates"] = gates
+    artifacts = list(report.get("artifacts")) if isinstance(report.get("artifacts"), list) else []
+    for artifact in ("design-gallery/index.html", "design-gallery/executive-decision-brief.md"):
+        if artifact not in artifacts:
+            insert_at = artifacts.index("design-gallery/design-review.json") if "design-gallery/design-review.json" in artifacts else len(artifacts)
+            artifacts.insert(insert_at, artifact)
+    report["artifacts"] = artifacts
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    (root / "commercial-release-report.html").write_text(_release_html(report), encoding="utf-8")
+    return report
 
 
 def _diagnosis_html(report: Mapping[str, Any]) -> str:
@@ -195,6 +239,7 @@ def run_commercial_upgrade(
     mode: str = "full",
     security_audit: bool = False,
     model_profile: str | None = None,
+    design_ui: bool = False,
 ) -> dict[str, Any]:
     project = Path(project_root).expanduser().resolve()
     output = Path(output_dir).expanduser().resolve()
@@ -374,6 +419,7 @@ def run_commercial_upgrade(
         journey=effective_journey,
         single_process=browser_single_process,
         product_discovery=discovery,
+        render_ui=design_ui,
     ) if implementation.get("status") == "IMPLEMENTED_IN_ISOLATED_COPY" else {
         "status": "NOT_RUN", "reason": "implementation did not produce runnable design candidates"
     }
@@ -399,6 +445,13 @@ def run_commercial_upgrade(
     design_pass = design_review.get("status") == "DESIGN_GALLERY_PASS"
     measurement_ready = outcome.get("status") in {"PASS", "BASELINE_REQUIRED"}
     status = "COMMERCIAL_WORKFLOW_PASS" if implementation_pass and design_pass and browser_pass and measurement_ready else "COMMERCIAL_WORKFLOW_NOT_VERIFIED"
+    design_ui_state = design_review.get("ui") if isinstance(design_review.get("ui"), Mapping) else {
+        "requested": bool(design_ui),
+        "status": "NOT_AVAILABLE",
+        "artifact": None,
+        "brief": None,
+        "command": "web-ui-quality design-ui <upgrade-output>",
+    }
     artifacts = [
         f"system-understanding/{discovery_artifacts['workbench']}",
         f"system-understanding/{discovery_artifacts['understanding']}",
@@ -416,14 +469,17 @@ def run_commercial_upgrade(
         "implementation/generated-preview/before/",
         "implementation/generated-preview/after/",
         "implementation/generated-preview/variants/",
-        "design-gallery/index.html",
         "design-gallery/design-review.json",
-        "design-gallery/executive-decision-brief.md",
         "validation/production-validation-report.json",
         "validation/production-validation-report.html",
         "outcome/outcome-measurement-report.json",
         "outcome/outcome-measurement-report.html",
     ]
+    if design_ui and design_ui_state.get("status") == "RENDERED":
+        artifacts[artifacts.index("design-gallery/design-review.json"):artifacts.index("design-gallery/design-review.json")] = [
+            "design-gallery/index.html",
+            "design-gallery/executive-decision-brief.md",
+        ]
     review_variants = [item for item in design_review.get("variants", []) if isinstance(item, Mapping)]
     recommended_variant = next((item for item in review_variants if item.get("id") == design_review.get("selectedVariantId")), None)
     recipe = recommended_variant.get("recipe") if isinstance(recommended_variant, Mapping) and isinstance(recommended_variant.get("recipe"), Mapping) else {}
@@ -442,12 +498,17 @@ def run_commercial_upgrade(
             for item in review_variants if item.get("id") != design_review.get("selectedVariantId")
         ],
         "evidence": {"candidateCount": len(review_variants), "viewportCount": 3, "browserStatus": validation.get("status")},
+        "ui": dict(design_ui_state),
         "risks": [
             "原项目没有被修改；只有负责人确认后才生成可集成补丁。",
             "当前结果不等于已授权上线，也不代表生产环境已经验证。",
             "视觉和旅程证据不构成业务指标因果提升的承诺。",
         ],
-        "nextActions": ["打开设计决策工作台", "切换角色与设备比较", "确认方向并下载决策", "交给 Codex 定稿并复验"],
+        "nextActions": (
+            ["打开设计决策工作台", "切换角色与设备比较", "确认方向并下载决策", "交给 Codex 定稿并复验"]
+            if design_ui_state.get("status") == "RENDERED"
+            else ["按需运行 design-ui", "切换角色与设备比较", "确认方向并下载决策", "交给 Codex 定稿并复验"]
+        ),
     }
     release = {
         "schemaVersion": "2",
@@ -471,7 +532,12 @@ def run_commercial_upgrade(
                 "artifact": "implementation/design-intelligence/project-design-candidates.json",
             },
             "implementation": {"status": "PASS" if implementation_pass else "FAIL", "artifact": "implementation/implementation-plan.json"},
-            "designGallery": {"status": design_review.get("status"), "selectedVariantId": design_review.get("selectedVariantId"), "artifact": "design-gallery/index.html"},
+            "designGallery": {
+                "status": design_review.get("status"),
+                "selectedVariantId": design_review.get("selectedVariantId"),
+                "artifact": "design-gallery/index.html" if design_ui_state.get("status") == "RENDERED" else "design-gallery/design-review.json",
+                "ui": design_ui_state.get("status"),
+            },
             "browserValidation": {"status": validation.get("status"), "artifact": "validation/production-validation-report.json"},
             "outcomeMeasurement": {"status": outcome.get("status"), "decision": outcome.get("decision"), "artifact": f"outcome/{outcome_artifacts['report']}"},
             "securityAudit": {"status": "RUN" if security_audit else "OPT_IN_ONLY", "included": security_audit},
@@ -479,6 +545,7 @@ def run_commercial_upgrade(
         "sourceProjectChanged": False,
         "patchIntegrationAuthorized": False,
         "selectedVariantId": design_review.get("selectedVariantId"),
+        "ui": design_ui_state,
         "artifacts": artifacts,
         "technicalAnalysis": technical,
         "workflowState": "AWAITING_IMPLEMENTATION_APPROVAL",

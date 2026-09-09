@@ -1,25 +1,24 @@
-# Notices and references
+# Notices
 
-No third-party source tree, model weights, browser binary, JavaScript library,
-font, or component package is intentionally bundled in this public snapshot.
-The runtime may integrate with separately installed dependencies. Review the
-exact version and its own notices before distribution:
+Project display label: **Web UI Quality contributors**
 
-- Playwright — Apache-2.0;
-- Pillow — HPND;
-- axe-core — MPL-2.0;
-- Lighthouse — Apache-2.0;
-- jsonschema — MIT.
+Copyright identity status: OPTIONAL_FUTURE_IDENTITY_DISCLOSURE.
 
-The component registry contains metadata and recommendation names for
-project-local or separately installed UI libraries. Those names are not a copy
-of their implementations and do not grant permission to install or redistribute
-them.
+This neutral display label is used because the recovered engineering records
+show one user-controlled Web UI Quality project and an explicit intent to
+publish it, but they do not safely establish a company or other statutory
+copyright-holder name. No legal entity is guessed here, and the public contact
+address `xrlcom@126.com` is not a holder declaration. A future legal identity
+may be added from reliable evidence if a distribution or legal step requires
+it. This record does not replace a rights opinion, contributor assignment, or
+other legal review.
 
-The public [Matt Pocock skills repository](https://github.com/mattpocock/skills)
-was reviewed as an engineering reference. The fixed review snapshot declares
-the MIT License; no Matt skill file is bundled in this repository. Reference
-ideas are not presented as third-party code incorporated into Web UI Quality.
+The project-owned files in this candidate are prepared for Apache License 2.0.
+The root license does not relicense third-party dependencies or grant rights
+to third-party trademarks. Dependencies are installed separately and keep
+their own licenses and notices; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-Any future third-party file must keep its original copyright and license notice,
-be recorded here, and pass a separate provenance review before merging.
+The candidate contains no intentionally vendored third-party source tree,
+model weights, browser binary, font, component package, screenshot, or icon.
+External project names, URLs, issue/PR identifiers, and behavior hypotheses
+are research references only; they are not a third-party attribution list.
