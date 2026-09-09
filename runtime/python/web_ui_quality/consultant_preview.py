@@ -39,18 +39,27 @@ def _direction_cards(consultation: Mapping[str, Any]) -> str:
         if not isinstance(direction, Mapping):
             continue
         recommended = bool(direction.get("recommended"))
+        selected_class = "selected" if recommended else ""
+        recommendation_badge = (
+            '<span class="recommended">AI 推荐</span>'
+            if recommended
+            else '<span class="alternative">备选方向</span>'
+        )
+        button_class = "primary" if recommended else ""
+        aria_pressed = "true" if recommended else "false"
+        button_label = "已选择" if recommended else _escape(direction.get("actionLabel"))
         cards.append(
-            f'<article class="direction-card {"selected" if recommended else ""}" data-direction="{_escape(direction.get("id"))}">'
+            f'<article class="direction-card {selected_class}" data-direction="{_escape(direction.get("id"))}">'
             f'<div class="direction-top"><span class="direction-number">{chr(65 + index)}</span>'
-            f'{"<span class=\"recommended\">AI 推荐</span>" if recommended else "<span class=\"alternative\">备选方向</span>"}</div>'
+            f'{recommendation_badge}</div>'
             f'<h3>{_escape(direction.get("userScenario") or direction.get("name"))}</h3>'
             f'<p>{_escape(direction.get("expectedExperienceChange") or direction.get("summary"))}</p>'
             f'<dl><dt>价值</dt><dd>{_escape(direction.get("businessValue"))}</dd>'
             f'<dt>适合</dt><dd>{_escape(direction.get("bestFor"))}</dd>'
             f'<dt>取舍</dt><dd>{_escape(direction.get("tradeoff"))}</dd></dl>'
-            f'<button type="button" class="choose-direction {"primary" if recommended else ""}" '
-            f'data-choose-direction="{_escape(direction.get("id"))}" aria-pressed="{"true" if recommended else "false"}">'
-            f'{"已选择" if recommended else _escape(direction.get("actionLabel"))}</button></article>'
+            f'<button type="button" class="choose-direction {button_class}" '
+            f'data-choose-direction="{_escape(direction.get("id"))}" aria-pressed="{aria_pressed}">'
+            f'{button_label}</button></article>'
         )
     return "".join(cards)
 

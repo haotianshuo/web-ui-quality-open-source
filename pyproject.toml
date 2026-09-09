@@ -8,12 +8,12 @@ version = "4.3.0"
 description = "Trust control layer for AI-assisted Web changes with bounded scope, Host-gated writes, evidence-backed verification, and release-integrity checks."
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
+license = "Apache-2.0"
 license-files = ["LICENSE"]
-authors = [{name = "Web UI Quality Contributors"}]
+authors = [{name = "Web UI Quality contributors", email = "xrlcom@126.com"}]
 keywords = ["web-ui", "accessibility", "product-design", "playwright", "codex-skill"]
 classifiers = [
-  "Development Status :: 5 - Production/Stable",
+  "Development Status :: 4 - Beta",
   "Environment :: Console",
   "Intended Audience :: Developers",
   "Intended Audience :: End Users/Desktop",
@@ -22,6 +22,12 @@ classifiers = [
   "Topic :: Software Development :: Quality Assurance",
 ]
 dependencies = ["Pillow>=10,<13"]
+
+[project.urls]
+Homepage = "https://github.com/haotianshuo/web-ui-quality-open-source"
+Repository = "https://github.com/haotianshuo/web-ui-quality-open-source"
+Issues = "https://github.com/haotianshuo/web-ui-quality-open-source/issues"
+Contact = "https://github.com/haotianshuo/web-ui-quality-open-source/issues"
 
 
 [project.optional-dependencies]
@@ -34,11 +40,6 @@ validation = ["jsonschema>=4.20"]
 
 [project.scripts]
 web-ui-quality = "web_ui_quality.__main__:main"
-
-[project.urls]
-Homepage = "https://github.com/haotianshuo/web-ui-quality-open-source"
-Repository = "https://github.com/haotianshuo/web-ui-quality-open-source"
-Issues = "https://github.com/haotianshuo/web-ui-quality-open-source/issues"
 
 [tool.setuptools]
 package-dir = {"" = "runtime/python"}
@@ -55,8 +56,7 @@ web_ui_quality = ["schemas/*.json", "browser_runner.cjs", "public-compatibility-
 runtime-path = "runtime/python"
 baseline-version = "v2.3-p0a"
 default-execution-layer = "Lite"
-commercial-release-stage = "4.3.0-commercial-stable"
-experimental-package-stage = "4.4.0-alpha.18-shadow"
+open-source-release-stage = "4.3.0-open-source"
 kernel-version = "4.2.3"
 kernel-base-version = "4.0.0-rc.1"
 protocol-version = "3.0"

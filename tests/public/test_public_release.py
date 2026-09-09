@@ -6,7 +6,10 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10
+    import tomli as tomllib
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,10 +30,10 @@ def test_public_license_is_declared_consistently() -> None:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
     license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
 
-    assert plugin["license"] == "MIT"
-    assert project["license"] == "MIT"
-    assert license_text.startswith("MIT License")
-    assert "Permission is hereby granted" in license_text
+    assert plugin["license"] == "Apache-2.0"
+    assert project["license"] == "Apache-2.0"
+    assert license_text.lstrip().startswith("Apache License")
+    assert "TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION" in license_text
 
 
 def test_private_and_external_material_is_outside_public_boundary() -> None:
@@ -39,7 +42,7 @@ def test_private_and_external_material_is_outside_public_boundary() -> None:
     assert not (present_parts & forbidden_dirs)
 
     forbidden_text = re.compile(
-        r"(?:C:\\Users\\|C:/Users/|-----BEGIN [A-Z ]*PRIVATE KEY-----|\b(?:sk|ghp|github_pat)_[A-Za-z0-9_]{12,})",
+        r"(?:[A-Za-z]:\\Users\\|[A-Za-z]:/Users/|-----BEGIN [A-Z ]*PRIVATE KEY-----|\b(?:sk|ghp|github_pat)_[A-Za-z0-9_]{12,})",
         re.IGNORECASE,
     )
     leaked = [

@@ -22,6 +22,7 @@ from .contracts import (
     validate_finding,
     validate_productization_plan,
 )
+from .aria_forwarding_rule import scan_aria_forwarding_gaps
 from .builtin_rules import coverage_for_findings
 from .design_context import build_project_reference
 from .provider_registry import default_provider_registry
@@ -94,6 +95,73 @@ NESTED_KEYBOARD_VISIBLE_ITEMS_RE = re.compile(
 NESTED_KEYBOARD_PARENT_GUARD_RE = re.compile(
     r"(?i)\bprocessedItem\s*&&\s*processedItem\.key\s*===\s*this\.focusedItemInfo\(\)\.parentKey\b"
 )
+FOCUSABLE_DESCENDANT_KEY_HANDLER_RE = re.compile(
+    r"(?ims)\bonKeyDown\s*=\s*\{composeEventHandlers\(props\.onKeyDown,\s*\(event\)\s*=>\s*\{(?P<body>.*?)^\s*\}\)\}"
+)
+FOCUSABLE_DESCENDANT_ORIGIN_GUARD_RE = re.compile(
+    r"(?i)\bevent\.target\s*!==\s*event\.currentTarget\b"
+)
+DIALOG_FOCUS_LOCK_OPEN_RE = re.compile(
+    r"(?is)<(?P<tag>(?:React)?FocusLock)\b(?P<attrs>[^>]*)>"
+)
+DIALOG_FOCUS_CONTEXT_RE = re.compile(
+    r"(?i)(?:\brole\s*=\s*['\"]dialog['\"]|\baria-modal\s*=\s*(?:\{\s*)?true\b|\brole\s*:\s*['\"]dialog['\"]|\baria-modal\s*:\s*(?:true|['\"]true['\"]))"
+)
+DIALOG_FOCUS_RETURN_PROP_RE = re.compile(r"(?i)\breturnFocus\s*=")
+ION_FAB_BUTTON_COMPONENT_RE = re.compile(
+    r"(?is)@Component\s*\(\s*\{(?P<config>.*?)\}\s*\)\s*"
+    r"export\s+class\s+FabButton\b"
+)
+ION_FAB_BUTTON_TYPE_PROP_RE = re.compile(
+    r"(?im)^\s*@Prop\(\)\s*type\s*:\s*['\"]submit['\"]\s*\|\s*"
+    r"['\"]reset['\"]\s*\|\s*['\"]button['\"]\s*="
+)
+ION_FAB_BUTTON_NATIVE_RENDER_RE = re.compile(
+    r"(?is)const\s+TagType\s*=\s*href\s*===\s*undefined\s*\?\s*['\"]button['\"]"
+    r".*?<TagType\b.*?\bdisabled\s*=\s*\{\s*disabled\s*\}.*?\bonClick\s*=\s*\{"
+)
+RADIX_DIALOG_CONTENT_RE = re.compile(
+    r"(?is)\bconst\s+DialogContentImpl\s*=\s*React\.forwardRef\b"
+)
+RADIX_DIALOG_LAYER_RE = re.compile(
+    r"(?is)<DismissableLayer\b(?P<attrs>[^>]*?)>"
+)
+RADIX_DIALOG_TITLE_RE = re.compile(r"(?is)\bconst\s+DialogTitle\s*=")
+RADIX_DIALOG_DESCRIPTION_RE = re.compile(r"(?is)\bconst\s+DialogDescription\s*=")
+PRIMEFACES_SELECT_ONE_MENU_RENDERER_RE = re.compile(
+    r"(?is)\bclass\s+SelectOneMenuRenderer\s+extends\s+SelectOneRenderer\s*<\s*SelectOneMenu\s*>"
+)
+PRIMEFACES_SELECT_ONE_MENU_ENCODE_LABEL_RE = re.compile(
+    r"(?is)\bprotected\s+void\s+encodeLabel\s*\([^{}]*\)\s+throws\s+IOException\s*\{"
+    r"(?P<body>.*?)(?=\n\s*protected\s+void\s+encodeMenuIcon\b)"
+)
+PRIMEFACES_SELECT_ONE_MENU_NON_EDITABLE_RE = re.compile(
+    r"(?is)\belse\s*\{\s*String\s+clientId\s*=\s*component\.getClientId\s*\(\s*context\s*\)\s*;"
+    r"(?P<body>.*?)\bwriter\.endElement\s*\(\s*['\"]span['\"]\s*\)\s*;"
+)
+ANGULAR_ARIA_MENU_TRIGGER_RE = re.compile(r"(?is)\bexport\s+class\s+MenuTriggerPattern\b")
+ANGULAR_ARIA_MENU_PENDING_FOCUS_RE = re.compile(
+    r"(?is)\bpendingFocusEffect\s*\(\s*\)\s*:\s*void\s*\{(?P<body>.*?)"
+    r"(?=\n\s*\}\s*\n\s*/\*\*\s*Handles keyboard events for the menu trigger)"
+)
+ANGULAR_ARIA_MENU_PENDING_FOCUS_IF_RE = re.compile(r"(?i)\bif\s*\(\s*menu\s*&&\s*intent\s*\)")
+HERMES_SIDEBAR_ROW_SHELL_RE = re.compile(
+    r"(?is)<SidebarRowShell\b(?P<body>.*?)(?=\n\s*</SidebarRowShell>)"
+)
+HERMES_DRAG_HANDLE_SPREAD_RE = re.compile(r"(?i)\{\s*\.\.\.\s*dragHandleProps\s*\}")
+HERMES_ROW_POINTER_HANDLER_RE = re.compile(r"(?i)\bonPointerDown\s*=")
+FLEX_MIN_WIDTH_ELEMENT_RE = re.compile(
+    r"(?is)<(?P<tag>[A-Za-z][A-Za-z0-9:._-]*)\b(?P<attrs>[^>]*?)>"
+)
+FLEX_MIN_WIDTH_CLASS_ATTR_RE = re.compile(r"(?i)\bclass(?:Name)?\s*=")
+FLEX_MIN_WIDTH_TARGET_RE = re.compile(
+    r"(?i)\bid\s*=\s*(?:\{\s*chatContainerId\s*\}|['\"](?:chat-container|chatContainer)['\"])"
+)
+FLEX_MIN_WIDTH_TOKEN_RE = {
+    token: re.compile(rf"(?<![\w-]){re.escape(token)}(?![\w-])")
+    for token in ("w-full", "max-w-full", "flex", "flex-col")
+}
+FLEX_MIN_WIDTH_GUARD_RE = re.compile(r"(?<![\w-])min-w-0(?![\w-])")
 
 
 def _split_values(value: str | None) -> list[str]:
@@ -575,6 +643,227 @@ def _nested_keyboard_traversal_guards(source: SourceFile) -> Iterable[int]:
         yield _line_for(source.text, match.start("body") + guard.start())
 
 
+def _focusable_descendant_key_interceptors(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield Radix-style menu key handlers that lack an event-origin guard.
+
+    This candidate diagnostic is derived from Radix Primitives issue #3232 and
+    merged PR #3999. It deliberately requires the library's named selection or
+    submenu key sets plus the corresponding activation path; it is not a claim
+    that every keydown handler needs the same guard.
+    """
+    for match in FOCUSABLE_DESCENDANT_KEY_HANDLER_RE.finditer(source.text):
+        body = match.group("body")
+        if FOCUSABLE_DESCENDANT_ORIGIN_GUARD_RE.search(body):
+            continue
+        if re.search(r"\bSELECTION_KEYS\.includes\(event\.key\)", body) and re.search(
+            r"\bevent\.currentTarget\.click\(\)", body
+        ):
+            yield _line_for(source.text, match.start()), "selection-keys"
+            continue
+        if re.search(r"\bSUB_OPEN_KEYS\[rootContext\.dir\]\.includes\(event\.key\)", body) and re.search(
+            r"\bcontext\.onOpenChange\(true\)", body
+        ):
+            yield _line_for(source.text, match.start()), "submenu-open-keys"
+
+
+def _dialog_focus_restore_gaps(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield dialog-scoped FocusLock wrappers without an explicit returnFocus prop.
+
+    This candidate is derived from Jitsi Meet #12379/#12657.  It deliberately
+    requires a FocusLock/ReactFocusLock wrapper whose bounded body contains
+    dialog semantics, and it only reports the absence of an explicit
+    ``returnFocus=`` attribute.  It does not infer the defaults of a focus
+    library or claim that every focus trap needs the same implementation.
+    """
+    for match in DIALOG_FOCUS_LOCK_OPEN_RE.finditer(source.text):
+        tag = match.group("tag")
+        closing = re.search(rf"(?is)</{re.escape(tag)}\s*>", source.text[match.end():])
+        if closing is None:
+            continue
+        body = source.text[match.end():match.end() + closing.start()]
+        context = match.group("attrs") + " " + body
+        if not DIALOG_FOCUS_CONTEXT_RE.search(context):
+            continue
+        if DIALOG_FOCUS_RETURN_PROP_RE.search(match.group("attrs")):
+            continue
+        yield _line_for(source.text, match.start()), tag
+
+
+def _flex_item_min_width_gaps(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield a narrow full-width flex-item min-width risk.
+
+    This candidate is derived from Open WebUI #28500/#28501.  It deliberately
+    requires the issue's ``#chat-container``/``chatContainerId`` target plus
+    the explicit utility combination ``w-full max-w-full flex flex-col`` and
+    reports only when the same opening tag lacks ``min-w-0``.
+    Static source cannot prove the parent flex context or rendered geometry, so
+    this is a candidate signal that still requires a fixed-commit Browser A/B.
+    """
+    if Path(source.path).suffix.casefold() not in {".html", ".htm", ".jsx", ".tsx", ".vue", ".svelte"}:
+        return
+    for match in FLEX_MIN_WIDTH_ELEMENT_RE.finditer(source.text):
+        attrs = match.group("attrs")
+        if FLEX_MIN_WIDTH_CLASS_ATTR_RE.search(attrs) is None:
+            continue
+        if FLEX_MIN_WIDTH_TARGET_RE.search(attrs) is None:
+            continue
+        if not all(pattern.search(attrs) for pattern in FLEX_MIN_WIDTH_TOKEN_RE.values()):
+            continue
+        if FLEX_MIN_WIDTH_GUARD_RE.search(attrs):
+            continue
+        yield _line_for(source.text, match.start()), match.group("tag")
+
+
+def _shadow_dom_form_button_gaps(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield the narrow Ionic ion-fab-button form-participation gap.
+
+    This candidate is derived from Ionic #18550/#31249.  It deliberately
+    requires the observed Stencil component tag, ``shadow: true``, the
+    submit/reset/button type union, and the native ``TagType`` render path.
+    It reports only when no hidden light-DOM form-button bridge is present;
+    it does not infer form behavior for arbitrary custom elements.
+    """
+    if Path(source.path).suffix.casefold() not in {".ts", ".tsx"}:
+        return
+    component = ION_FAB_BUTTON_COMPONENT_RE.search(source.text)
+    if component is None:
+        return
+    config = component.group("config")
+    if not re.search(r"(?i)\btag\s*:\s*['\"]ion-fab-button['\"]", config):
+        return
+    if re.search(r"(?i)\bshadow\s*:\s*true\b", config) is None:
+        return
+    class_start = component.end()
+    type_prop = ION_FAB_BUTTON_TYPE_PROP_RE.search(source.text, class_start)
+    if type_prop is None:
+        return
+    class_body = source.text[type_prop.start():]
+    if ION_FAB_BUTTON_NATIVE_RENDER_RE.search(class_body) is None:
+        return
+    if re.search(r"(?i)\b(?:renderHiddenButton|submitForm|formButtonEl|findForm)\b", class_body):
+        return
+    yield _line_for(source.text, type_prop.start()), "ion-fab-button[type=submit|reset][shadow]"
+
+
+def _dialog_aria_reference_gaps(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield the narrow Radix Dialog dangling-ARIA-reference gap.
+
+    This candidate is derived from Radix Primitives #2836/#4031.  It only
+    recognizes the observed DialogContentImpl/DismissableLayer implementation
+    that unconditionally points ``aria-labelledby`` and ``aria-describedby``
+    at generated context ids.  The merged implementation tracks whether a
+    DialogTitle/DialogDescription is mounted and conditionally emits those
+    references; this helper does not infer ARIA validity for arbitrary dialog
+    implementations or consumer markup.
+    """
+    if Path(source.path).suffix.casefold() not in {".ts", ".tsx"}:
+        return
+    if RADIX_DIALOG_CONTENT_RE.search(source.text) is None:
+        return
+    if RADIX_DIALOG_TITLE_RE.search(source.text) is None or RADIX_DIALOG_DESCRIPTION_RE.search(source.text) is None:
+        return
+    for layer in RADIX_DIALOG_LAYER_RE.finditer(source.text):
+        attrs = layer.group("attrs")
+        if re.search(r"(?i)\brole\s*=\s*['\"]dialog['\"]", attrs) is None:
+            continue
+        if re.search(r"(?i)\bid\s*=\s*\{\s*context\.contentId\s*\}", attrs) is None:
+            continue
+        if re.search(r"(?i)\baria-labelledby\s*=\s*\{\s*context\.titleId\s*\}", attrs) is None:
+            continue
+        if re.search(r"(?i)\baria-describedby\s*=\s*\{\s*context\.descriptionId\s*\}", attrs) is None:
+            continue
+        label = re.search(r"(?i)\baria-labelledby\s*=", attrs)
+        offset = layer.start() if label is None else layer.start() + label.start()
+        yield _line_for(source.text, offset), "DialogContentImpl > DismissableLayer[aria-labelledby/aria-describedby]"
+
+
+def _primefaces_select_one_menu_disabled_state_gaps(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield the narrow PrimeFaces SelectOneMenu disabled-state propagation gap.
+
+    This candidate is derived from PrimeFaces #14625/#14630.  It deliberately
+    requires the observed Java SelectOneMenuRenderer class and its non-editable
+    ``encodeLabel`` branch.  The pre-fix renderer reused the generic
+    ``renderAccessibilityAttributes`` call after ``renderARIACombobox`` without
+    writing ``aria-disabled`` for the span that acts as the combobox surface;
+    the merged renderer writes the explicit ARIA state on that branch.  It does
+    not infer disabled-state behavior for arbitrary Java renderers or all
+    PrimeFaces components.
+    """
+    if Path(source.path).suffix.casefold() != ".java" or Path(source.path).name != "SelectOneMenuRenderer.java":
+        return
+    if PRIMEFACES_SELECT_ONE_MENU_RENDERER_RE.search(source.text) is None:
+        return
+    method = PRIMEFACES_SELECT_ONE_MENU_ENCODE_LABEL_RE.search(source.text)
+    if method is None:
+        return
+    branch = PRIMEFACES_SELECT_ONE_MENU_NON_EDITABLE_RE.search(method.group("body"))
+    if branch is None:
+        return
+    body = branch.group("body")
+    call = re.search(
+        r"(?is)renderARIACombobox\s*\(\s*context\s*,\s*component\s*\)\s*;"
+        r"\s*renderAccessibilityAttributes\s*\(\s*context\s*,\s*component\s*\)\s*;",
+        body,
+    )
+    if call is None or re.search(r"(?i)(?:HTML\.)?ARIA_DISABLED|aria-disabled", body):
+        return
+    offset = method.start("body") + branch.start("body") + call.start()
+    yield _line_for(source.text, offset), "SelectOneMenuRenderer > encodeLabel > non-editable combobox"
+
+
+def _angular_delayed_menu_focus_gaps(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield the narrow Angular Aria delayed-menu initial-focus gap.
+
+    This candidate is derived from Angular Components #33742/#33743.  It
+    deliberately requires the observed ``MenuTriggerPattern`` in the named
+    ``menu.ts`` source, its pending-focus effect, the first/last dispatch, and
+    the pre-fix ``menu && intent`` guard without an item-availability check.
+    It does not infer focus behavior for arbitrary menu implementations or
+    claim that a static guard proves a Browser focus journey.
+    """
+    if Path(source.path).suffix.casefold() != ".ts" or Path(source.path).name != "menu.ts":
+        return
+    if ANGULAR_ARIA_MENU_TRIGGER_RE.search(source.text) is None:
+        return
+    method = ANGULAR_ARIA_MENU_PENDING_FOCUS_RE.search(source.text)
+    if method is None:
+        return
+    body = method.group("body")
+    condition = ANGULAR_ARIA_MENU_PENDING_FOCUS_IF_RE.search(body)
+    if condition is None:
+        return
+    if "menu.first()" not in body or "menu.last()" not in body:
+        return
+    if re.search(r"\b(?:menu\?\.items\(\)|items\?\.length|items\.length)\b", body):
+        return
+    yield _line_for(source.text, method.start("body") + condition.start()), "MenuTriggerPattern > pendingFocusEffect"
+
+
+def _hermes_row_drag_keyboard_scope_gaps(source: SourceFile) -> Iterable[tuple[int, str]]:
+    """Yield the narrow Hermes sidebar drag keyboard-scope regression.
+
+    This candidate is derived from NousResearch/hermes-agent #82373 and the
+    follow-up bug report #83617.  It recognizes the observed session/project
+    row shape where the complete dnd-kit ``dragHandleProps`` object is spread
+    onto ``SidebarRowShell`` alongside a row-level pointer handler.  The
+    pointer exclusion for row actions does not remove the keyboard listener,
+    so a keyboard sensor can be armed from a row control and keep a window
+    listener alive while a portaled text input has focus.  It does not infer
+    all drag-and-drop correctness or prove the reported runtime event trace.
+    """
+    if Path(source.path).suffix.casefold() != ".tsx" or Path(source.path).name not in {
+        "session-row.tsx",
+        "overview-row.tsx",
+    }:
+        return
+    for shell in HERMES_SIDEBAR_ROW_SHELL_RE.finditer(source.text):
+        body = shell.group("body")
+        spread = HERMES_DRAG_HANDLE_SPREAD_RE.search(body)
+        if spread is None or HERMES_ROW_POINTER_HANDLER_RE.search(body) is None:
+            continue
+        yield _line_for(source.text, shell.start("body") + spread.start()), "SidebarRowShell > dragHandleProps"
+
+
 def _collect_findings(
     sources: list[SourceFile],
     html: dict[str, HtmlFacts],
@@ -665,7 +954,74 @@ def _collect_findings(
                 )
 
         suffix = Path(source.path).suffix.casefold()
+        if suffix == ".java":
+            for line, selector in _primefaces_select_one_menu_disabled_state_gaps(source):
+                factory.add(
+                    "A11Y-COMPONENT-ARIA-DISABLED-PROPAGATION",
+                    category="accessibility",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=selector,
+                    summary="组件的禁用状态没有在实际 combobox 展示节点上暴露为 aria-disabled。",
+                    impact="禁用控件可能仍被辅助技术按可用控件理解，用户无法可靠获知该操作当前不可用。",
+                    recommendation="在实际可感知的 combobox 节点输出 aria-disabled=true，并用 disabled、可编辑/非可编辑和屏幕阅读器路径做固定版本前后回归；静态命中不等于项目运行时通过。",
+                    reason_code="DISABLED_STATE_NOT_EXPOSED_TO_ASSISTIVE_TECHNOLOGY",
+                )
+        if suffix in {".html", ".htm", ".jsx", ".tsx", ".vue", ".svelte"}:
+            for line, selector in _flex_item_min_width_gaps(source):
+                factory.add(
+                    "LAYOUT-FLEX-ITEM-MIN-WIDTH",
+                    category="layout",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=f"{selector}[w-full+max-w-full+flex+flex-col]",
+                    summary="全宽 flex 子项缺少显式的 min-w-0 收缩约束。",
+                    impact="在父级 flex 行内，内容最小宽度可能把相邻导航或侧栏推出可视区，形成不可达的左侧溢出。",
+                    recommendation="确认该元素是可收缩的 flex 子项后显式加入 min-w-0，并用固定提交前后及窄/桌面视口 Browser 几何回归验证；静态命中不等于项目运行时通过。",
+                    reason_code="FLEX_ITEM_MIN_WIDTH_AUTO_CAN_PUSH_SIBLING",
+                )
         if suffix in {".jsx", ".tsx", ".js", ".ts"}:
+            for line, selector in _angular_delayed_menu_focus_gaps(source):
+                factory.add(
+                    "A11Y-MENU-DELAYED-ITEM-FOCUS",
+                    category="accessibility",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=selector,
+                    summary="菜单项尚未可用时仍立即尝试初始焦点，可能错过首项。",
+                    impact="动态或 overlay 菜单打开后，焦点可能留在触发器，键盘用户必须额外移动焦点才能进入菜单。",
+                    recommendation="等待实际菜单项出现后再执行 first/last，并用延迟渲染、Enter/Space、Arrow、Escape 和触发器恢复做固定版本 Browser 回归；静态命中不等于项目焦点通过。",
+                    reason_code="DELAYED_MENU_ITEMS_PREVENT_INITIAL_FOCUS",
+                )
+            for line, selector in _hermes_row_drag_keyboard_scope_gaps(source):
+                factory.add(
+                    "A11Y-DND-KEYBOARD-SCOPE",
+                    category="accessibility",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=selector,
+                    summary="拖拽排序的完整键盘监听被扩散到整行外壳。",
+                    impact="键盘传感器可能从行内控件被意外激活并保留窗口级监听，导致重命名等文本输入中的空格键被吞掉。",
+                    recommendation="整行外壳只承载明确的指针拖拽路径，把完整键盘属性与监听保留在可见的专用拖拽把手；再用重命名输入、Space/Enter、控件焦点和拖拽取消做 Browser 回归，静态命中不等于运行时通过。",
+                    reason_code="DND_KEYBOARD_LISTENERS_SPREAD_TO_ROW_SHELL",
+                )
+            for line, selector, reason_code in scan_aria_forwarding_gaps(source.path, source.text):
+                factory.add(
+                    "A11Y-COMPONENT-ARIA-LABEL-FORWARDING",
+                    category="accessibility",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=selector,
+                    summary="组件包装器显式转发了描述但没有把顶层 aria-label 转发到实际表单控件。",
+                    impact="调用方提供的顶层 aria-label 可能停留在包装器上，底层控件仍可能没有可访问名称。",
+                    recommendation="把 aria-label/aria-labelledby 明确传给实际 input，或明确记录 inputProps 契约，并用 getByRole/accessibility tree 做运行时回归；静态命中不等于项目通过。",
+                    reason_code=reason_code,
+                )
             for tag, line in _jsx_pointer_only_interactions(source):
                 factory.add(
                     "A11Y-POINTER-ONLY-INTERACTION",
@@ -692,9 +1048,66 @@ def _collect_findings(
                     recommendation="不要把活动项 parent-key 相等作为继续嵌套键盘遍历的必要条件；用 issue-specific 键盘回归覆盖根项、子项和同级/下一级移动，并在 Browser 中复验。",
                     reason_code="NESTED_MENU_PARENT_KEY_GUARD_CAN_FALL_BACK_TO_ROOT",
                 )
+            for line, selector in _focusable_descendant_key_interceptors(source):
+                factory.add(
+                    "A11Y-FOCUSABLE-DESCENDANT-KEY-INTERCEPTION",
+                    category="accessibility",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=f"onKeyDown[{selector}]",
+                    summary="菜单键盘处理器未确认事件目标就是当前菜单项或子菜单触发器。",
+                    impact="Portal 或嵌套的可聚焦后代可能冒泡 Enter/Space，并被菜单项错误吞掉或触发选择/打开子菜单。",
+                    recommendation="在执行菜单选择或打开子菜单前检查 event.target === event.currentTarget，并用 Portal 后代与当前项焦点两条回归路径复验。",
+                    reason_code="MENU_KEY_HANDLER_LACKS_EVENT_ORIGIN_GUARD",
+                )
+            for line, selector in _dialog_focus_restore_gaps(source):
+                factory.add(
+                    "A11Y-DIALOG-FOCUS-RESTORE",
+                    category="accessibility",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=selector,
+                    summary="带 dialog 语义的 FocusLock 未声明关闭后返回触发器的焦点契约。",
+                    impact="键盘用户关闭对话框后可能回到 body 或错误位置，丢失操作上下文。",
+                    recommendation="在确认焦点库和关闭路径后显式声明 returnFocus，并用打开、Escape/关闭和触发器恢复的 Browser 回归验证；不要仅凭静态结果宣称焦点顺序已通过。",
+                    reason_code="DIALOG_FOCUS_RETURN_CONTRACT_MISSING",
+                )
+            for line, selector in _shadow_dom_form_button_gaps(source):
+                factory.add(
+                    "A11Y-COMPONENT-FORM-PARTICIPATION",
+                    category="logic",
+                    severity="P1",
+                    file=source.path,
+                    line=line,
+                    selector=selector,
+                    summary="Shadow DOM 按钮组件声明了 submit/reset 类型，但没有把动作桥接到 light DOM 表单。",
+                    impact="表单提交、重置或回车触发路径可能完全不生效，核心业务动作因此不可达。",
+                    recommendation="为关联表单创建并同步 light-DOM 原生 submit/reset button，再用 click、Enter、reset、disabled 和外部 form 目标做固定提交前后 Browser/E2E 回归；静态命中不等于项目运行时通过。",
+                    reason_code="SHADOW_DOM_BUTTON_NOT_FORM_ASSOCIATED",
+                )
+            for line, selector in _dialog_aria_reference_gaps(source):
+                factory.add(
+                    "A11Y-DIALOG-ARIA-REFERENCE-INTEGRITY",
+                    category="accessibility",
+                    severity="P2",
+                    file=source.path,
+                    line=line,
+                    selector=selector,
+                    summary="Dialog 无条件引用可能不存在的 Title/Description 节点，形成悬空 ARIA 关系。",
+                    impact="辅助技术可能读取到不存在的 aria-labelledby/aria-describedby 目标，导致对话框名称或描述失效。",
+                    recommendation="仅在对应 Title/Description 实际挂载时输出引用，并用挂载、卸载、显式 aria-label 和 accessibility tree 回归验证；静态命中不等于 Browser 或屏幕阅读器通过。",
+                    reason_code="DIALOG_ARIA_REFERENCE_MAY_BE_DANGLING",
+                )
             for match in re.finditer(r"(?is)<(?P<tag>input|select|textarea)\b(?P<attrs>[^>]*)>", source.text):
                 attrs = match.group("attrs")
                 if re.search(r"(?i)\b(?:aria-label|aria-labelledby|id|title)\s*=", attrs) is None:
+                    reason_code = (
+                        "PLACEHOLDER_ONLY_NOT_ACCESSIBLE_NAME"
+                        if re.search(r"(?i)\bplaceholder\s*=", attrs)
+                        else None
+                    )
                     factory.add(
                         "A11Y-FORM-CONTROL-NAME",
                         category="accessibility",
@@ -705,6 +1118,7 @@ def _collect_findings(
                         summary="JSX/TSX 表单控件缺少可识别的可访问名称。",
                         impact="辅助技术用户可能无法理解输入目的。",
                         recommendation="使用可关联 label、aria-label 或 aria-labelledby。",
+                        reason_code=reason_code,
                     )
             for match in re.finditer(r"(?is)<button\b(?P<attrs>[^>]*)>(?P<body>.*?)</button\s*>", source.text):
                 attrs = match.group("attrs")
@@ -750,6 +1164,7 @@ def _collect_findings(
                 or (control_id and control_id in facts.label_for)
             )
             if not has_name:
+                reason_code = "PLACEHOLDER_ONLY_NOT_ACCESSIBLE_NAME" if attrs.get("placeholder") else None
                 factory.add(
                     "A11Y-FORM-CONTROL-NAME",
                     category="accessibility",
@@ -760,6 +1175,7 @@ def _collect_findings(
                     summary="表单控件缺少可关联标签或可访问名称。",
                     impact="用户无法可靠理解核心输入字段，屏幕阅读器用户尤其受影响。",
                     recommendation="使用显式 label/for 或准确的 aria-labelledby 建立名称关系。",
+                    reason_code=reason_code,
                 )
         for attrs, line, text in facts.buttons:
             if not text and not (attrs.get("aria-label") or attrs.get("aria-labelledby") or attrs.get("title")):

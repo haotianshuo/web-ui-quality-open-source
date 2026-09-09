@@ -1,8 +1,6 @@
-include README.md LICENSE THIRD_PARTY_NOTICES.md CHANGELOG.md SECURITY.md KNOWN_LIMITATIONS.md ARCHITECTURE.md EULA_TEMPLATE.md PRIVACY_NOTICE_TEMPLATE.md SUPPORT_POLICY_TEMPLATE.md SECURITY_RESPONSE_POLICY.md
-include COMMERCIAL_RELEASE_CHECKLIST.md COMPATIBILITY_MATRIX.md
+include README.md LICENSE NOTICE.md THIRD_PARTY_NOTICES.md CHANGELOG.md SECURITY.md SECURITY_RESPONSE_POLICY.md PUBLICATION.md SOURCE_PROVENANCE.md FINAL_PUBLIC_SOURCE_MANIFEST.json CONTRIBUTING.md pytest.ini pyproject.toml setup.cfg run_tests.py .gitignore .github/workflows/ci.yml
 recursive-include .codex-plugin *.json
 recursive-include assets *.svg
-prune evolution
 recursive-include runtime/python/web_ui_quality *.py
 include runtime/python/web_ui_quality/browser_runner.cjs
 recursive-include runtime/python/web_ui_quality/schemas *.json
@@ -10,12 +8,14 @@ recursive-include skills *.md *.yaml *.py
 recursive-include schemas *.json
 include schemas/product-experience-report.schema.json
 include runtime/python/web_ui_quality/schemas/product-experience-report.schema.json
-recursive-include examples/commercial-demo *
 recursive-include examples/ui-inventory-demo *
+recursive-include examples/qualification-collection *
 recursive-include scripts *.sh *.ps1 *.py
-include run_tests.py
-recursive-include tests *.py
+recursive-include tests/public *.py
 global-exclude *.py[cod]
 global-exclude __pycache__
 global-exclude .pytest_cache
 global-exclude .DS_Store
+prune evolution
+prune external-challenge-track
+prune examples/commercial-demo

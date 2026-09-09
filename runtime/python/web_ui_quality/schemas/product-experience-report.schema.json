@@ -76,7 +76,7 @@
           "const": "3.0"
         },
         "stage": {
-          "const": "4.3.0-commercial-stable"
+          "const": "4.3.0-open-source"
         },
         "workflowContractVersion": {
           "const": "5"

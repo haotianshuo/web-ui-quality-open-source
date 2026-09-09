@@ -94,3 +94,84 @@ def test_similar_key_guard_without_arrowdown_context_is_not_reported() -> None:
     """
 
     assert not any(item["id"] == "A11Y-NESTED-KEYBOARD-TRAVERSAL-GUARD" for item in _findings(text, "src/menu-state.ts"))
+
+
+def test_focusable_descendant_menu_key_interceptor_is_reported_before_fix() -> None:
+    text = """
+    const SELECTION_KEYS = ['Enter', ' '];
+    const MenuItem = () => (
+      <MenuItemImpl onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
+        if (SELECTION_KEYS.includes(event.key)) {
+          event.currentTarget.click();
+          event.preventDefault();
+        }
+      })} />
+    );
+    """
+
+    findings = _findings(text, "packages/react/menu/src/menu.tsx")
+    matches = [item for item in findings if item["id"] == "A11Y-FOCUSABLE-DESCENDANT-KEY-INTERCEPTION"]
+    assert len(matches) == 1
+    assert matches[0]["severity"] == "P2"
+    assert matches[0]["reasonCode"] == "MENU_KEY_HANDLER_LACKS_EVENT_ORIGIN_GUARD"
+
+
+def test_focusable_descendant_menu_key_origin_guard_after_fix_is_not_reported() -> None:
+    text = """
+    const SELECTION_KEYS = ['Enter', ' '];
+    const MenuItem = () => (
+      <MenuItemImpl onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
+        if (disabled || event.target !== event.currentTarget) {
+          return;
+        }
+        if (SELECTION_KEYS.includes(event.key)) {
+          event.currentTarget.click();
+          event.preventDefault();
+        }
+      })} />
+    );
+    """
+
+    assert not any(
+        item["id"] == "A11Y-FOCUSABLE-DESCENDANT-KEY-INTERCEPTION"
+        for item in _findings(text, "packages/react/menu/src/menu.tsx")
+    )
+
+
+def test_focusable_descendant_submenu_trigger_interceptor_is_reported_and_guarded() -> None:
+    before = """
+    const SUB_OPEN_KEYS = { ltr: ['Enter', 'ArrowRight'] };
+    <MenuItemImpl onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
+      if (SUB_OPEN_KEYS[rootContext.dir].includes(event.key)) {
+        context.onOpenChange(true);
+      }
+    })} />
+    """
+    after = before.replace(
+        "if (SUB_OPEN_KEYS",
+        "if (event.target !== event.currentTarget) return;\n      if (SUB_OPEN_KEYS",
+    )
+
+    before_matches = [
+        item
+        for item in _findings(before, "packages/react/menu/src/menu.tsx")
+        if item["id"] == "A11Y-FOCUSABLE-DESCENDANT-KEY-INTERCEPTION"
+    ]
+    assert len(before_matches) == 1
+    assert not any(
+        item["id"] == "A11Y-FOCUSABLE-DESCENDANT-KEY-INTERCEPTION"
+        for item in _findings(after, "packages/react/menu/src/menu.tsx")
+    )
+
+
+def test_unrelated_keydown_handler_is_not_reported_as_menu_interceptor() -> None:
+    text = """
+    <div onKeyDown={composeEventHandlers(props.onKeyDown, (event) => {
+      if (event.key === 'Enter') console.log(event.currentTarget);
+    })} />
+    """
+
+    assert not any(
+        item["id"] == "A11Y-FOCUSABLE-DESCENDANT-KEY-INTERCEPTION"
+        for item in _findings(text, "src/unrelated.tsx")
+    )
