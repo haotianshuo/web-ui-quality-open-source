@@ -4,9 +4,9 @@
   "RIGHTS_BLOCKED": 0,
   "auditedAt": "2026-09-09",
   "candidate": {
-    "candidateOnly": true,
+    "candidateOnly": false,
     "product": "web-ui-quality",
-    "publicGithubRelease": "HOLD",
+    "publicGithubRelease": "PUBLISHED_PREVIEW",
     "rootLicense": "Apache-2.0",
     "stage": "4.3.0-open-source",
     "version": "4.3.0"
@@ -18,7 +18,7 @@
     "status": "CLOSED_FOR_DISTRIBUTED_FILES",
     "thirdPartyProvenanceStatus": "CLOSED_FOR_DISTRIBUTED_FILES"
   },
-  "fileCount": 535,
+  "fileCount": 545,
   "files": [
     {
       "bytes": 3807,
@@ -31,6 +31,57 @@
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
       "sha256": "26ba4cf373d18a270670fe5993b05b2767f6b9be7d440e00300ae8fa153ae643",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 1135,
+      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "d4b64cfbdf8ead436649915dc48a29385044af432efd23eb10a0e5f103de3f5d",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 914,
+      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "8874cdb4161c7eec2c35078d2e889c672047913b16358dde38fd5a5e909c6bc1",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 698,
+      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "a7d08f39830568de6e340f8eada260e45f8814b44c1af87e48ab9119ce6c9b69",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -55,7 +106,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 276,
+      "bytes": 282,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -64,7 +115,7 @@
       "path": ".gitignore",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "dbf5347ec3b6c53a29adf12c035c3f8a67e63217872260c16c2e5448bbcd73dc",
+      "sha256": "55e13c085a6216159189382597ab21bc9e590eade085773026478711a78014bc",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -140,6 +191,23 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 711,
+      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "CODE_OF_CONDUCT.md",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "8e30f82ea5f9dd6194623048a7c50e6b7771649ea99b86de096b2c433691def3",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 1128,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -167,6 +235,23 @@
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
       "sha256": "8dbe8a024eb03225e9116845815f9068436ef9ac10e354c0d2876a52750b4102",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 3166,
+      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "DEPENDENCY_LICENSE_REVIEW.md",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "df6e30bc42524384a40e1027179d89dd9e3ab439b9c2274427c2f230cfd6bc65",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -225,7 +310,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1102,
+      "bytes": 1295,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -234,7 +319,7 @@
       "path": "MANIFEST.in",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "88dae129fd3e164e56ca807757fd1dd727e25ed9fa3bdf95e3904e37c04c41b9",
+      "sha256": "3b32beef2421f096424fcf7a084156ee0de8ef8dbe291807b3e7690bbac6864a",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -242,7 +327,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1309,
+      "bytes": 1374,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -251,7 +336,7 @@
       "path": "NOTICE.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "a436ac7df39db697a8e4b55ff93d8169e3a0428eb641cce3fba7a3327bc4072d",
+      "sha256": "6c4219a48f41aba722223487509692160a1c91121a8ec510b799e6cd522c32e5",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -276,7 +361,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2683,
+      "bytes": 3001,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -285,7 +370,7 @@
       "path": "PUBLICATION.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "d61cf6d5ace49e34ee87deb576cd47548e4e87ffe3b9a5c71c7ece08705f1470",
+      "sha256": "ac4aac6bd0da12a5bee8ba57e796f11a470b72341c01e67c9ffd004469c953ee",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -293,7 +378,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 4732,
+      "bytes": 5894,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -302,7 +387,7 @@
       "path": "README.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "2ba40dcdda41c54f4e5af86c156a0afda74f7103cba9b20273f08ca848c4b0bb",
+      "sha256": "5f5e823e35134d5bf08ca7adf247b9889f99a8de47b861368224cd49c1a97293",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -378,7 +463,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3619,
+      "bytes": 1269,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -387,7 +472,7 @@
       "path": "THIRD_PARTY_NOTICES.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "182ddbd47b88ca10f7833a831780fb4719355432d52f2842ff4da3442cc3cc14",
+      "sha256": "4b2466b5ca1f894cefc2faea024c2e09cb15dacdd3116dcf3b327f8cfa5ff35a",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -463,7 +548,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 430,
+      "bytes": 627,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -472,7 +557,7 @@
       "path": "examples/README.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "a89947f3044bb1e9a80c09c86f44c3aef88d1b52409e50c3602d6b0ded0c7585",
+      "sha256": "dc5dfc884ad9bca34d10149eabaced5ed8c0cb44d4d8c40228500220bab337de",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -524,6 +609,91 @@
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
       "sha256": "5cefde5397a515dd8ab80a2899bab8875802ea6c5a6814d2dd088a4670731b31",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 1288,
+      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "examples/scope-drift-demo/README.md",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "6bfd4d380a2ab6eb0dd0afc22082104137d112e70c3cb5baae6d32d239ae8e29",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 384,
+      "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "examples/scope-drift-demo/actual-drift-gate.json",
+      "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "2a37c22d575bce738980f7431af3d9cdbd7ab9feec9eaf2176fd0d72a1c63c60",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 4151,
+      "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "examples/scope-drift-demo/actual-run.json",
+      "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "770548a4eae6a05407aec32fa320c2ab9c50ec3bf1444ec5f2ae54dda5e742dd",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 108,
+      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "examples/scope-drift-demo/companion.txt",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "28279d5e5e5f446c8f8604fd0e3cc366fa473ee4c4683dfab7b0af7d10c7736c",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 411,
+      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "examples/scope-drift-demo/component.html",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "c0205918e641b92da9d90d9af53275ab2bcbee1e2dd7ba4ac1393028500d5a22",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7297,7 +7467,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 22814,
+      "bytes": 23070,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7306,7 +7476,7 @@
       "path": "scripts/release.py",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "660e912eb2b6bb5636d22ddc08b5c9a962d15b448fa08d267f7e4c21cef6b3e9",
+      "sha256": "18ce315e5128f3d78d570a71a8defa268e8f6cd1923522bdb4578cbffa885ebf",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -9212,10 +9382,10 @@
     "thirdPartyExpressiveContentFoundInDistributedCandidate": false
   },
   "statusCounts": {
-    "GENERATED_FROM_WUQ_CONFIRMED": 182,
-    "REWRITE_INDEPENDENTLY": 16,
+    "GENERATED_FROM_WUQ_CONFIRMED": 184,
+    "REWRITE_INDEPENDENTLY": 22,
     "THIRD_PARTY_APACHE_COMPATIBLE": 1,
-    "WUQ_ORIGINAL_CONFIRMED": 336
+    "WUQ_ORIGINAL_CONFIRMED": 338
   },
   "title": "Final public source manifest for the Web UI Quality Apache candidate",
   "validationContract": {

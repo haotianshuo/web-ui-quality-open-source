@@ -1,7 +1,7 @@
 {
   "claimBoundary": "This manifest proves deterministic package-tree composition. The final archive SHA-256 is external and is not self-referenced here; Real Codex Host qualification is not implied.",
   "evidenceSchemaVersion": "3.0",
-  "fileCount": 536,
+  "fileCount": 546,
   "files": [
     {
       "bytes": 3807,
@@ -9,14 +9,29 @@
       "sha256": "26ba4cf373d18a270670fe5993b05b2767f6b9be7d440e00300ae8fa153ae643"
     },
     {
+      "bytes": 1135,
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "sha256": "d4b64cfbdf8ead436649915dc48a29385044af432efd23eb10a0e5f103de3f5d"
+    },
+    {
+      "bytes": 914,
+      "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
+      "sha256": "8874cdb4161c7eec2c35078d2e889c672047913b16358dde38fd5a5e909c6bc1"
+    },
+    {
+      "bytes": 698,
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "sha256": "a7d08f39830568de6e340f8eada260e45f8814b44c1af87e48ab9119ce6c9b69"
+    },
+    {
       "bytes": 619,
       "path": ".github/workflows/ci.yml",
       "sha256": "a069db7c516ce1f52709c33c7dd2b0de0b22de3d59bbff0947b4b527634a7368"
     },
     {
-      "bytes": 276,
+      "bytes": 282,
       "path": ".gitignore",
-      "sha256": "dbf5347ec3b6c53a29adf12c035c3f8a67e63217872260c16c2e5448bbcd73dc"
+      "sha256": "55e13c085a6216159189382597ab21bc9e590eade085773026478711a78014bc"
     },
     {
       "bytes": 1123,
@@ -39,6 +54,11 @@
       "sha256": "e0db95a7cc3dcb8c10c80dadca1eece0ac6c67556db275b66f151dd01fe34e38"
     },
     {
+      "bytes": 711,
+      "path": "CODE_OF_CONDUCT.md",
+      "sha256": "8e30f82ea5f9dd6194623048a7c50e6b7771649ea99b86de096b2c433691def3"
+    },
+    {
       "bytes": 1128,
       "path": "COMPATIBILITY_MATRIX.md",
       "sha256": "ec4838286c251f84db19a6cfb881b68e8a9644397007809be6a19c46e668ec47"
@@ -49,9 +69,14 @@
       "sha256": "8dbe8a024eb03225e9116845815f9068436ef9ac10e354c0d2876a52750b4102"
     },
     {
-      "bytes": 465498,
+      "bytes": 3166,
+      "path": "DEPENDENCY_LICENSE_REVIEW.md",
+      "sha256": "df6e30bc42524384a40e1027179d89dd9e3ab439b9c2274427c2f230cfd6bc65"
+    },
+    {
+      "bytes": 474094,
       "path": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
-      "sha256": "520df4e95905163e5a06a7f32eaad9e720fe1cf66221e62261b398111f1ba07b"
+      "sha256": "45d2ded2afa1f199f091e83fe7a42fd51f3503c153fdb8f8940b4fc18934b293"
     },
     {
       "bytes": 1264,
@@ -69,14 +94,14 @@
       "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1"
     },
     {
-      "bytes": 1102,
+      "bytes": 1295,
       "path": "MANIFEST.in",
-      "sha256": "88dae129fd3e164e56ca807757fd1dd727e25ed9fa3bdf95e3904e37c04c41b9"
+      "sha256": "3b32beef2421f096424fcf7a084156ee0de8ef8dbe291807b3e7690bbac6864a"
     },
     {
-      "bytes": 1309,
+      "bytes": 1374,
       "path": "NOTICE.md",
-      "sha256": "a436ac7df39db697a8e4b55ff93d8169e3a0428eb641cce3fba7a3327bc4072d"
+      "sha256": "6c4219a48f41aba722223487509692160a1c91121a8ec510b799e6cd522c32e5"
     },
     {
       "bytes": 1196,
@@ -84,14 +109,14 @@
       "sha256": "cef304bf7db67ed616d473f1e3f7a707982723587724fadeec8e1e4c5cb48d94"
     },
     {
-      "bytes": 2683,
+      "bytes": 3001,
       "path": "PUBLICATION.md",
-      "sha256": "d61cf6d5ace49e34ee87deb576cd47548e4e87ffe3b9a5c71c7ece08705f1470"
+      "sha256": "ac4aac6bd0da12a5bee8ba57e796f11a470b72341c01e67c9ffd004469c953ee"
     },
     {
-      "bytes": 4732,
+      "bytes": 5894,
       "path": "README.md",
-      "sha256": "2ba40dcdda41c54f4e5af86c156a0afda74f7103cba9b20273f08ca848c4b0bb"
+      "sha256": "5f5e823e35134d5bf08ca7adf247b9889f99a8de47b861368224cd49c1a97293"
     },
     {
       "bytes": 1002,
@@ -114,9 +139,9 @@
       "sha256": "a7e4262f420a14a29cc8fd15c5e57a775c8efc40c4e16c5d9670a21884facdd9"
     },
     {
-      "bytes": 3619,
+      "bytes": 1269,
       "path": "THIRD_PARTY_NOTICES.md",
-      "sha256": "182ddbd47b88ca10f7833a831780fb4719355432d52f2842ff4da3442cc3cc14"
+      "sha256": "4b2466b5ca1f894cefc2faea024c2e09cb15dacdd3116dcf3b327f8cfa5ff35a"
     },
     {
       "bytes": 480,
@@ -139,9 +164,9 @@
       "sha256": "b765dfa972049da0fb581b764e2e230f5e0a1398a2009b4d39053149286755b4"
     },
     {
-      "bytes": 430,
+      "bytes": 627,
       "path": "examples/README.md",
-      "sha256": "a89947f3044bb1e9a80c09c86f44c3aef88d1b52409e50c3602d6b0ded0c7585"
+      "sha256": "dc5dfc884ad9bca34d10149eabaced5ed8c0cb44d4d8c40228500220bab337de"
     },
     {
       "bytes": 540,
@@ -157,6 +182,31 @@
       "bytes": 217,
       "path": "examples/qualification-collection/independent-label-response.example.json",
       "sha256": "5cefde5397a515dd8ab80a2899bab8875802ea6c5a6814d2dd088a4670731b31"
+    },
+    {
+      "bytes": 1288,
+      "path": "examples/scope-drift-demo/README.md",
+      "sha256": "6bfd4d380a2ab6eb0dd0afc22082104137d112e70c3cb5baae6d32d239ae8e29"
+    },
+    {
+      "bytes": 384,
+      "path": "examples/scope-drift-demo/actual-drift-gate.json",
+      "sha256": "2a37c22d575bce738980f7431af3d9cdbd7ab9feec9eaf2176fd0d72a1c63c60"
+    },
+    {
+      "bytes": 4151,
+      "path": "examples/scope-drift-demo/actual-run.json",
+      "sha256": "770548a4eae6a05407aec32fa320c2ab9c50ec3bf1444ec5f2ae54dda5e742dd"
+    },
+    {
+      "bytes": 108,
+      "path": "examples/scope-drift-demo/companion.txt",
+      "sha256": "28279d5e5e5f446c8f8604fd0e3cc366fa473ee4c4683dfab7b0af7d10c7736c"
+    },
+    {
+      "bytes": 411,
+      "path": "examples/scope-drift-demo/component.html",
+      "sha256": "c0205918e641b92da9d90d9af53275ab2bcbee1e2dd7ba4ac1393028500d5a22"
     },
     {
       "bytes": 433,
@@ -2149,9 +2199,9 @@
       "sha256": "bcb98575eeafaf2cdfe617329d09fc9c1b7ccee5001eb2b4c87c911a8c694257"
     },
     {
-      "bytes": 22814,
+      "bytes": 23070,
       "path": "scripts/release.py",
-      "sha256": "660e912eb2b6bb5636d22ddc08b5c9a962d15b448fa08d267f7e4c21cef6b3e9"
+      "sha256": "18ce315e5128f3d78d570a71a8defa268e8f6cd1923522bdb4578cbffa885ebf"
     },
     {
       "bytes": 6143,
@@ -2687,7 +2737,7 @@
   "kernelBaseVersion": "4.0.0-rc.1",
   "kernelVersion": "4.2.3",
   "packageStage": "4.3.0-open-source",
-  "packageTreeDigest": "259ae700611037a9a160fb27c92b75aa0604e2a01317dadc779ca074361898b4",
+  "packageTreeDigest": "da4b0a5fde0288c1eb2df548e18629443181fbbf548189b83078baea166c047e",
   "packageVersion": "4.3.0",
   "pluginVersion": "4.3.0",
   "product": "web-ui-quality",

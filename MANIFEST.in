@@ -1,4 +1,5 @@
-include README.md LICENSE NOTICE.md THIRD_PARTY_NOTICES.md CHANGELOG.md SECURITY.md SECURITY_RESPONSE_POLICY.md PUBLICATION.md SOURCE_PROVENANCE.md FINAL_PUBLIC_SOURCE_MANIFEST.json CONTRIBUTING.md pytest.ini pyproject.toml setup.cfg run_tests.py .gitignore .github/workflows/ci.yml
+include README.md LICENSE NOTICE.md THIRD_PARTY_NOTICES.md DEPENDENCY_LICENSE_REVIEW.md CHANGELOG.md SECURITY.md SECURITY_RESPONSE_POLICY.md PUBLICATION.md SOURCE_PROVENANCE.md FINAL_PUBLIC_SOURCE_MANIFEST.json CONTRIBUTING.md CODE_OF_CONDUCT.md examples/README.md pytest.ini pyproject.toml setup.cfg run_tests.py .gitignore .github/workflows/ci.yml .github/PULL_REQUEST_TEMPLATE.md
+recursive-include .github/ISSUE_TEMPLATE *.yml
 recursive-include .codex-plugin *.json
 recursive-include assets *.svg
 recursive-include runtime/python/web_ui_quality *.py
@@ -10,6 +11,7 @@ include schemas/product-experience-report.schema.json
 include runtime/python/web_ui_quality/schemas/product-experience-report.schema.json
 recursive-include examples/ui-inventory-demo *
 recursive-include examples/qualification-collection *
+recursive-include examples/scope-drift-demo *
 recursive-include scripts *.sh *.ps1 *.py
 recursive-include tests/public *.py
 global-exclude *.py[cod]
