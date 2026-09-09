@@ -28,7 +28,8 @@ from web_ui_quality.release_info import (PRODUCT_NAME, PACKAGE_STAGE, PACKAGE_VE
 
 
 ROOT_FILES = {
-    "README.md", "LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md", "CHANGELOG.md",
+    "README.md", "LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md", "DEPENDENCY_LICENSE_REVIEW.md", "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
     "SECURITY.md", "SECURITY_RESPONSE_POLICY.md", "PUBLICATION.md", "SOURCE_PROVENANCE.md",
     "TRADEMARKS.md", "CONTRIBUTING.md", "pytest.ini", "MANIFEST.in", "pyproject.toml",
     "setup.cfg", "run_tests.py", "KNOWN_LIMITATIONS.md", "ARCHITECTURE.md",
@@ -42,7 +43,7 @@ ROOT_FILES = {
 # external challenge evidence. Public packaging must use this same boundary.
 ROOT_DIRS = {".codex-plugin", ".github", "assets", "examples", "references", "runtime", "schemas", "scripts", "skills", "tests"}
 EXCLUDED_PARTS = {
-    ".git", ".pytest_cache", ".test-workspace", "__pycache__", "build", "dist",
+    ".git", ".pytest_cache", ".test-workspace", ".wuq", "__pycache__", "build", "dist",
     "external-proof", "reports",
 }
 HISTORICAL_HEADING = re.compile(r"(?im)^#{1,3}\s+\d+\.\d+\.\d+[^\n]*\bRC\d*\b")
@@ -157,7 +158,10 @@ def _entries() -> list[tuple[str, bytes, int]]:
 
 def parse_release_doc_identity(text: str) -> dict[str, str | None]:
     """Parse the structured release header instead of searching loose text."""
-    header = "\n".join(text.splitlines()[:12])
+    # The public README keeps the human-facing introduction first and places
+    # the compact identity block below it. Parse the whole document so package
+    # validation does not force internal release metadata into the first screen.
+    header = text
 
     def value(pattern: str) -> str | None:
         match = re.search(pattern, header, flags=re.IGNORECASE | re.MULTILINE)
@@ -389,8 +393,8 @@ def validate() -> dict[str, object]:
         "openSourceLicense": "Apache-2.0",
         "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
         "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-        "publicationStatus": "HOLD_PUBLIC_GITHUB_RELEASE",
-        "promotionStatus": "CANDIDATE_ONLY",
+        "publicationStatus": "PUBLISHED_PREVIEW",
+        "promotionStatus": "PREVIEW_NOT_GA",
         "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
         "version": PACKAGE_VERSION,
         "packageStage": PACKAGE_STAGE,
@@ -448,8 +452,8 @@ def main() -> int:
             "openSourceLicense": "Apache-2.0",
             "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
             "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-            "publicationStatus": "HOLD_PUBLIC_GITHUB_RELEASE",
-            "promotionStatus": "CANDIDATE_ONLY",
+            "publicationStatus": "PUBLISHED_PREVIEW",
+            "promotionStatus": "PREVIEW_NOT_GA",
             "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
             "version": PACKAGE_VERSION,
             "packageStage": PACKAGE_STAGE,

@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {
+      "name": "tool-filesystem-plan",
+      "status": "PASS"
+    },
+    {
+      "name": "tool-run-binding",
+      "status": "PASS"
+    },
+    {
+      "name": "unexpected-tool-write-blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "unexpected-baseline-drift-blocks-verified",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
+}

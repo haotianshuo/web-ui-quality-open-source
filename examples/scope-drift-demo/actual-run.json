@@ -1,0 +1,103 @@
+{
+  "changes": [
+    "Patch candidate limited to component.html"
+  ],
+  "claimBoundary": "TaskResult separates execution completion, task outcome, and verification coverage. VERIFIED never implies whole-repository verification when globalProject is PARTIAL or UNKNOWN.",
+  "claims": [
+    {
+      "claim": "No broader success claim is made beyond the recorded outcome and coverage.",
+      "evidenceRefs": [],
+      "status": "NOT_VERIFIED"
+    }
+  ],
+  "coverage": {
+    "claimBoundary": "PATCH coverage refers only to the exact sealed repair scope and critical context. PARTIAL global coverage never proves that unindexed repository files were unchanged.",
+    "criticalContext": "COMPLETE",
+    "globalProject": "COMPLETE",
+    "patchScope": "COMPLETE",
+    "scope": "PATCH",
+    "target": "COMPLETE"
+  },
+  "executionId": "wuq-da513cce6a1349cb",
+  "executionStatus": "COMPLETED",
+  "hypotheses": [
+    {
+      "evidenceRefs": [],
+      "statement": "Root cause remains bounded to the confirmed finding/source scope",
+      "status": "NOT_VERIFIED"
+    }
+  ],
+  "kind": "REPAIR",
+  "nextAction": "审查 Patch Candidate；由 Host 应用后，把 Host write receipt 和列出的 project-tool result 带回同一 run 完成验证。",
+  "observations": [
+    "已完成页面快检，但关键旅程尚未得到足够证据，暂时无法确认能否交付。",
+    "已完成页面快检，但关键旅程尚未得到足够证据，暂时无法确认能否交付。"
+  ],
+  "outcome": "NOT_VERIFIED",
+  "protectedScope": [
+    "companion"
+  ],
+  "repairReport": {
+    "answers": {
+      "howVerified": [
+        "Verification budget: FULL / REPRESENTATIVE_PLUS_INTEGRATION",
+        "Project-owned tools require Host approval before execution"
+      ],
+      "remainingRiskOrUnknown": [
+        "No source write has occurred yet; Runtime cannot self-authorize writes"
+      ],
+      "rootCause": "Root cause remains bounded to the confirmed finding/source scope",
+      "whatChanged": [
+        "Patch candidate limited to component.html"
+      ],
+      "whatWasReproduced": "已完成页面快检，但关键旅程尚未得到足够证据，暂时无法确认能否交付。",
+      "whatYouAsked": "修复 component.html 里的保存按钮；不要修改 companion.txt"
+    },
+    "authentication": "anonymous",
+    "claimBoundary": "The report summarizes sealed evidence and explicit verification results; omitted or unavailable evidence remains unverified.",
+    "nextAction": "审查 Patch Candidate；由 Host 应用后，把 Host write receipt 和列出的 project-tool result 带回同一 run 完成验证。",
+    "request": "修复 component.html 里的保存按钮；不要修改 companion.txt",
+    "schemaVersion": "1",
+    "status": "NOT_VERIFIED",
+    "taskState": {
+      "resumable": true,
+      "resumeHint": "继续上次任务",
+      "runId": "wuq-da513cce6a1349cb"
+    },
+    "verificationSummary": {
+      "browser": "BEFORE_RECORDED",
+      "hostWrite": "HOST_RECEIPT_REQUIRED",
+      "overall": "AWAITING_HOST_WRITE",
+      "patchQuality": "QUALITY_OK",
+      "projectDrift": "NOT_APPLICABLE",
+      "projectTools": "NOT_APPLICABLE"
+    }
+  },
+  "repairStatus": "NOT_VERIFIED",
+  "request": "修复 component.html 里的保存按钮；不要修改 companion.txt",
+  "review": {
+    "available": false,
+    "claimBoundary": "No repair-scope revert plan is available for this task result.",
+    "hostExecutionRequired": false,
+    "revertPlanDigest": null,
+    "revertScope": null
+  },
+  "schemaVersion": "1",
+  "subjectStatus": "NOT_VERIFIED",
+  "taskId": "cli-task-dabaab6332fbfb19",
+  "taskState": {
+    "resumable": true,
+    "resumeHint": "继续上次任务"
+  },
+  "uncertainties": [
+    "No source write has occurred yet; Runtime cannot self-authorize writes"
+  ],
+  "verification": {
+    "browser": "BEFORE_RECORDED",
+    "hostWrite": "HOST_RECEIPT_REQUIRED",
+    "overall": "AWAITING_HOST_WRITE",
+    "patchQuality": "QUALITY_OK",
+    "projectDrift": "NOT_APPLICABLE",
+    "projectTools": "NOT_APPLICABLE"
+  }
+}

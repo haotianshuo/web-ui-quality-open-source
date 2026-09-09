@@ -1,0 +1,2 @@
+This file is intentionally outside the approved component.html scope.
+Keep it unchanged during the example.

@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible problem in the public source preview
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please remove secrets, cookies, storage state, private URLs, and personal data before posting.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: Include the preview version or exact commit you tested.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: List the smallest safe steps and the command you ran.
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual result
+      description: Explain what you expected and what happened.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Python version, operating system, optional Browser/Host capability, and relevant dependencies.
+    validations:
+      required: true
+
