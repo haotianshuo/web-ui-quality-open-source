@@ -1177,7 +1177,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 33824,
+      "bytes": 34068,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -1186,7 +1186,7 @@
       "path": "runtime/python/web_ui_quality/consultant_preview.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "01782a5b1476593e9961a4e256d4600318df05eaca8629c210b6e6e23ac8d023",
+      "sha256": "647f8789cfc1c53f05dc223224cd5c67b0360d0600149ea27804cd54e094b67d",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
