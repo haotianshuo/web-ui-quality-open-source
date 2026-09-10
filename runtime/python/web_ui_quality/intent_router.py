@@ -51,9 +51,10 @@ _RULES: tuple[dict[str, Any], ...] = (
         "compatIntent": "fix",
         "patterns": (
             r"修复", r"修好", r"修一下", r"修掉", r"改一下", r"改好", r"直接改", r"帮我改", r"优化一下",
-            r"优化这个页面", r"按照刚才", r"把这些问题", r"修改", r"调整", r"改成", r"换成", r"更新", r"修正",
+            r"优化这个页面", r"按照刚才", r"把这些问题", r"帮我处理", r"处理好", r"处理一下", r"帮我改善", r"改善一下", r"改善",
+            r"修改", r"调整", r"改成", r"换成", r"更新", r"修正",
             r"implement", r"\bfix\b", r"repair", r"apply the changes", r"make the changes",
-            r"\b(?:change|edit|update|adjust)\b",
+            r"\b(?:change|edit|update|adjust|improve|handle)\b",
         ),
         "rationale": "用户要求对已知问题实施受控修复。",
         "writeRequested": True,
@@ -63,7 +64,9 @@ _RULES: tuple[dict[str, Any], ...] = (
         "compatIntent": "specialized-audit",
         "patterns": (
             r"无障碍", r"accessibility", r"a11y", r"性能", r"performance",
-            r"安全", r"security", r"lighthouse", r"完整商业验收", r"全量验收",
+            r"(?:安全|security).{0,16}(?:审计|专项检查|合规检查|audit|review|assessment)",
+            r"(?:检查|check|review).{0,24}(?:安全问题|security|安全性)", r"安全审计", r"security\s+audit",
+            r"lighthouse", r"完整商业验收", r"全量验收",
             r"专项", r"合规", r"审计", r"responsive", r"响应式", r"断点",
             r"ui\s*asset", r"ui\s*inventory", r"资产盘点", r"按钮统计",
             r"风格统计", r"样式统计", r"全站\s*ui",

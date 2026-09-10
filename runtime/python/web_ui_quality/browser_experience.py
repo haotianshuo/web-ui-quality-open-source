@@ -87,6 +87,8 @@ _EXPERIENCE_GEOMETRY_JS = r"""
   const effectiveBackground=el=>{let cur=el;while(cur){const value=getComputedStyle(cur).backgroundColor;if(value&&value!=='transparent'&&!/^rgba\(0,\s*0,\s*0,\s*0\)$/.test(value))return value;cur=cur.parentElement;}return 'rgb(255, 255, 255)';};
   const isPrimary=el=>el.matches('.primary,[data-variant=primary],button[type=submit],[aria-current=page]');
   const finite=raw=>{const value=Number(raw);return Number.isFinite(value)?+value.toFixed(2):null;};
+  const viewportWidth=Math.round((window.visualViewport&&window.visualViewport.width)||document.documentElement?.clientWidth||window.innerWidth);
+  const viewportHeight=Math.round((window.visualViewport&&window.visualViewport.height)||document.documentElement?.clientHeight||window.innerHeight);
   const visualItem=el=>{const s=getComputedStyle(el);return {selector:selector(el),role:el.getAttribute('role')||el.tagName.toLowerCase(),text:(el.getAttribute('aria-label')||el.textContent||'').trim().slice(0,120),fontSizePx:finite(parseFloat(s.fontSize)),fontWeight:s.fontWeight,lineHeightPx:finite(parseFloat(s.lineHeight)),color:s.color,backgroundColor:effectiveBackground(el),bounds:rect(el),visible:true,isPrimary:isPrimary(el),isCta:el.matches('button,a[href],[role=button]')};};
   const elements=[...document.querySelectorAll('body *')].filter(visible).slice(0,2500);
   const interactive=[...document.querySelectorAll('button,a[href],input,select,textarea,[role=button],[tabindex]')].filter(visible);
@@ -111,10 +113,10 @@ _EXPERIENCE_GEOMETRY_JS = r"""
   }
   const tables=[...document.querySelectorAll('table,[role=grid],[role=table]')].filter(visible).map(el=>{
     const r=rect(el), parent=el.parentElement, ps=parent?getComputedStyle(parent):null;
-    return {selector:selector(el),rect:r,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,columnCount:el.querySelectorAll('tr:first-child th,tr:first-child td').length,localScroll:!!(ps&&['auto','scroll'].includes(ps.overflowX)),viewportOverflow:r.right>innerWidth+1};
+    return {selector:selector(el),rect:r,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,columnCount:el.querySelectorAll('tr:first-child th,tr:first-child td').length,localScroll:!!(ps&&['auto','scroll'].includes(ps.overflowX)),viewportOverflow:r.right>viewportWidth+1};
   });
   const dialogs=[...document.querySelectorAll('dialog,[role=dialog],[aria-modal=true],.modal,.drawer,.sheet')].filter(visible).map(el=>{
-    const r=rect(el); return {selector:selector(el),rect:r,oversized:r.width>innerWidth-16||r.height>innerHeight-16,offscreen:r.x<0||r.y<0||r.right>innerWidth||r.bottom>innerHeight};
+    const r=rect(el); return {selector:selector(el),rect:r,oversized:r.width>viewportWidth-16||r.height>viewportHeight-16,offscreen:r.x<0||r.y<0||r.right>viewportWidth||r.bottom>viewportHeight};
   });
   const navigation=[...document.querySelectorAll('nav,[role=navigation],header,.sidebar,.sidenav')].filter(visible).map(el=>({selector:selector(el),rect:rect(el),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,overflow:el.scrollWidth>el.clientWidth+1,expanded:el.getAttribute('aria-expanded')}));
   const fixed=[...document.querySelectorAll('body *')].filter(el=>visible(el)&&['fixed','sticky'].includes(getComputedStyle(el).position));
@@ -149,9 +151,9 @@ _EXPERIENCE_GEOMETRY_JS = r"""
   const headings=visualElements.filter(item=>['h1','h2','h3','heading'].includes(item.role)).map(item=>({selector:item.selector,text:item.text,fontSize:item.fontSizePx,fontWeight:item.fontWeight,rect:item.bounds}));
   const bodyFont=finite(parseFloat(getComputedStyle(document.body).fontSize||'16'));
   return {
-    id:viewportId||String(innerWidth)+'x'+String(innerHeight),
-    width:innerWidth,height:innerHeight,clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,
-    contentWidth:+mr.width.toFixed(1),contentOccupancy:+(mr.width/Math.max(1,innerWidth)).toFixed(3),
+    id:viewportId||String(viewportWidth)+'x'+String(viewportHeight),
+    width:viewportWidth,height:viewportHeight,innerWidth,innerHeight,clientWidth:document.documentElement.clientWidth,clientHeight:document.documentElement.clientHeight,scrollWidth:document.documentElement.scrollWidth,
+    contentWidth:+mr.width.toFixed(1),contentOccupancy:+(mr.width/Math.max(1,viewportWidth)).toFixed(3),
     minimumGapPx:minimumGapPx===null?null:+minimumGapPx.toFixed(1),minimumTargetPx:minimumTargetPx===null?null:+minimumTargetPx.toFixed(1),
     alignmentDeviationPx:alignmentDeviationPx===null?null:+alignmentDeviationPx.toFixed(1),
     layoutSystems,buttonGroups,buttons:targets.slice(0,200),tables,dialogs,navigation,fixedOcclusions,overlaps,

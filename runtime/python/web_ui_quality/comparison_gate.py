@@ -1,6 +1,7 @@
 """Evidence gate for Before/After comparability and improvement claims."""
 from __future__ import annotations
 
+import re
 from typing import Any, Mapping, Sequence
 from urllib.parse import urlsplit
 
@@ -216,6 +217,243 @@ def _runtime_claim_report(report: Mapping[str, Any], *, side: Mapping[str, Any],
     return derived
 
 
+_TASK_OBJECTIVE_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("RUNTIME_HEALTH", (r"运行时", r"报错", r"出错", r"错误", r"崩溃", r"状态.{0,8}(?:异常|出错)", r"runtime", r"error")),
+    ("FOCUS_AFFORDANCE", (r"焦点", r"键盘", r"\btab\b", r"focus", r"keyboard")),
+    ("LOW_CONTRAST", (r"对比度", r"看不清", r"不清晰", r"可读", r"contrast", r"readab")),
+    ("CLIPPED_CONTENT", (r"显示不全", r"裁切", r"剪裁", r"截断", r"内容.{0,12}完整", r"clip", r"truncat", r"cut\s+off")),
+    ("HORIZONTAL_OVERFLOW", (r"横向", r"水平.{0,8}溢出", r"horizontal\s+overflow")),
+)
+
+
+def _task_objective_kinds(request: str | None) -> tuple[str, ...]:
+    text = str(request or "")
+    return tuple(
+        name for name, patterns in _TASK_OBJECTIVE_PATTERNS
+        if any(re.search(pattern, text, flags=re.IGNORECASE) for pattern in patterns)
+    )
+
+
+def _task_objective_side(
+    report: Mapping[str, Any] | None,
+    *,
+    expected_viewports: Sequence[Sequence[int]],
+    side: str,
+    kind: str,
+) -> dict[str, Any]:
+    """Validate the structural evidence needed by a named measured objective.
+
+    This is deliberately narrower than a generic health override.  A measured
+    objective may explain an expected defect-bearing Before record, but it
+    cannot excuse a missing target, bad viewport trace, unreachable page,
+    blocked resource, or an After runtime error.
+    """
+    base = _runtime_side(report, expected_viewports=expected_viewports, side=side)
+    source = report if isinstance(report, Mapping) else {}
+    runtime = source.get("runtime") if isinstance(source.get("runtime"), Mapping) else {}
+    records = [row for row in list(runtime.get("records") or []) if isinstance(row, Mapping)]
+    reasons = set(str(item) for item in base.get("reasons") or [])
+    allowed_expected = set()
+    if kind == "RUNTIME_HEALTH" and side == "before":
+        allowed_expected.update({"BROWSER_RECORD_NOT_PASS", "BROWSER_EVIDENCE_NOT_VERIFIED", "BROWSER_RUNTIME_ERRORS"})
+
+    auth_boundary = False
+    if kind == "LOW_CONTRAST":
+        auth_boundary = bool(records) and all(
+            str((row.get("readiness") or {}).get("status") or "").upper() == "AUTH_REQUIRED"
+            and bool((row.get("metrics") or {}).get("authWallHint"))
+            for row in records
+        )
+        if auth_boundary:
+            allowed_expected.update({"BROWSER_RECORD_NOT_PASS", "BROWSER_EVIDENCE_NOT_VERIFIED"})
+
+    custom_reasons: list[str] = []
+    if not records:
+        custom_reasons.append("NO_BROWSER_RECORDS")
+    for row in records:
+        normalization = row.get("viewportNormalization") if isinstance(row.get("viewportNormalization"), Mapping) else {}
+        if str(normalization.get("status") or "").upper() != "MATCHED":
+            custom_reasons.append("VIEWPORT_NORMALIZATION_NOT_MATCHED")
+
+        readiness_status = str((row.get("readiness") or {}).get("status") or "").upper()
+        if kind == "RUNTIME_HEALTH":
+            expected_readiness = "RUNTIME_BROKEN" if side == "before" else "READY"
+            if readiness_status != expected_readiness:
+                custom_reasons.append("RUNTIME_OBJECTIVE_STATE_MISMATCH")
+        elif auth_boundary:
+            if readiness_status != "AUTH_REQUIRED":
+                custom_reasons.append("AUTH_BOUNDARY_NOT_TRACEABLE")
+        elif readiness_status != "READY":
+            custom_reasons.append("PAGE_READINESS_NOT_VERIFIED")
+
+        rendered = row.get("renderedQuality") if isinstance(row.get("renderedQuality"), Mapping) else {}
+        raw = rendered.get("raw") if isinstance(rendered.get("raw"), Mapping) else None
+        evidence = raw.get("evidence") if isinstance(raw, Mapping) and isinstance(raw.get("evidence"), Mapping) else None
+        if evidence is None:
+            custom_reasons.append("TASK_EVIDENCE_MISSING")
+        else:
+            target = source.get("target") if isinstance(source.get("target"), Mapping) else {}
+            route_only = str(target.get("source") or "") == "local-static-project"
+            evidence_url = evidence.get("url")
+            target_url = target.get("url")
+            if _url_key(evidence_url, route_only=route_only) is None or _url_key(evidence_url, route_only=route_only) != _url_key(target_url, route_only=route_only):
+                custom_reasons.append("TASK_EVIDENCE_TARGET_MISMATCH")
+            try:
+                h1_count = int(evidence.get("h1Count") or 0)
+            except (TypeError, ValueError):
+                h1_count = 0
+            if evidence.get("hasMain") is not True or h1_count < 1:
+                custom_reasons.append("TASK_EVIDENCE_NOT_REPRESENTATIVE")
+
+        if kind != "RUNTIME_HEALTH" and side == "after" and list(row.get("pageErrors") or []):
+            custom_reasons.append("AFTER_RUNTIME_ERRORS")
+        if kind == "LOW_CONTRAST" and side == "after" and str(rendered.get("status") or "").upper() != "PASS":
+            custom_reasons.append("AFTER_RENDERED_QUALITY_NOT_PASS")
+
+    rejected = sorted(reasons - allowed_expected)
+    all_reasons = sorted(set(rejected + custom_reasons))
+    return {
+        **base,
+        "status": "SUFFICIENT" if not all_reasons else "INSUFFICIENT",
+        "reasons": all_reasons,
+        "reason": all_reasons[0] if all_reasons else None,
+        "expectedDefectAllowed": sorted(reasons & allowed_expected),
+        "authBoundary": auth_boundary,
+        "objectiveKind": kind,
+    }
+
+
+def _task_objective_signal(report: Mapping[str, Any] | None, *, kind: str, side: str) -> dict[str, Any]:
+    source = report if isinstance(report, Mapping) else {}
+    runtime = source.get("runtime") if isinstance(source.get("runtime"), Mapping) else {}
+    records = [row for row in list(runtime.get("records") or []) if isinstance(row, Mapping)]
+    if not records:
+        return {"status": "NOT_MEASURED", "reason": "NO_BROWSER_RECORDS", "defect": False, "clean": False, "count": 0}
+
+    if kind == "RUNTIME_HEALTH":
+        defect_count = sum(
+            1 for row in records
+            if row.get("pageErrors") or str((row.get("readiness") or {}).get("status") or "").upper() == "RUNTIME_BROKEN"
+        )
+        page_status = str(((source.get("pageHealth") or {}).get("pageStatus")) or "").upper()
+        defect_count = max(defect_count, len(records) if page_status == "RUNTIME_BROKEN" else 0)
+        clean = all(
+            not row.get("pageErrors")
+            and str((row.get("readiness") or {}).get("status") or "").upper() == "READY"
+            and str(row.get("status") or "").upper() in _BROWSER_RECORD_PASS
+            and str(row.get("evidenceStatus") or "").upper() == "VERIFIED"
+            for row in records
+        )
+        return {"status": "MEASURED", "defect": defect_count > 0, "clean": clean, "count": defect_count}
+
+    raw_rows: list[Mapping[str, Any]] = []
+    for row in records:
+        rendered = row.get("renderedQuality") if isinstance(row.get("renderedQuality"), Mapping) else {}
+        raw = rendered.get("raw") if isinstance(rendered.get("raw"), Mapping) else None
+        if not isinstance(raw, Mapping):
+            return {"status": "NOT_MEASURED", "reason": "TASK_EVIDENCE_MISSING", "defect": False, "clean": False, "count": 0}
+        raw_rows.append(raw)
+
+    if kind == "FOCUS_AFFORDANCE":
+        counts: list[Mapping[str, Any]] = []
+        for raw in raw_rows:
+            keyboard = raw.get("keyboardAudit")
+            item = keyboard.get("counts") if isinstance(keyboard, Mapping) else None
+            if not isinstance(item, Mapping) or "missingFocusAffordance" not in item or "focusAffordanceMeasured" not in item:
+                return {"status": "NOT_MEASURED", "reason": "FOCUS_MEASUREMENT_MISSING", "defect": False, "clean": False, "count": 0}
+            try:
+                if int(item.get("missingFocusAffordance")) < 0 or int(item.get("focusAffordanceMeasured")) <= 0:
+                    raise ValueError
+            except (TypeError, ValueError):
+                return {"status": "NOT_MEASURED", "reason": "FOCUS_MEASUREMENT_INVALID", "defect": False, "clean": False, "count": 0}
+            counts.append(item)
+        missing = sum(int(item["missingFocusAffordance"]) for item in counts)
+        measured = sum(int(item["focusAffordanceMeasured"]) for item in counts)
+        return {"status": "MEASURED", "defect": missing > 0, "clean": missing == 0 and measured > 0, "count": missing, "measured": measured}
+
+    issue_key = {
+        "LOW_CONTRAST": "lowContrast",
+        "CLIPPED_CONTENT": "clipped",
+    }.get(kind)
+    if issue_key:
+        samples: list[Any] = []
+        for raw in raw_rows:
+            issues = raw.get("issues")
+            if not isinstance(issues, Mapping) or not isinstance(issues.get(issue_key), list):
+                return {"status": "NOT_MEASURED", "reason": f"{issue_key.upper()}_MEASUREMENT_MISSING", "defect": False, "clean": False, "count": 0}
+            values = list(issues[issue_key])
+            if kind == "LOW_CONTRAST":
+                for item in values:
+                    if not isinstance(item, Mapping):
+                        return {"status": "NOT_MEASURED", "reason": "LOW_CONTRAST_MEASUREMENT_INVALID", "defect": False, "clean": False, "count": 0}
+                    try:
+                        if float(item.get("ratio")) >= float(item.get("threshold")):
+                            return {"status": "NOT_MEASURED", "reason": "LOW_CONTRAST_DEFECT_NOT_PROVEN", "defect": False, "clean": False, "count": 0}
+                    except (TypeError, ValueError):
+                        return {"status": "NOT_MEASURED", "reason": "LOW_CONTRAST_MEASUREMENT_INVALID", "defect": False, "clean": False, "count": 0}
+            samples.extend(values)
+        return {"status": "MEASURED", "defect": bool(samples), "clean": not samples, "count": len(samples)}
+
+    if kind == "HORIZONTAL_OVERFLOW":
+        if any(not isinstance(row.get("horizontalOverflow"), bool) for row in records):
+            return {"status": "NOT_MEASURED", "reason": "HORIZONTAL_OVERFLOW_MEASUREMENT_MISSING", "defect": False, "clean": False, "count": 0}
+        count = sum(1 for row in records if row.get("horizontalOverflow") is True)
+        return {"status": "MEASURED", "defect": count > 0, "clean": count == 0, "count": count}
+
+    return {"status": "NOT_MEASURED", "reason": "TASK_OBJECTIVE_UNKNOWN", "defect": False, "clean": False, "count": 0}
+
+
+def _evaluate_task_objective_claim(
+    before_report: Mapping[str, Any] | None,
+    after_report: Mapping[str, Any] | None,
+    *,
+    request: str | None,
+    expected_viewports: Sequence[Sequence[int]],
+    condition_match: bool,
+    target_match: bool,
+    safe_task_match: bool,
+) -> dict[str, Any] | None:
+    kinds = _task_objective_kinds(request)
+    if not kinds:
+        return None
+    attempts: list[dict[str, Any]] = []
+    for kind in kinds:
+        before_side = _task_objective_side(before_report, expected_viewports=expected_viewports, side="before", kind=kind)
+        after_side = _task_objective_side(after_report, expected_viewports=expected_viewports, side="after", kind=kind)
+        before_signal = _task_objective_signal(before_report, kind=kind, side="before")
+        after_signal = _task_objective_signal(after_report, kind=kind, side="after")
+        attempt = {
+            "kind": kind,
+            "before": {**before_side, "signal": before_signal},
+            "after": {**after_side, "signal": after_signal},
+        }
+        attempts.append(attempt)
+        if not (condition_match and target_match and safe_task_match):
+            continue
+        if before_side["status"] != "SUFFICIENT" or after_side["status"] != "SUFFICIENT":
+            continue
+        if before_signal.get("status") != "MEASURED" or after_signal.get("status") != "MEASURED":
+            continue
+        if not before_signal.get("defect") or not after_signal.get("clean"):
+            continue
+        before_claim_side = {**before_side, "defectSignal": True}
+        after_claim_side = {**after_side, "defectSignal": False}
+        derived = _evaluate_improvement_claim_core(
+            _runtime_claim_report(before_report or {}, side=before_claim_side, expected_viewports=expected_viewports),
+            _runtime_claim_report(after_report or {}, side=after_claim_side, expected_viewports=expected_viewports),
+            condition_match=condition_match, target_match=target_match, safe_task_match=safe_task_match,
+        )
+        derived["evidenceBasis"] = "BROWSER_TASK_OBJECTIVE"
+        derived["browserEvidence"] = {"before": before_side, "after": after_side}
+        derived["taskObjective"] = {"status": "PASS", "kind": kind, "before": before_signal, "after": after_signal}
+        derived["claimBoundary"] = "A task-specific Browser claim requires a current, target-bound, complete viewport matrix and a measured Before defect that is absent in a clean After; it cannot bypass Host, drift, budget, or other Trust Kernel gates."
+        return derived
+    return {
+        "status": "NOT_VERIFIED",
+        "taskObjective": {"status": "NOT_VERIFIED", "attempts": attempts},
+    }
+
+
 def _evaluate_improvement_claim_core(
     before_report: Mapping[str, Any] | None,
     after_report: Mapping[str, Any] | None,
@@ -315,15 +553,36 @@ def evaluate_improvement_claim(
     target_match: bool,
     safe_task_match: bool,
     browser_viewports: Sequence[Sequence[int]] | None = None,
+    request: str | None = None,
 ) -> dict[str, Any]:
     result = _evaluate_improvement_claim_core(
         before_report, after_report,
         condition_match=condition_match, target_match=target_match, safe_task_match=safe_task_match,
     )
     if browser_viewports:
+        objective = _evaluate_task_objective_claim(
+            before_report, after_report, request=request, expected_viewports=browser_viewports,
+            condition_match=condition_match, target_match=target_match, safe_task_match=safe_task_match,
+        )
+        if objective is not None and objective.get("status") == "IMPROVEMENT_CLAIM_ALLOWED":
+            return objective
         before_runtime = _runtime_side(before_report, expected_viewports=browser_viewports, side="before")
         after_runtime = _runtime_side(after_report, expected_viewports=browser_viewports, side="after")
         runtime_evidence = {"before": before_runtime, "after": after_runtime}
+        # Once the request names a measurable objective, an unrelated generic
+        # signal must not promote a stale, missing, or still-broken target to a
+        # verified repair.  Preserve the ordinary runtime evidence for the
+        # report, but keep the claim fail-closed until that objective passes.
+        if objective is not None:
+            result["evidenceBasis"] = "BROWSER_TASK_OBJECTIVE"
+            result["browserEvidence"] = runtime_evidence
+            result["taskObjective"] = objective.get("taskObjective")
+            result["claimBoundary"] = "A named task objective must be measured and cleared by current target-bound Browser evidence; unrelated generic improvements cannot substitute for it."
+            if before_runtime["status"] != "SUFFICIENT":
+                result["beforeEvidenceReason"] = "BROWSER_RUNTIME_EVIDENCE_INSUFFICIENT"
+            if after_runtime["status"] != "SUFFICIENT":
+                result["afterEvidenceReason"] = "BROWSER_RUNTIME_EVIDENCE_INSUFFICIENT"
+            return result
         if result["status"] == "INCONCLUSIVE" and before_runtime["status"] == "SUFFICIENT" and after_runtime["status"] == "SUFFICIENT":
             if isinstance(before_report, Mapping) and isinstance(after_report, Mapping):
                 derived = _evaluate_improvement_claim_core(

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1",
+  "purpose": "Formal Qualification Fix Round bounded Treatment validation",
+  "baselineSha": "f6f830942fb9dd2fe4ae188934fa20e00662ab98",
+  "fixtureSha": "de36ac253d942f2f3805230ce8a2083a9b56d56c",
+  "browserMatrix": [
+    [390, 844],
+    [768, 1024],
+    [1440, 900]
+  ],
+  "tasks": [
+    {
+      "taskId": "Q05",
+      "oracleClass": "CLEAN_CONFIRMED",
+      "expectedOutcome": "CLEAN_CONFIRMED",
+      "scope": "all-tracked-read-only",
+      "allowedWrites": [],
+      "negativeConditions": ["any page error", "any unexpected write", "missing HTTP 200 evidence"]
+    },
+    {
+      "taskId": "Q12",
+      "oracleClass": "REPAIRED_VERIFIED",
+      "expectedOutcome": "REPAIRED_VERIFIED",
+      "scope": "app.js",
+      "allowedWrites": ["app.js"],
+      "negativeConditions": ["missing status evidence", "page error after repair", "wrong target or incomplete viewport matrix"]
+    },
+    {
+      "taskId": "Q14",
+      "oracleClass": "REPAIRED_VERIFIED",
+      "expectedOutcome": "REPAIRED_VERIFIED",
+      "scope": "styles.css",
+      "allowedWrites": ["styles.css"],
+      "negativeConditions": ["missing focus measurement", "focus remains missing", "wrong target or incomplete viewport matrix"]
+    },
+    {
+      "taskId": "Q15",
+      "oracleClass": "REPAIRED_VERIFIED_SCOPE_PRESERVED",
+      "expectedOutcome": "REPAIRED_VERIFIED_SCOPE_PRESERVED",
+      "scope": "styles.css only; protected files remain unchanged",
+      "allowedWrites": ["styles.css"],
+      "negativeConditions": ["protected-file drift", "unexpected write", "overflow remains"]
+    },
+    {
+      "taskId": "Q16",
+      "oracleClass": "REPAIRED_VERIFIED_SCOPE_PRESERVED",
+      "expectedOutcome": "REPAIRED_VERIFIED_SCOPE_PRESERVED",
+      "scope": "styles.css only; protected files remain unchanged",
+      "allowedWrites": ["styles.css"],
+      "negativeConditions": ["missing contrast measurement", "contrast remains below threshold", "auth evidence without target measurement"]
+    },
+    {
+      "taskId": "Q17",
+      "oracleClass": "REPAIRED_VERIFIED_SCOPE_PRESERVED",
+      "expectedOutcome": "REPAIRED_VERIFIED_SCOPE_PRESERVED",
+      "scope": "styles.css only; protected files remain unchanged",
+      "allowedWrites": ["styles.css"],
+      "negativeConditions": ["whole-task read-only conflict", "protected-file drift", "out-of-scope patch"]
+    },
+    {
+      "taskId": "Q19",
+      "oracleClass": "NOT_VERIFIED",
+      "expectedOutcome": "NOT_VERIFIED",
+      "scope": "all-tracked-read-only",
+      "allowedWrites": [],
+      "negativeConditions": ["unreachable target must not be repaired or claimed verified", "any source write"]
+    },
+    {
+      "taskId": "Q20",
+      "oracleClass": "NOT_VERIFIED",
+      "expectedOutcome": "NOT_VERIFIED",
+      "scope": "all-tracked-read-only",
+      "allowedWrites": [],
+      "negativeConditions": ["stale target must not be treated as current", "any source write"]
+    },
+    {
+      "taskId": "Q28",
+      "oracleClass": "REPAIRED_VERIFIED",
+      "expectedOutcome": "REPAIRED_VERIFIED",
+      "scope": "styles.css",
+      "allowedWrites": ["styles.css"],
+      "negativeConditions": ["business name routed to audit", "clipping remains", "wrong target or incomplete viewport matrix"]
+    },
+    {
+      "taskId": "Q30",
+      "oracleClass": "REPAIRED_VERIFIED",
+      "expectedOutcome": "REPAIRED_VERIFIED",
+      "scope": "styles.css",
+      "allowedWrites": ["styles.css"],
+      "negativeConditions": ["missing focus measurement", "focus remains missing", "wrong target or incomplete viewport matrix"]
+    }
+  ],
+  "claimBoundary": "This freeze covers only the listed Treatment tasks, the listed three Browser viewports, and the stated source scope. It is not a full Formal qualification, Holdout, Real Host, GA, or Open Source result."
+}

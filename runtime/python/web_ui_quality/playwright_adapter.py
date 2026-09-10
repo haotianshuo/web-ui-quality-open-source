@@ -156,7 +156,15 @@ def _normalize_viewport_observation(
 ) -> dict[str, Any]:
     """Keep requested, browser-realized, and evidence-reported viewports distinct."""
     requested_value = {"width": int(requested[0]), "height": int(requested[1])}
-    actual_value = _viewport_pair({"width": metrics.get("innerWidth"), "height": metrics.get("innerHeight")})
+    actual_value = None
+    for width_key, height_key in (
+        ("visualViewportWidth", "visualViewportHeight"),
+        ("clientWidth", "clientHeight"),
+        ("innerWidth", "innerHeight"),
+    ):
+        actual_value = _viewport_pair({"width": metrics.get(width_key), "height": metrics.get(height_key)})
+        if actual_value is not None:
+            break
     rows = list((experience_geometry or {}).get("viewports") or []) if isinstance(experience_geometry, Mapping) else []
     reported_row = rows[0] if rows and isinstance(rows[0], Mapping) else None
     reported_value = _viewport_pair(reported_row)
@@ -311,6 +319,10 @@ def _capture_one(
             () => ({
               innerWidth: window.innerWidth,
               innerHeight: window.innerHeight,
+              clientWidth: document.documentElement ? document.documentElement.clientWidth : 0,
+              clientHeight: document.documentElement ? document.documentElement.clientHeight : 0,
+              visualViewportWidth: window.visualViewport ? window.visualViewport.width : 0,
+              visualViewportHeight: window.visualViewport ? window.visualViewport.height : 0,
               devicePixelRatio: window.devicePixelRatio,
               visualViewportScale: window.visualViewport ? window.visualViewport.scale : 1,
               scrollX: window.scrollX,
@@ -347,7 +359,13 @@ def _capture_one(
                 geometry=experience_geometry,
             )
         axe_result = run_axe(page, axe_script) if axe_script else {"status": "NOT_RUN", "reason": "axe script not supplied"}
-        overflow = max(int(metrics["bodyScrollWidth"]), int(metrics["documentScrollWidth"])) > int(metrics["innerWidth"]) + 1
+        realized_viewport = None
+        for width_key, height_key in (("visualViewportWidth", "visualViewportHeight"), ("clientWidth", "clientHeight"), ("innerWidth", "innerHeight")):
+            realized_viewport = _viewport_pair({"width": metrics.get(width_key), "height": metrics.get(height_key)})
+            if realized_viewport is not None:
+                break
+        overflow_width = int((realized_viewport or {}).get("width") or metrics["innerWidth"])
+        overflow = max(int(metrics["bodyScrollWidth"]), int(metrics["documentScrollWidth"])) > overflow_width + 1
         filename = _SAFE_FILENAME_RE.sub("-", f"{label}-{width}x{height}-viewport.png")
         full_filename = _SAFE_FILENAME_RE.sub("-", f"{label}-{width}x{height}-full-page.png")
         screenshot_path = output_dir / filename
@@ -662,7 +680,7 @@ def compare_pages(
         {
             "step": "关键内容无明显横向溢出",
             "status": "PASS" if not any(item.get("horizontalOverflow") for item in records) else "PASS_WITH_WARNINGS",
-            "reason": "通过 document/body scrollWidth 与 innerWidth 比较。",
+            "reason": "通过 document/body scrollWidth 与实际 CSS 视口宽度比较。",
         },
     ]
     if journey_results:
