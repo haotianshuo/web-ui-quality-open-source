@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from .external_providers import capabilities as external_capabilities
 from .production_validation import browser_runtime_capability
@@ -74,11 +74,75 @@ def _python_playwright(browser_executable: str | Path | None = None) -> dict[str
     }
 
 
+_CAPABILITY_STATES = frozenset({"AVAILABLE", "BLOCKED", "MISSING", "NOT_MEASURED"})
+
+
+def _capability_state(value: str, *, field: str) -> str:
+    state = str(value or "NOT_MEASURED").upper()
+    if state not in _CAPABILITY_STATES:
+        raise ValueError(f"unsupported Browser capability state for {field}: {state}")
+    return state
+
+
+def build_browser_capability_clarity(
+    python_browser: Mapping[str, Any],
+    node_browser: Mapping[str, Any],
+    *,
+    navigation_authorized: str = "NOT_MEASURED",
+    target_reachable: str = "NOT_MEASURED",
+    evidence_collected: str = "NOT_MEASURED",
+    verification_status: str = "NOT_MEASURED",
+) -> dict[str, Any]:
+    """Project launch prerequisites separately from task-level Browser proof.
+
+    The optional task-level states are descriptive inputs for a run result. The
+    default doctor projection deliberately leaves them unmeasured; a local
+    driver/executable probe cannot authorize navigation or create evidence.
+    """
+    browser_installed = bool(
+        python_browser.get("browserExecutableAvailable")
+        or python_browser.get("executable")
+        or node_browser.get("executable")
+    )
+    driver_available = bool(python_browser.get("moduleAvailable"))
+    launch_ready = bool(python_browser.get("available"))
+    if launch_ready:
+        launch_status = "AVAILABLE"
+    elif browser_installed or driver_available:
+        launch_status = "BLOCKED"
+    else:
+        launch_status = "MISSING"
+    if launch_status == "AVAILABLE":
+        next_action = "提供安全的目标 URL 并执行本次任务；当前状态只表示可启动 Browser，不表示已完成验证。"
+        reason_code = "BROWSER_CAPABILITY_READY_NOT_VERIFIED"
+    elif launch_status == "BLOCKED":
+        next_action = "补齐缺失的 Browser 驱动或可执行文件，然后重新运行；当前没有导航或验证证据。"
+        reason_code = "BROWSER_CAPABILITY_PARTIAL"
+    else:
+        next_action = "安装 Playwright 驱动和 Chrome/Edge/Chromium 后重新运行 doctor；当前没有 Browser 能力。"
+        reason_code = "BROWSER_CAPABILITY_MISSING"
+    return {
+        "status": launch_status,
+        "reasonCode": reason_code,
+        "browserInstalled": "AVAILABLE" if browser_installed else "MISSING",
+        "driverAvailable": "AVAILABLE" if driver_available else "MISSING",
+        "launchStatus": launch_status,
+        "navigationAuthorized": _capability_state(navigation_authorized, field="navigationAuthorized"),
+        "targetReachable": _capability_state(target_reachable, field="targetReachable"),
+        "evidenceCollected": _capability_state(evidence_collected, field="evidenceCollected"),
+        "verificationStatus": _capability_state(verification_status, field="verificationStatus"),
+        "driverProvider": "python-playwright",
+        "claimBoundary": "AVAILABLE means Browser Installed plus Driver Available for launch only; navigation authorization, target reachability, evidence, and verification require an actual bounded task run.",
+        "nextAction": next_action,
+    }
+
+
 def build_capability_registry(browser_executable: str | Path | None = None) -> dict[str, Any]:
     python_browser = _python_playwright(browser_executable)
     node_browser = browser_runtime_capability(browser_executable)
     providers = external_capabilities()
     navigation = bool(python_browser.get("available"))
+    browser_clarity = build_browser_capability_clarity(python_browser, node_browser)
     return {
         "pageNavigation": {"available": navigation, "provider": "python-playwright" if navigation else None},
         "pageScreenshot": {"available": navigation, "provider": "python-playwright" if navigation else None},
@@ -97,6 +161,7 @@ def build_capability_registry(browser_executable: str | Path | None = None) -> d
         "multiViewport": {"available": navigation, "viewports": [f"{w}x{h}" for w, h in STANDARD_VIEWPORTS], "authoritativeSource": "condition_registry.STANDARD_VIEWPORTS"},
         "pythonPlaywright": python_browser,
         "nodeCandidateValidation": node_browser,
+        "browserCapability": browser_clarity,
         "lighthouse": providers.get("lighthouse", {}),
         "axe": providers.get("axe", {}),
         "browserStatus": "AVAILABLE" if navigation else "NOT_AVAILABLE",
@@ -115,4 +180,4 @@ def build_capability_registry(browser_executable: str | Path | None = None) -> d
     }
 
 
-__all__ = ["build_capability_registry"]
+__all__ = ["build_browser_capability_clarity", "build_capability_registry"]

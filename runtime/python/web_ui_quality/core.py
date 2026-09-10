@@ -595,7 +595,12 @@ def _css_has_focus_replacement(text: str) -> bool:
         selector, body = block.group(1), block.group(2)
         if ":focus" not in selector.casefold():
             continue
-        if re.search(r"(?i)(?:outline\s*:\s*(?!none|0)[^;]+|box-shadow\s*:\s*(?!none)[^;]+|border(?:-color)?\s*:\s*[^;]+)", body):
+        if re.search(
+            r"(?i)(?:outline\s*:\s*(?!\s*(?:none|0)\b)[^;]+|"
+            r"box-shadow\s*:\s*(?!\s*none\b)[^;]+|"
+            r"border(?:-color)?\s*:\s*[^;]+)",
+            body,
+        ):
             return True
     return False
 
@@ -1560,6 +1565,19 @@ def _normalise_status(value: Any, default: str = "NOT_VERIFIED") -> str:
     return value if value in {"PASS", "PASS_WITH_WARNINGS", "FAIL", "NOT_VERIFIED", "NOT_RUN"} else default
 
 
+def _security_coverage(*, include_security: bool, findings: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Expose opt-in security coverage without turning it into authority."""
+    selected = [item for item in findings if include_security and str(item.get("category") or "").casefold() == "security"]
+    measured = bool(include_security)
+    return {
+        "status": "MEASURED" if measured else "NOT_MEASURED", "enabled": measured, "requested": measured,
+        "scope": "bounded-static-security-rules", "findingCount": len(selected),
+        "findingIds": [str(item.get("id") or "") for item in selected],
+        "claimBoundary": "仅表示边界内的静态安全规则已运行；不等于完整 AppSec、Browser、Host 或生产安全资格。" if measured else "安全 opt-in 未启用；没有安全 Finding 不等于安全检查通过。",
+        "nextAction": ("审查已记录的安全 Finding；没有 Finding 也不代表完成完整安全验证。" if selected else "当前边界内未发现安全 Finding；仍不代表完成完整安全验证。") if measured else "如需安全检查，请显式启用 --security-audit；该选项不会自动授予凭证、导航或写入权限。",
+    }
+
+
 def _evidence_and_delivery(
     *,
     evidence: Mapping[str, Any] | None,
@@ -1915,6 +1933,22 @@ def _audit_sources(
         trusted_target_context=trusted_target_context,
         business_context=business_context,
     )
+    security_coverage = _security_coverage(include_security=include_security, findings=findings)
+    delivery = ui_product_capability.get("evidenceAndDelivery")
+    if isinstance(delivery, dict):
+        delivery["securityCoverage"] = security_coverage
+        summary = delivery.get("userSummary")
+        if isinstance(summary, list):
+            summary.append(
+                {
+                    "section": "安全覆盖",
+                    "content": (
+                        "安全检查已运行：" + str(security_coverage["findingCount"]) + " 项 Finding。"
+                        if include_security
+                        else "安全检查：NOT_MEASURED；如需检查请显式启用 --security-audit。"
+                    ),
+                }
+            )
     observed_profile = {
         "tables": profile.tables, "rows": profile.rows, "columns": profile.columns,
         "forms": profile.forms, "controls": profile.controls, "metrics": profile.metrics,
@@ -2071,6 +2105,7 @@ def _audit_sources(
         "providerRouting": provider_routing,
         "securityAudit": "RUN" if include_security else "OPT_IN_ONLY",
         "securityFindingsIncluded": include_security,
+        "securityCoverage": security_coverage,
     }
 
 
@@ -2131,6 +2166,7 @@ def _empty_scope_audit_result(
         "providerRouting": {},
         "securityAudit": "RUN" if include_security else "OPT_IN_ONLY",
         "securityFindingsIncluded": include_security,
+        "securityCoverage": _security_coverage(include_security=include_security, findings=()),
         "error": error,
     }
 

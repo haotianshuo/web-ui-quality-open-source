@@ -73,6 +73,9 @@
     "schemaVersion": {
       "const": "1"
     },
+    "securityCoverage": {
+      "type": "object"
+    },
     "scope": {
       "type": "object"
     },

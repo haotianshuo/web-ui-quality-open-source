@@ -22,7 +22,14 @@ _FULL_READ_ONLY = re.compile(
 )
 _WRITE_REQUEST = re.compile(
     r"修复|修好|修一下|修掉|改一下|改好|直接改|帮我改|优化(?:一下|这个|当前|该)|"
-    r"\b(?:implement|fix|repair)\b|apply\s+the\s+changes|make\s+the\s+changes",
+    r"修改|调整|改成|换成|更新|修正|\b(?:implement|fix|repair|change|edit|update|adjust)\b|"
+    r"apply\s+the\s+changes|make\s+the\s+changes",
+    re.IGNORECASE,
+)
+_NEGATED_WRITE_CLAUSE = re.compile(
+    r"(?:不要|别|不许|禁止|do\s+not|don't)\s*"
+    r"(?:修改|改|动|碰|touch|change|modify|edit|update|adjust)"
+    r"[^，。,.!！;；\n]*",
     re.IGNORECASE,
 )
 
@@ -43,17 +50,18 @@ def normalize_task_intent(text: str | None) -> dict[str, Any]:
     raw = str(text or "").strip()
     routed = route_user_intent(raw)
     control = parse_control_intent(raw)
+    internal_intent = str(routed.get("taskIntent") or "DIAGNOSE")
     # The compatibility router intentionally prioritizes read-only language;
     # independently inspect the raw request so a contradictory sentence is
     # not silently downgraded to EXPLAIN before this adapter sees it.
+    positive_write_text = _NEGATED_WRITE_CLAUSE.sub("", raw)
     write_requested = bool(
         routed.get("writeRequested")
         or control.get("action") == "FIX"
-        or _WRITE_REQUEST.search(raw)
+        or (internal_intent != "VERIFY_ONLY" and _WRITE_REQUEST.search(positive_write_text))
     )
     read_only_requested = bool(_FULL_READ_ONLY.search(raw))
     conflict = write_requested and read_only_requested
-    internal_intent = str(routed.get("taskIntent") or "DIAGNOSE")
     public_intent = _public_intent(internal_intent)
 
     result: dict[str, Any] = {

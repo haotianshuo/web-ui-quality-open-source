@@ -41,6 +41,49 @@ def _raw_status(result: Mapping[str, Any]) -> str:
     return str(verification.get("status") or report.get("status") or result.get("status") or "NOT_VERIFIED").upper()
 
 
+def _reason_code(result: Mapping[str, Any], kind: str) -> str:
+    """Return one semantic reason for every renderer of the same TaskResult."""
+    report = _mapping(result.get("repairReport"))
+    for source in (result, report):
+        for key in ("reasonCode", "reason_code"):
+            value = str(source.get(key) or "").strip().upper()
+            if value:
+                return value
+
+    raw = _raw_status(result)
+    if raw == "VERIFIED":
+        return "VERIFIED"
+    if raw in {"AUTH_REQUIRED", "AWAITING_HOST_WRITE", "SCOPE_NOT_CONFIRMED", "REVIEW_REQUIRED"}:
+        return "MANUAL_DECISION_REQUIRED"
+
+    drift = _mapping(result.get("projectDriftGate"))
+    if str(drift.get("status") or "").upper() in {"FAIL", "UNEXPECTED_DRIFT", "DRIFT"}:
+        return "DRIFT_DETECTED"
+
+    before = _mapping(result.get("before"))
+    preflight = _mapping(before.get("preflight"))
+    browser = _mapping(preflight.get("browser"))
+    if browser.get("available") is False:
+        return "BROWSER_UNAVAILABLE"
+
+    blockers = _strings(preflight.get("blockers"))
+    blocker_text = " ".join(blockers).casefold()
+    if any(token in blocker_text for token in ("network", "网络", "offline", "离线")):
+        return "NETWORK_BLOCKED"
+    if any(token in blocker_text for token in ("depend", "依赖", "package", "module")):
+        return "DEPENDENCY_MISSING"
+    if any(token in blocker_text for token in ("browser", "浏览器", "navigation", "导航", "host policy")):
+        return "ENV_BLOCKED"
+    if blockers or str(_mapping(result.get("projectStartPlan")).get("status") or "").upper() in {"UNABLE_TO_START", "BLOCKED"}:
+        return "INSUFFICIENT_EVIDENCE"
+
+    if raw in {"NOT_VERIFIED", "NOT_VERIFIED_ENVIRONMENT", "PARTIAL", "INDETERMINATE", "POLICY_BLOCKED"}:
+        return "ENV_BLOCKED" if raw in {"NOT_VERIFIED_ENVIRONMENT", "POLICY_BLOCKED"} else "INSUFFICIENT_EVIDENCE"
+    if raw in {"FAIL", "FAILED", "BLOCKED", "REJECTED", "REGRESSED", "INVALID"}:
+        return "FINDINGS_DETECTED" if kind == "INSPECTION" else "TASK_FAILED"
+    return "MANUAL_DECISION_REQUIRED"
+
+
 def _outcome(result: Mapping[str, Any], kind: str) -> str:
     raw = _raw_status(result)
     if raw == "VERIFIED":
@@ -162,6 +205,7 @@ def build_task_result(result: Mapping[str, Any], *, request: str | None = None) 
     task_goal = _mapping(result.get("taskGoal"))
     raw_status = _raw_status(result)
     outcome = _outcome(result, kind)
+    reason_code = _reason_code(result, kind)
     coverage = _coverage(result, kind)
     request_text = str(request or report.get("request") or answers.get("whatYouAsked") or task_goal.get("goal") or "Task request unavailable")
     changes = _strings(answers.get("whatChanged"))
@@ -239,6 +283,7 @@ def build_task_result(result: Mapping[str, Any], *, request: str | None = None) 
         "executionStatus": "COMPLETED",
         "outcome": outcome,
         "subjectStatus": raw_status,
+        "reasonCode": reason_code,
         "coverage": coverage,
         "observations": _observations(result, report),
         "hypotheses": _hypotheses(result, report),
@@ -270,6 +315,15 @@ def human_status_label(kind: str) -> str:
 
 def human_status_explanation(code: str) -> str:
     mapping = {
+        "ENV_BLOCKED": "当前环境或宿主策略阻止了所需验证，因此没有宣称成功。",
+        "DEPENDENCY_MISSING": "所需依赖尚未就绪，因此没有宣称成功。",
+        "BROWSER_UNAVAILABLE": "当前没有可用的 Browser 证据，因此没有宣称成功。",
+        "NETWORK_BLOCKED": "当前网络条件阻止了所需操作，因此没有宣称成功。",
+        "INSUFFICIENT_EVIDENCE": "现有证据不足以证明任务成功。",
+        "MANUAL_DECISION_REQUIRED": "这一步需要当前用户或宿主明确决定，系统没有替你越权。",
+        "DRIFT_DETECTED": "发现计划范围外的变化，本次任务不会被标记为 VERIFIED。",
+        "FINDINGS_DETECTED": "检查发现了需要处理的问题；发现本身不等于修复完成。",
+        "TASK_FAILED": "任务存在确定失败条件，不能声明成功。",
         "NOT_VERIFIED_ENVIRONMENT": "当前环境无法完成所需验证，因此没有宣称成功。",
         "POLICY_BLOCKED": "当前 Host 策略阻止了所需观察；源码不会因此被当作问题修改。",
         "FRAMEWORK_NOT_SUPPORTED": "当前生产生成路径不支持该框架；只读探索结果不能升级为生产 PASS。",
