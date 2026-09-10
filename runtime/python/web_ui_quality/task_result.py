@@ -181,7 +181,7 @@ def _verification(result: Mapping[str, Any], report: Mapping[str, Any]) -> dict[
         drift = _mapping(result.get("projectDriftGate"))
         summary = {
             "overall": _raw_status(result),
-            "browser": str(_mapping(result.get("comparison")).get("status") or "NOT_MEASURED"),
+            "browser": _browser_surface_status(result),
             "projectTools": str(_mapping(result.get("projectToolGate")).get("status") or "NOT_APPLICABLE"),
             "patchQuality": str(_mapping(result.get("patchQuality")).get("status") or "NOT_APPLICABLE"),
             "projectDrift": str(drift.get("status") or "NOT_APPLICABLE"),
@@ -195,6 +195,26 @@ def _verification(result: Mapping[str, Any], report: Mapping[str, Any]) -> dict[
         "projectDrift": str(summary.get("projectDrift") or "NOT_APPLICABLE"),
         "hostWrite": str(summary.get("hostWrite") or "NOT_APPLICABLE"),
     }
+
+
+def _browser_surface_status(result: Mapping[str, Any]) -> str:
+    """Project the current Browser lifecycle without trusting a loose status field.
+
+    ``experience_fix`` records the current run's lifecycle after the Browser
+    payload has been produced.  A status such as ``BROWSER_PASS`` is therefore
+    consumable only when that same result proves execution and measurement.  A
+    missing lifecycle deliberately stays ``NOT_MEASURED`` so stale or copied
+    Browser fields cannot promote an inspection result.
+    """
+    lifecycle = _mapping(_mapping(result.get("evidenceLifecycle")).get("browser"))
+    if not lifecycle:
+        return "NOT_MEASURED"
+    if not bool(lifecycle.get("executed")) or not bool(lifecycle.get("measured")):
+        return "NOT_MEASURED"
+    reported = str(result.get("browserExecutionStatus") or "").upper()
+    if reported == "BROWSER_PASS" and bool(lifecycle.get("verified")):
+        return "BROWSER_PASS"
+    return "BROWSER_NOT_VERIFIED"
 
 
 def build_task_result(result: Mapping[str, Any], *, request: str | None = None) -> dict[str, Any]:
