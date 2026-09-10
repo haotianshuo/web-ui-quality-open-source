@@ -10,7 +10,7 @@ from typing import Any, Iterable, Mapping, Sequence
 from .contracts import ContractViolation, digest_json
 from .error_classifier import classify_record
 from .user_language import status_label
-from .playwright_adapter import _capture_one, _normalize_viewports, _origin, _safe_url
+from .playwright_adapter import _capture_one, _normalize_viewports, _origin, _safe_url, _viewport_summary
 from .release_info import PACKAGE_VERSION
 from .repair_recipe import build_repair_recipes
 from .condition_registry import STANDARD_VIEWPORTS
@@ -305,6 +305,7 @@ def run_quick_ui(
         "status": status,
         "url": target.split("?", 1)[0],
         "viewports": [{"width": width, "height": height} for width, height in matrix],
+        "viewportNormalization": _viewport_summary(records),
         "pageHealth": page_health,
         "topIssues": top_issues,
         "repairRecipes": build_repair_recipes(top_issues, confirmed_ids=[str(item.get("id")) for item in top_issues]),

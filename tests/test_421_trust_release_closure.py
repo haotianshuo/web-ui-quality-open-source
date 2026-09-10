@@ -144,6 +144,8 @@ def test_public_repair_mainline_can_verify_only_with_v3(monkeypatch, tmp_path: P
     assert final["repairVerification"]["dimensions"]["hostWrite"] == "VERIFIED_V3"
     assert final["status"] == "VERIFIED"
     assert final["taskResult"]["outcome"] == "VERIFIED"
+    assert final["evidenceGraph"]["requiredMissing"] == []
+    assert final["evidenceGraph"]["status"] == "COMPLETE_VERIFIED_CHAIN"
     assert final["userOutcome"]["result"] == "已完成并验证"
     assert final["executionState"]["stage"] == "REPORT"
     assert [row["to"] for row in final["executionState"]["history"]] == ["PREFLIGHT", "PLAN", "HOST_APPLY", "VERIFY", "REPORT"]

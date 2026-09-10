@@ -10,6 +10,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from .intent_signals import strip_negated_write_clauses
+
 
 _RULES: tuple[dict[str, Any], ...] = (
     {
@@ -82,17 +84,9 @@ _RULES: tuple[dict[str, Any], ...] = (
 )
 
 
-_NEGATED_WRITE_CLAUSE = re.compile(
-    r"(?:不要|别|不许|禁止|do\s+not|don't)\s*"
-    r"(?:修改|改|动|碰|touch|change|modify|edit|update|adjust)"
-    r"[^，。,.!！;；\n]*",
-    re.IGNORECASE,
-)
-
-
 def _has_positive_write_signal(text: str) -> bool:
     """Ignore a scoped non-goal such as ``不要修改登录逻辑`` when routing."""
-    candidate = _NEGATED_WRITE_CLAUSE.sub("", text)
+    candidate = strip_negated_write_clauses(text)
     patterns = _RULES[3]["patterns"]
     return any(re.search(pattern, candidate, flags=re.IGNORECASE) for pattern in patterns)
 

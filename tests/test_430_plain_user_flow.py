@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import json
 from pathlib import Path
 
 import pytest
@@ -107,6 +108,48 @@ def test_intent_conflict_fails_closed_before_artifacts(tmp_path: Path) -> None:
     assert caught.value.code == "INTENT_CONFLICT"
     assert not (tmp_path / "project").exists()
     assert not (tmp_path / "artifacts").exists()
+
+
+def test_clean_read_only_request_runs_inspection_without_repair_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "index.html").write_text("<main>clean</main>\n", encoding="utf-8")
+
+    def fake_acceptance(*args, **kwargs):
+        output = Path(kwargs["output_dir"])
+        report = {
+            "status": "PASS",
+            "pageHealth": {"pageStatus": "PASS"},
+            "preflight": {"status": "READY", "blockers": [], "warnings": [], "browser": {"available": True}},
+            "runtime": {"records": []},
+            "journey": {"status": "PASS", "journey": [], "runs": []},
+            "findings": [],
+            "topFindings": [],
+            "deliveryConclusion": "clean",
+            "open": "index.html",
+        }
+        output.mkdir(parents=True, exist_ok=True)
+        (output / "smart-acceptance-report.json").write_text(json.dumps(report), encoding="utf-8")
+        return report
+
+    monkeypatch.setattr("web_ui_quality.experience_fix.run_smart_acceptance", fake_acceptance)
+    result = run_experience_fix(
+        project,
+        tmp_path / "artifacts",
+        request="检查这个页面有没有横向滚动；没有问题就明确说明，不要为了找问题修改文件。",
+        mode="FIX_AND_VERIFY",
+        task_id="plain-clean-check-430",
+        session_id="plain-clean-check-session-430",
+    )
+
+    assert result["mode"] == "CHECK"
+    assert result["controlIntent"]["action"] == "CHECK"
+    assert result["taskResult"]["kind"] == "INSPECTION"
+    assert result["taskResult"]["outcome"] == "COMPLETED"
+    assert "fixPlan" not in result
+    assert "repairReport" not in result
+    assert result.get("hostWriteReceipt") is None
+    assert "HOST_RECEIPT_REQUIRED" not in json.dumps(result, ensure_ascii=False)
 
 
 def test_safe_defaults_are_recorded_in_a_short_settings_summary(tmp_path: Path) -> None:

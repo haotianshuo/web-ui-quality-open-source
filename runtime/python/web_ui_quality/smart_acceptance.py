@@ -633,6 +633,7 @@ def run_smart_acceptance(
             "coverage": coverage,
             "coverageSummary": {
                 "viewports": [f"{w}x{h}" for w, h in matrix],
+                "viewportNormalization": (quick_report or {}).get("viewportNormalization") or {"status": "NOT_VERIFIED", "records": []},
                 "journeyStatus": journey_report.get("status"),
                 "executedJourneys": 1 if journey_report.get("journey") else 0,
                 "unverifiedAreas": ["authenticated roles"] if preflight.get("authRequired") else [],

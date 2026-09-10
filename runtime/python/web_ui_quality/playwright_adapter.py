@@ -137,6 +137,84 @@ def _context_options(
     return options
 
 
+def _viewport_pair(value: Any) -> dict[str, int] | None:
+    if not isinstance(value, Mapping):
+        return None
+    try:
+        width, height = int(value.get("width")), int(value.get("height"))
+    except (TypeError, ValueError):
+        return None
+    if width <= 0 or height <= 0:
+        return None
+    return {"width": width, "height": height}
+
+
+def _normalize_viewport_observation(
+    requested: tuple[int, int],
+    metrics: Mapping[str, Any],
+    experience_geometry: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Keep requested, browser-realized, and evidence-reported viewports distinct."""
+    requested_value = {"width": int(requested[0]), "height": int(requested[1])}
+    actual_value = _viewport_pair({"width": metrics.get("innerWidth"), "height": metrics.get("innerHeight")})
+    rows = list((experience_geometry or {}).get("viewports") or []) if isinstance(experience_geometry, Mapping) else []
+    reported_row = rows[0] if rows and isinstance(rows[0], Mapping) else None
+    reported_value = _viewport_pair(reported_row)
+    mismatches: list[str] = []
+    if actual_value is None:
+        mismatches.append("ACTUAL_BROWSER_VIEWPORT_MISSING")
+    if reported_value is None:
+        mismatches.append("REPORTED_EVIDENCE_VIEWPORT_MISSING")
+    if actual_value is not None and actual_value != requested_value:
+        mismatches.append("REQUESTED_ACTUAL_VIEWPORT_MISMATCH")
+    if reported_value is not None and reported_value != requested_value:
+        mismatches.append("REQUESTED_REPORTED_VIEWPORT_MISMATCH")
+    if actual_value is not None and reported_value is not None and actual_value != reported_value:
+        mismatches.append("ACTUAL_REPORTED_VIEWPORT_MISMATCH")
+    status = "MATCHED" if not mismatches else "MISMATCH" if actual_value or reported_value else "NOT_VERIFIED"
+    document_scroll_width = metrics.get("documentScrollWidth")
+    try:
+        document_scroll_width = int(document_scroll_width) if document_scroll_width is not None else None
+    except (TypeError, ValueError):
+        document_scroll_width = None
+    return {
+        "status": status,
+        "requested": requested_value,
+        "actual": actual_value,
+        "reported": reported_value,
+        "documentScrollWidth": document_scroll_width,
+        "bodyScrollWidth": metrics.get("bodyScrollWidth"),
+        "mismatches": mismatches,
+        "claimBoundary": "Viewport width is the browser CSS viewport; document/body scroll width is reported separately and never used as a viewport fallback.",
+    }
+
+
+def _viewport_summary(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    rows = []
+    statuses: list[str] = []
+    for record in records:
+        observation = record.get("viewportNormalization")
+        if not isinstance(observation, Mapping):
+            observation = {"status": "NOT_VERIFIED", "mismatches": ["VIEWPORT_NORMALIZATION_MISSING"]}
+        status = str(observation.get("status") or "NOT_VERIFIED")
+        statuses.append(status)
+        rows.append({
+            "label": record.get("label"),
+            "requested": observation.get("requested") or record.get("requestedViewport") or record.get("viewport"),
+            "actual": observation.get("actual") or record.get("actualBrowserViewport"),
+            "reported": observation.get("reported") or record.get("reportedEvidenceViewport"),
+            "status": status,
+            "mismatches": list(observation.get("mismatches") or []),
+            "documentScrollWidth": observation.get("documentScrollWidth"),
+        })
+    overall = "MATCHED" if rows and all(value == "MATCHED" for value in statuses) else "MISMATCH" if any(value == "MISMATCH" for value in statuses) else "NOT_VERIFIED"
+    return {
+        "status": overall,
+        "records": rows,
+        "claimBoundary": "Requested, browser-realized, and evidence-reported viewport dimensions are independently traceable; document scroll width is not a viewport measurement.",
+    }
+
+
 def _capture_one(
     browser: Any,
     *,
@@ -257,6 +335,7 @@ def _capture_one(
         )
         rendered_quality = inspect_rendered_page(page)
         experience_geometry = inspect_experience_geometry(page, viewport_id=label)
+        viewport_normalization = _normalize_viewport_observation(viewport, metrics, experience_geometry)
         sidecar_refs: dict[str, str] = {}
         if persist_dom_sidecars:
             semantic_dom = inspect_semantic_dom(page)
@@ -301,6 +380,10 @@ def _capture_one(
             "label": label,
             "url": page.url.split("?", 1)[0],
             "viewport": {"width": width, "height": height},
+            "requestedViewport": viewport_normalization["requested"],
+            "actualBrowserViewport": viewport_normalization["actual"],
+            "reportedEvidenceViewport": viewport_normalization["reported"],
+            "viewportNormalization": viewport_normalization,
             "httpStatus": http_status,
             "metrics": metrics,
             "horizontalOverflow": overflow,
@@ -337,6 +420,19 @@ def _capture_one(
             "label": label,
             "url": url.split("?", 1)[0],
             "viewport": {"width": width, "height": height},
+            "requestedViewport": {"width": width, "height": height},
+            "actualBrowserViewport": None,
+            "reportedEvidenceViewport": None,
+            "viewportNormalization": {
+                "status": "NOT_VERIFIED",
+                "requested": {"width": width, "height": height},
+                "actual": None,
+                "reported": None,
+                "documentScrollWidth": None,
+                "bodyScrollWidth": None,
+                "mismatches": ["VIEWPORT_OBSERVATION_UNAVAILABLE"],
+                "claimBoundary": "Viewport dimensions were not observed because Browser capture failed.",
+            },
             "status": "FAIL",
             "error": type(error).__name__,
             "errorMessage": str(error)[:500],
@@ -517,7 +613,8 @@ def compare_pages(
     failures = [item for item in records if item["status"] == "FAIL"]
     equal_condition_pairs = True
     for viewport in matrix:
-        pair = [item for item in records if item["viewport"] == {"width": viewport[0], "height": viewport[1]}]
+        requested_value = {"width": viewport[0], "height": viewport[1]}
+        pair = [item for item in records if (item.get("requestedViewport") or item.get("viewport")) == requested_value]
         if len(pair) != 2 or any(item["status"] not in {"PASS", "PASS_WITH_WARNINGS"} for item in pair):
             equal_condition_pairs = False
             continue
@@ -526,6 +623,10 @@ def compare_pages(
         if any(before_metrics[key] != after_metrics[key] for key in keys):
             equal_condition_pairs = False
         for item in pair:
+            normalization = item.get("viewportNormalization")
+            if isinstance(normalization, Mapping) and normalization.get("status") != "MATCHED":
+                equal_condition_pairs = False
+                warnings.append(f"{item['label']} {viewport[0]}x{viewport[1]} viewport normalization mismatch")
             if item["horizontalOverflow"]:
                 warnings.append(f"{item['label']} {viewport[0]}x{viewport[1]} horizontal overflow")
             if item["console"] or item["pageErrors"] or item["requestFailures"]:
@@ -577,6 +678,14 @@ def compare_pages(
                 result = compare_images(before_path, after_path, diff_path=target_dir / f"diff-{width}x{height}.png")
                 result["viewport"] = {"width": width, "height": height}
                 visual_results.append(result)
+    observed_viewports = sorted({
+        (int((item.get("actualBrowserViewport") or {}).get("width")), int((item.get("actualBrowserViewport") or {}).get("height")))
+        for item in records if (item.get("actualBrowserViewport") or {}).get("width") and (item.get("actualBrowserViewport") or {}).get("height")
+    })
+    reported_viewports = sorted({
+        (int((item.get("reportedEvidenceViewport") or {}).get("width")), int((item.get("reportedEvidenceViewport") or {}).get("height")))
+        for item in records if (item.get("reportedEvidenceViewport") or {}).get("width") and (item.get("reportedEvidenceViewport") or {}).get("height")
+    })
     payload = {
         "schemaVersion": "1",
         "producer": "web-ui-quality-playwright",
@@ -584,7 +693,9 @@ def compare_pages(
         "authentication": {"storageStateSupplied": storage_state is not None, "extraHeadersSupplied": bool(extra_http_headers), "credentialValuesRecorded": False},
         "browserExecuted": bool(records),
         "requestedViewports": [{"width": width, "height": height} for width, height in matrix],
-        "observedViewports": [{"width": width, "height": height} for width, height in sorted({((item.get("viewport") or {}).get("width"), (item.get("viewport") or {}).get("height")) for item in records if (item.get("viewport") or {}).get("width") and (item.get("viewport") or {}).get("height")})],
+        "observedViewports": [{"width": width, "height": height} for width, height in observed_viewports],
+        "reportedViewports": [{"width": width, "height": height} for width, height in reported_viewports],
+        "viewportNormalization": _viewport_summary(records),
         "status": status,
         "beforeUrl": before.split("?", 1)[0],
         "afterUrl": after.split("?", 1)[0],
