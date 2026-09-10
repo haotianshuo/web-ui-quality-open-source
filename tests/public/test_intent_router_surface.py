@@ -42,3 +42,20 @@ def test_write_request_requires_host_and_conflicting_read_only_wins() -> None:
     assert conflict["writeRequested"] is True
     assert conflict["writeAuthorized"] is False
     assert conflict["mutation"] == "FORBIDDEN"
+
+
+@pytest.mark.parametrize(
+    "text",
+    (
+        "检查这个页面有没有横向滚动；没有问题就明确说明，不要为了找问题修改文件。",
+        "Check whether this page has horizontal overflow. If it is clean, say so. Do not modify files.",
+    ),
+)
+def test_clean_inspection_never_routes_to_repair_or_host_receipt(text: str) -> None:
+    result = normalize_task_intent(text)
+
+    assert result["intent"] == "inspect"
+    assert result["readOnlyRequired"] is True
+    assert result["writeRequested"] is False
+    assert result["writeAuthorized"] is False
+    assert result["requiresHostApproval"] is False

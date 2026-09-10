@@ -291,7 +291,15 @@ def run_experience_fix(
     control = parse_control_intent(request)
     routed = route_user_intent(request)
     control_mode = {"CHECK": "CHECK", "FIX": "FIX_AND_VERIFY"}.get(control.get("action"))
-    selected = _MODE_MAP.get(mode or control_mode or routed["intent"])
+    requested_mode = _MODE_MAP.get(mode or control_mode or routed["intent"])
+    # A clean inspection is never allowed to enter the repair workflow merely
+    # because a stale/ambient mode says FIX_AND_VERIFY.  An explicit repair
+    # request is already rejected above when it conflicts with whole-task
+    # read-only language; this branch covers the read-only-only case.
+    if canonical_intent["readOnlyRequired"] and not canonical_intent["writeRequested"] and requested_mode == "FIX_AND_VERIFY":
+        selected = "CHECK"
+    else:
+        selected = requested_mode
     if selected is None:
         raise ContractViolation("EXPERIENCE_MODE_INVALID", [f"$: unsupported mode {mode!r}"])
     execution = ExecutionState()
@@ -589,6 +597,7 @@ def run_experience_fix(
             gate = evaluate_improvement_claim(
                 before_report, after_report,
                 condition_match=bool(condition_check["match"]), target_match=target_match, safe_task_match=safe_task_match,
+                browser_viewports=matrix,
             )
             comparison = {
                 **gate,
@@ -600,8 +609,10 @@ def run_experience_fix(
                     "afterFingerprint": after_conditions.get("source_fingerprint"),
                     "changeExpected": True,
                 },
-                "beforeHealth": (before_report or {}).get("pageHealth"),
-                "afterHealth": after_report.get("pageHealth"),
+                "beforeHealth": gate.get("beforeHealth") or (before_report or {}).get("pageHealth"),
+                "afterHealth": gate.get("afterHealth") or after_report.get("pageHealth"),
+                "observedBeforeHealth": (before_report or {}).get("pageHealth"),
+                "observedAfterHealth": after_report.get("pageHealth"),
             }
             if trusted_v3_receipt is not None:
                 verified_files = [str(row.get("canonicalPath")) for row in trusted_v3_receipt.to_dict().get("entries", []) if isinstance(row, Mapping)]
@@ -663,7 +674,9 @@ def run_experience_fix(
                 },
                 next_action=next_action,
             )
-            result = {**common, "status": final_verification["status"], "after": after_report, "afterManifest": after_manifest, "comparison": comparison,
+            result = {**common, "status": final_verification["status"], "before": before_report,
+                      "scopeBaseline": prior_result.get("scopeBaseline") if isinstance(prior_result.get("scopeBaseline"), Mapping) else None,
+                      "after": after_report, "afterManifest": after_manifest, "comparison": comparison,
                       "repairVerification": final_verification, "baselineDrift": baseline_drift, "projectDriftGate": drift_gate, "patchQuality": patch_quality,
                       "riskTier": prior_risk_tier, "changeBudget": prior_change_budget, "changeBudgetGate": change_budget_gate,
                       "hostWriteReceipt": trusted_v3_receipt.to_dict() if trusted_v3_receipt is not None else trusted_host_receipt.to_dict() if trusted_host_receipt is not None else None,

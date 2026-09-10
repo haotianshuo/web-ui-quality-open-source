@@ -41,6 +41,8 @@ def _viewport_checks(report: dict, page: dict) -> dict[str, bool]:
         "reportBoundaryPreserved": report.get("status") == "NOT_VERIFIED",
         "pageIdentityMeasured": True,
         "viewportRealized": True,
+        "viewportEvidenceTraceable": True,
+        "documentScrollWidthSeparated": True,
         "noHorizontalOverflow": True,
         "mutationFirewallPass": True,
         "noPageErrors": True,
@@ -53,6 +55,13 @@ def _viewport_checks(report: dict, page: dict) -> dict[str, bool]:
         page_evidence = evidence.get("pageEvidence") or {}
         metrics = record.get("metrics") or {}
         realized = raw.get("viewport") or {}
+        requested = record.get("requestedViewport") or record.get("viewport") or {}
+        actual = record.get("actualBrowserViewport") or {
+            "width": metrics.get("innerWidth"),
+            "height": metrics.get("innerHeight"),
+        }
+        reported = record.get("reportedEvidenceViewport") or realized
+        normalization = record.get("viewportNormalization") or {}
         checks["pageIdentityMeasured"] = checks["pageIdentityMeasured"] and (
             evidence.get("page") == page["id"]
             and page_evidence.get("marker") == page["id"]
@@ -60,12 +69,30 @@ def _viewport_checks(report: dict, page: dict) -> dict[str, bool]:
             and evidence.get("title") == page["title"]
         )
         checks["viewportRealized"] = checks["viewportRealized"] and (
-            record.get("viewport") == {"width": width, "height": height}
+            requested == {"width": width, "height": height}
             and metrics.get("innerWidth") == width
             and metrics.get("innerHeight") == height
-            and realized.get("width") == width
-            and realized.get("height") == height
+            and actual == {"width": width, "height": height}
+            and reported == {"width": width, "height": height}
         )
+        if normalization:
+            actual_pair = actual if isinstance(actual, dict) else {}
+            reported_pair = reported if isinstance(reported, dict) else {}
+            checks["viewportEvidenceTraceable"] = checks["viewportEvidenceTraceable"] and (
+                normalization.get("status") == "MATCHED"
+                and normalization.get("requested") == requested
+                and normalization.get("actual") == actual
+                and normalization.get("reported") == reported
+                and metrics.get("innerWidth") == actual_pair.get("width")
+                and metrics.get("innerHeight") == actual_pair.get("height")
+            )
+            checks["documentScrollWidthSeparated"] = checks["documentScrollWidthSeparated"] and (
+                "documentScrollWidth" in normalization
+                and normalization.get("documentScrollWidth") == metrics.get("documentScrollWidth")
+            )
+        else:
+            checks["viewportEvidenceTraceable"] = False
+            checks["documentScrollWidthSeparated"] = False
         checks["noHorizontalOverflow"] = checks["noHorizontalOverflow"] and not record.get("horizontalOverflow")
         checks["mutationFirewallPass"] = checks["mutationFirewallPass"] and (record.get("mutationFirewall") or {}).get("status") == "PASS"
         checks["noPageErrors"] = checks["noPageErrors"] and not record.get("pageErrors")
@@ -78,12 +105,16 @@ def _viewport_rows(report: dict) -> list[dict]:
         metrics = record.get("metrics") or {}
         raw = _raw(record)
         rows.append({
-            "requestedWidth": (record.get("viewport") or {}).get("width"),
-            "requestedHeight": (record.get("viewport") or {}).get("height"),
+            "requestedWidth": (record.get("requestedViewport") or record.get("viewport") or {}).get("width"),
+            "requestedHeight": (record.get("requestedViewport") or record.get("viewport") or {}).get("height"),
             "innerWidth": metrics.get("innerWidth"),
             "innerHeight": metrics.get("innerHeight"),
-            "realizedWidth": (raw.get("viewport") or {}).get("width"),
-            "realizedHeight": (raw.get("viewport") or {}).get("height"),
+            "actualBrowserWidth": (record.get("actualBrowserViewport") or {}).get("width", metrics.get("innerWidth")),
+            "actualBrowserHeight": (record.get("actualBrowserViewport") or {}).get("height", metrics.get("innerHeight")),
+            "reportedEvidenceWidth": (record.get("reportedEvidenceViewport") or raw.get("viewport") or {}).get("width"),
+            "reportedEvidenceHeight": (record.get("reportedEvidenceViewport") or raw.get("viewport") or {}).get("height"),
+            "normalizationStatus": (record.get("viewportNormalization") or {}).get("status", "NOT_VERIFIED"),
+            "documentScrollWidth": (record.get("viewportNormalization") or {}).get("documentScrollWidth", metrics.get("documentScrollWidth")),
             "visualViewportScale": metrics.get("visualViewportScale"),
             "horizontalOverflow": record.get("horizontalOverflow"),
             "renderedQualityStatus": (record.get("renderedQuality") or {}).get("status"),
