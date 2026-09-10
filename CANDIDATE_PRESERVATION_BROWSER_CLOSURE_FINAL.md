@@ -188,4 +188,37 @@ Final allowed state for this round:
 CANDIDATE_UNCOMMITTED_AUTHOR_EMAIL_BLOCKED
 ```
 
+## 8. Execution addendum — 2026-09-10
+
+The Sections 2 and 6 values above are preserved as the pre-identity-resolution
+snapshot recorded before the final preservation commit. They are historical
+evidence, not the current branch state.
+
+The user-authorized repository-local identity was then configured as:
+
+```text
+user.name  = haotianshuo
+user.email = xrlcom@126.com
+```
+
+No global Git identity was changed. The preservation commit was created with
+the intended message:
+
+```text
+EVOLUTION_CANDIDATE_SHA=87bdf7a2a85c87621b89a78e64851b88a472c4aa
+```
+
+The commit contains the Stage 00–15 material, Browser Closure evidence,
+public tests, and the documented implementation changes. Its author and
+committer are both `haotianshuo <xrlcom@126.com>`. Commit and whitespace
+checks passed, the worktree is clean, and the branch was pushed successfully
+to `origin/human-first-universal-evolution` without force-push or history
+rewrite.
+
+The final local evidence remains `717 passed`, `0 skipped`, `0 failed`, with
+the public subset at `43 passed`; Browser Closure remains a qualification of
+the isolated local environment only. Real Host, External Project, External
+Harness, Blind Holdout, real-user, and cross-platform evidence remain
+`NOT_MEASURED`; GA remains `NOT_ELIGIBLE`.
+
 Stop here. Do not enter Real Host Pilot in this window. A later independent window may use `REAL_HOST_PILOT` only after an exact committed candidate SHA exists and is explicitly bound to the first 5–10 task pilot.
