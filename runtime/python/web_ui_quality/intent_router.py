@@ -49,8 +49,9 @@ _RULES: tuple[dict[str, Any], ...] = (
         "compatIntent": "fix",
         "patterns": (
             r"修复", r"修好", r"修一下", r"修掉", r"改一下", r"改好", r"直接改", r"帮我改", r"优化一下",
-            r"优化这个页面", r"按照刚才", r"把这些问题", r"implement", r"\bfix\b",
-            r"repair", r"apply the changes", r"make the changes",
+            r"优化这个页面", r"按照刚才", r"把这些问题", r"修改", r"调整", r"改成", r"换成", r"更新", r"修正",
+            r"implement", r"\bfix\b", r"repair", r"apply the changes", r"make the changes",
+            r"\b(?:change|edit|update|adjust)\b",
         ),
         "rationale": "用户要求对已知问题实施受控修复。",
         "writeRequested": True,
@@ -79,6 +80,21 @@ _RULES: tuple[dict[str, Any], ...] = (
         "writeRequested": False,
     },
 )
+
+
+_NEGATED_WRITE_CLAUSE = re.compile(
+    r"(?:不要|别|不许|禁止|do\s+not|don't)\s*"
+    r"(?:修改|改|动|碰|touch|change|modify|edit|update|adjust)"
+    r"[^，。,.!！;；\n]*",
+    re.IGNORECASE,
+)
+
+
+def _has_positive_write_signal(text: str) -> bool:
+    """Ignore a scoped non-goal such as ``不要修改登录逻辑`` when routing."""
+    candidate = _NEGATED_WRITE_CLAUSE.sub("", text)
+    patterns = _RULES[3]["patterns"]
+    return any(re.search(pattern, candidate, flags=re.IGNORECASE) for pattern in patterns)
 
 
 def _specialty(text: str, task_intent: str) -> str | None:
@@ -110,6 +126,8 @@ def route_user_intent(text: str | None, *, default: str = "inspect") -> dict[str
     lowered = source.casefold()
     matches: list[dict[str, Any]] = []
     for rule in _RULES:
+        if rule["taskIntent"] == "REPAIR_SMALL" and not _has_positive_write_signal(lowered):
+            continue
         hit = [pattern for pattern in rule["patterns"] if re.search(pattern, lowered, flags=re.IGNORECASE)]
         if hit:
             matches.append({**rule, "hits": hit})

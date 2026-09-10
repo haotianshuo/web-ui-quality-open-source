@@ -9,6 +9,14 @@ import re
 from typing import Any
 
 
+_NEGATED_WRITE_CLAUSE = re.compile(
+    r"(?:不要|别|不许|禁止|do\s+not|don't)\s*"
+    r"(?:修改|改|动|碰|touch|change|modify|edit|update|adjust)"
+    r"[^，。,.!！;；\n]*",
+    re.IGNORECASE,
+)
+
+
 def parse_control_intent(text: str | None) -> dict[str, Any]:
     raw = str(text or "").strip()
     low = raw.casefold()
@@ -29,9 +37,14 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
     # Only direct optimization language counts as a mutation request. Phrases
     # such as “告诉我应该怎么优化” remain read-only because the optimization
     # verb is not used as an imperative action.
-    fix_requested = bool(re.search(
-        r"(直接修|修一下|修复|修掉|帮我修|帮我优化|优化(?:一下|这个|当前|该)|\bfix\b|repair)",
+    verification_requested = bool(re.search(
+        r"(验证(?:刚才|之前|已经)?|有没有(?:回归|问题)|verify|regression\s+check)",
         low,
+    ))
+    positive_write_text = _NEGATED_WRITE_CLAUSE.sub("", raw)
+    fix_requested = not verification_requested and bool(re.search(
+        r"(直接修|修一下|修复|修掉|帮我修|帮我优化|优化(?:一下|这个|当前|该)|修改|调整|改成|换成|更新|修正|\bfix\b|repair|\b(?:change|edit|update|adjust)\b)",
+        positive_write_text.casefold(),
     ))
     if read_only_requested:
         return {**base, "action": "CHECK", "mutation": "FORBIDDEN", "confidence": "HIGH", "safeFallback": False}

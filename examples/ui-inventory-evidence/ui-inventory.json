@@ -1,0 +1,2232 @@
+{
+  "artifacts": {
+    "html": "ui-inventory.html",
+    "json": "ui-inventory.json",
+    "screenshots": "screenshots/"
+  },
+  "designSystemMap": {
+    "compatibilityCss": ":root {\n  --wuq-color-background-canvas: var(--background, oklch(0.975 0.006 250));\n  --wuq-color-background-surface: var(--surface, oklch(0.995 0.002 250));\n  --wuq-color-text-primary: var(--text, oklch(0.22 0.025 255));\n  --wuq-color-text-secondary: oklch(0.52 0.025 255);\n  --wuq-color-border-default: var(--border, oklch(0.90 0.015 250));\n  --wuq-color-action-primary: var(--primary, oklch(0.57 0.18 255));\n  --wuq-color-status-success: oklch(0.58 0.15 155);\n  --wuq-color-status-warning: oklch(0.70 0.16 80);\n  --wuq-color-status-danger: oklch(0.58 0.21 28);\n}\n",
+    "cssFiles": 3,
+    "cssVariableCount": 18,
+    "dtcg": {
+      "$description": "Web UI Quality extracted project token map. Review before production use.",
+      "project": {
+        "raw": {
+          "colors": {
+            "color-1": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "color"
+              },
+              "$type": "string",
+              "$value": "#0958d9"
+            },
+            "color-2": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "color"
+              },
+              "$type": "string",
+              "$value": "#f5f7fb"
+            },
+            "color-3": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "color"
+              },
+              "$type": "string",
+              "$value": "#ffffff"
+            },
+            "color-4": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "color"
+              },
+              "$type": "string",
+              "$value": "#1f2937"
+            },
+            "color-5": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "color"
+              },
+              "$type": "string",
+              "$value": "#e5e7eb"
+            },
+            "color-6": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "color"
+              },
+              "$type": "string",
+              "$value": "#d1d5db"
+            },
+            "color-7": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "color"
+              },
+              "$type": "string",
+              "$value": "rgba(0, 0, 0, 0.05)"
+            }
+          },
+          "cssVariables": {
+            "background": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "#f5f7fb"
+            },
+            "border": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "#e5e7eb"
+            },
+            "control.radius": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "8px"
+            },
+            "focus": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "#0958d9"
+            },
+            "font.family.sans": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "Arial, sans-serif"
+            },
+            "font.size.body": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "16px"
+            },
+            "font.size.control": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "14px"
+            },
+            "font.size.title": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "32px"
+            },
+            "font.weight.bold": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "700"
+            },
+            "font.weight.regular": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "400"
+            },
+            "font.weight.semibold": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "600"
+            },
+            "input.border": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "#d1d5db"
+            },
+            "line.height.control": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "1.4"
+            },
+            "line.height.title": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "1.2"
+            },
+            "page.space": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "24px"
+            },
+            "primary": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "#0958d9"
+            },
+            "surface": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "#ffffff"
+            },
+            "text": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "string"
+              },
+              "$type": "string",
+              "$value": "#1f2937"
+            }
+          },
+          "fontFamily": {
+            "family-1": {
+              "$type": "fontFamily",
+              "$value": [
+                "var(--font-family-sans)"
+              ]
+            }
+          },
+          "fontSize": {
+            "size-1": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "dimension"
+              },
+              "$type": "dimension",
+              "$value": "var(--font-size-control)"
+            },
+            "size-2": {
+              "$type": "dimension",
+              "$value": {
+                "unit": "px",
+                "value": 14.0
+              }
+            },
+            "size-3": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "dimension"
+              },
+              "$type": "dimension",
+              "$value": "var(--font-size-body)"
+            },
+            "size-4": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "dimension"
+              },
+              "$type": "dimension",
+              "$value": "var(--font-size-title)"
+            }
+          },
+          "radius": {
+            "radius-1": {
+              "$extensions": {
+                "org.web-ui-quality.semanticType": "dimension"
+              },
+              "$type": "dimension",
+              "$value": "var(--control-radius)"
+            }
+          },
+          "spacing": {
+            "space-1": {
+              "$type": "dimension",
+              "$value": {
+                "unit": "px",
+                "value": 16.0
+              }
+            },
+            "space-2": {
+              "$type": "dimension",
+              "$value": {
+                "unit": "px",
+                "value": 8.0
+              }
+            },
+            "space-3": {
+              "$type": "dimension",
+              "$value": {
+                "unit": "px",
+                "value": 6.0
+              }
+            },
+            "space-4": {
+              "$type": "dimension",
+              "$value": {
+                "unit": "px",
+                "value": 32.0
+              }
+            },
+            "space-5": {
+              "$type": "dimension",
+              "$value": {
+                "unit": "px",
+                "value": 12.0
+              }
+            }
+          }
+        }
+      }
+    },
+    "inventory": {
+      "colors": [
+        {
+          "count": 2,
+          "value": "#0958d9"
+        },
+        {
+          "count": 1,
+          "value": "#f5f7fb"
+        },
+        {
+          "count": 1,
+          "value": "#ffffff"
+        },
+        {
+          "count": 1,
+          "value": "#1f2937"
+        },
+        {
+          "count": 1,
+          "value": "#e5e7eb"
+        },
+        {
+          "count": 1,
+          "value": "#d1d5db"
+        },
+        {
+          "count": 1,
+          "value": "rgba(0, 0, 0, 0.05)"
+        }
+      ],
+      "fontFamilies": [
+        {
+          "count": 2,
+          "value": "var(--font-family-sans)"
+        }
+      ],
+      "fontSizes": [
+        {
+          "count": 2,
+          "value": "var(--font-size-control)"
+        },
+        {
+          "count": 1,
+          "value": "14px"
+        },
+        {
+          "count": 1,
+          "value": "var(--font-size-body)"
+        },
+        {
+          "count": 1,
+          "value": "var(--font-size-title)"
+        }
+      ],
+      "radii": [
+        {
+          "count": 4,
+          "value": "var(--control-radius)"
+        }
+      ],
+      "shadows": [
+        {
+          "count": 1,
+          "value": "0 2px 8px rgba(0, 0, 0, 0.05)"
+        }
+      ],
+      "spacing": [
+        {
+          "count": 3,
+          "value": "16px"
+        },
+        {
+          "count": 2,
+          "value": "8px"
+        },
+        {
+          "count": 1,
+          "value": "6px"
+        },
+        {
+          "count": 1,
+          "value": "32px"
+        },
+        {
+          "count": 1,
+          "value": "12px"
+        }
+      ],
+      "variables": {
+        "--background": "#f5f7fb",
+        "--border": "#e5e7eb",
+        "--control-radius": "8px",
+        "--focus": "#0958d9",
+        "--font-family-sans": "Arial, sans-serif",
+        "--font-size-body": "16px",
+        "--font-size-control": "14px",
+        "--font-size-title": "32px",
+        "--font-weight-bold": "700",
+        "--font-weight-regular": "400",
+        "--font-weight-semibold": "600",
+        "--input-border": "#d1d5db",
+        "--line-height-control": "1.4",
+        "--line-height-title": "1.2",
+        "--page-space": "24px",
+        "--primary": "#0958d9",
+        "--surface": "#ffffff",
+        "--text": "#1f2937"
+      }
+    },
+    "metrics": {
+      "colourTokenRatio": 69.2,
+      "consistencyScore": 65,
+      "spacingGridCoherence": 80.0,
+      "tokenReuseRatio": 46.8
+    },
+    "recommendations": [
+      "优先将现有变量映射为背景、表面、文字、边界、操作和状态语义 Token",
+      "保留项目已有品牌语言，只有对比、状态或一致性不足时才替换具体数值",
+      "设计 Token 与组件结构解耦，避免通过高特异性 CSS 覆盖第三方组件",
+      "导出的 DTCG Token 需要设计与前端共同复核后再成为生产单一事实源"
+    ],
+    "schemaVersion": "1.0",
+    "semanticAliases": {
+      "color.action.primary": "--primary",
+      "color.background.canvas": "--background",
+      "color.background.surface": "--surface",
+      "color.border.default": "--border",
+      "color.text.primary": "--text"
+    }
+  },
+  "inventory": {
+    "colors": {
+      "count": 5,
+      "potentialDuplicates": [],
+      "values": [
+        {
+          "count": 54,
+          "value": "#1F2937"
+        },
+        {
+          "count": 24,
+          "value": "#0958D9"
+        },
+        {
+          "count": 15,
+          "value": "#E5E7EB"
+        },
+        {
+          "count": 12,
+          "value": "#FFFFFF"
+        },
+        {
+          "count": 12,
+          "value": "#D1D5DB"
+        }
+      ]
+    },
+    "components": {
+      "button": {
+        "count": 3,
+        "similarStyleClusters": [],
+        "styleCount": 1,
+        "styles": [
+          {
+            "count": 3,
+            "fingerprint": "82bc84c6fb87",
+            "pageCount": 3,
+            "representative": {
+              "page": "/index.html",
+              "selector": "button.save",
+              "style": {
+                "backgroundColor": "rgb(9, 88, 217)",
+                "borderBottomLeftRadius": 8,
+                "borderBottomRightRadius": 8,
+                "borderTopColor": "rgb(9, 88, 217)",
+                "borderTopLeftRadius": 8,
+                "borderTopRightRadius": 8,
+                "borderTopWidth": 1,
+                "boxShadow": "none",
+                "color": "rgb(255, 255, 255)",
+                "columnGap": null,
+                "display": "inline-block",
+                "fill": "rgb(31, 41, 55)",
+                "fontFamily": "Arial, sans-serif",
+                "fontSize": 14,
+                "fontWeight": "600",
+                "gap": null,
+                "height": 44,
+                "letterSpacing": null,
+                "lineHeight": 19.6,
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+                "opacity": 1,
+                "paddingBottom": 8,
+                "paddingLeft": 16,
+                "paddingRight": 16,
+                "paddingTop": 8,
+                "position": "static",
+                "rowGap": null,
+                "stroke": "none",
+                "width": 62
+              },
+              "text": "保存"
+            }
+          }
+        ]
+      },
+      "card": {
+        "count": 3,
+        "similarStyleClusters": [],
+        "styleCount": 1,
+        "styles": [
+          {
+            "count": 3,
+            "fingerprint": "49719215ef3f",
+            "pageCount": 3,
+            "representative": {
+              "page": "/index.html",
+              "selector": "section.card",
+              "style": {
+                "backgroundColor": "rgb(255, 255, 255)",
+                "borderBottomLeftRadius": 8,
+                "borderBottomRightRadius": 8,
+                "borderTopColor": "rgb(229, 231, 235)",
+                "borderTopLeftRadius": 8,
+                "borderTopRightRadius": 8,
+                "borderTopWidth": 1,
+                "boxShadow": "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px",
+                "color": "rgb(31, 41, 55)",
+                "columnGap": null,
+                "display": "block",
+                "fill": "rgb(31, 41, 55)",
+                "fontFamily": "Arial, sans-serif",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "gap": null,
+                "height": 238.06,
+                "letterSpacing": null,
+                "lineHeight": null,
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+                "opacity": 1,
+                "paddingBottom": 24,
+                "paddingLeft": 24,
+                "paddingRight": 24,
+                "paddingTop": 24,
+                "position": "static",
+                "rowGap": null,
+                "stroke": "none",
+                "width": 852
+              },
+              "text": "首页用于 UI Asset Inventory 真实浏览器验收。示例输入框保存"
+            }
+          }
+        ]
+      },
+      "dialog": {
+        "count": 0,
+        "similarStyleClusters": [],
+        "styleCount": 0,
+        "styles": []
+      },
+      "icon": {
+        "count": 0,
+        "similarStyleClusters": [],
+        "styleCount": 0,
+        "styles": []
+      },
+      "input": {
+        "count": 3,
+        "similarStyleClusters": [],
+        "styleCount": 1,
+        "styles": [
+          {
+            "count": 3,
+            "fingerprint": "35e389b08752",
+            "pageCount": 3,
+            "representative": {
+              "page": "/index.html",
+              "selector": "#inventory-query",
+              "style": {
+                "backgroundColor": "rgb(255, 255, 255)",
+                "borderBottomLeftRadius": 8,
+                "borderBottomRightRadius": 8,
+                "borderTopColor": "rgb(209, 213, 219)",
+                "borderTopLeftRadius": 8,
+                "borderTopRightRadius": 8,
+                "borderTopWidth": 1,
+                "boxShadow": "none",
+                "color": "rgb(31, 41, 55)",
+                "columnGap": null,
+                "display": "inline-block",
+                "fill": "rgb(31, 41, 55)",
+                "fontFamily": "Arial, sans-serif",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "gap": null,
+                "height": 44,
+                "letterSpacing": null,
+                "lineHeight": 19.6,
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+                "opacity": 1,
+                "paddingBottom": 8,
+                "paddingLeft": 12,
+                "paddingRight": 12,
+                "paddingTop": 8,
+                "position": "static",
+                "rowGap": null,
+                "stroke": "none",
+                "width": 196
+              },
+              "text": ""
+            }
+          }
+        ]
+      },
+      "table": {
+        "count": 0,
+        "similarStyleClusters": [],
+        "styleCount": 0,
+        "styles": []
+      }
+    },
+    "driftCandidates": [],
+    "mode": "full",
+    "pageProfiles": [
+      {
+        "buttonStyles": 1,
+        "dominantColor": "#1F2937",
+        "dominantFontSize": 16,
+        "dominantRadius": 8,
+        "dominantSpacing": 24,
+        "path": "/index.html",
+        "url": "http://127.0.0.1/index.html"
+      },
+      {
+        "buttonStyles": 1,
+        "dominantColor": "#1F2937",
+        "dominantFontSize": 16,
+        "dominantRadius": 8,
+        "dominantSpacing": 24,
+        "path": "/settings.html",
+        "url": "http://127.0.0.1/settings.html"
+      },
+      {
+        "buttonStyles": 1,
+        "dominantColor": "#1F2937",
+        "dominantFontSize": 16,
+        "dominantRadius": 8,
+        "dominantSpacing": 24,
+        "path": "/users.html",
+        "url": "http://127.0.0.1/users.html"
+      }
+    ],
+    "radius": {
+      "count": 1,
+      "possibleOutliers": [],
+      "values": [
+        {
+          "count": 36,
+          "value": 8
+        }
+      ]
+    },
+    "spacing": {
+      "count": 8,
+      "values": [
+        {
+          "count": 30,
+          "value": 24
+        },
+        {
+          "count": 27,
+          "value": 16
+        },
+        {
+          "count": 12,
+          "value": 8
+        },
+        {
+          "count": 6,
+          "value": 32
+        },
+        {
+          "count": 6,
+          "value": 270
+        },
+        {
+          "count": 6,
+          "value": 21.44
+        },
+        {
+          "count": 6,
+          "value": 12
+        },
+        {
+          "count": 3,
+          "value": 6
+        }
+      ]
+    },
+    "typography": {
+      "crossRoleTierPairs": [
+        {
+          "roleCounts": [
+            {
+              "counts": [
+                0,
+                21
+              ],
+              "semanticRole": "body"
+            },
+            {
+              "counts": [
+                6,
+                0
+              ],
+              "semanticRole": "control"
+            },
+            {
+              "counts": [
+                3,
+                0
+              ],
+              "semanticRole": "control-label"
+            }
+          ],
+          "roles": [
+            "body",
+            "control",
+            "control-label"
+          ],
+          "values": [
+            14.0,
+            16.0
+          ]
+        }
+      ],
+      "fontFamilies": [
+        {
+          "count": 33,
+          "value": "Arial, sans-serif"
+        }
+      ],
+      "fontSizeCount": 3,
+      "fontSizes": [
+        {
+          "count": 21,
+          "value": 16
+        },
+        {
+          "count": 9,
+          "value": 14
+        },
+        {
+          "count": 3,
+          "value": 32
+        }
+      ],
+      "fontWeights": [
+        {
+          "count": 24,
+          "value": "400"
+        },
+        {
+          "count": 6,
+          "value": "600"
+        },
+        {
+          "count": 3,
+          "value": "700"
+        }
+      ],
+      "fragmentationCandidates": [],
+      "semanticRoleCounts": {
+        "body": {
+          "fontSizes": [
+            {
+              "count": 21,
+              "value": 16
+            }
+          ]
+        },
+        "control": {
+          "fontSizes": [
+            {
+              "count": 6,
+              "value": 14
+            }
+          ]
+        },
+        "control-label": {
+          "fontSizes": [
+            {
+              "count": 3,
+              "value": 14
+            }
+          ]
+        },
+        "heading": {
+          "fontSizes": [
+            {
+              "count": 3,
+              "value": 32
+            }
+          ]
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Only rendered routes/states reachable in the supplied session are proven.",
+    "Authenticated inventory visits only the start route and explicitly approved routes; newly discovered links are recorded but not opened.",
+    "Hover/focus pseudo-class styles are not asserted unless visible in the measured state.",
+    "Different values are review candidates, not automatic errors; no source changes are performed."
+  ],
+  "mode": "full",
+  "mutationFirewall": {
+    "decisions": [
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "document",
+        "url": "http://127.0.0.1/index.html"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/styles.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha10-semantics.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha11-inventory-fixture.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "document",
+        "url": "http://127.0.0.1/settings.html"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/styles.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha10-semantics.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha11-inventory-fixture.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "document",
+        "url": "http://127.0.0.1/users.html"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/styles.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha10-semantics.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha11-inventory-fixture.css"
+      }
+    ],
+    "status": "PASS"
+  },
+  "navigationPolicy": {
+    "approvedRoutes": [
+      "/index.html",
+      "/settings.html",
+      "/users.html"
+    ],
+    "authenticated": false,
+    "discoveredLinksRecordedOnly": []
+  },
+  "networkPolicy": {
+    "blockedRequestCount": 0,
+    "blockedWebSocketCount": 0,
+    "claimBoundary": "Browser routing is enforced in-process; OS/process network isolation is not implied.",
+    "credentials": {
+      "boundOriginIds": [],
+      "injectedHeaderCount": 0,
+      "strippedHeaderCount": 0,
+      "used": false,
+      "valuesRecorded": false
+    },
+    "externalOriginsBlocked": false,
+    "firewallDecisions": [
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "document",
+        "url": "http://127.0.0.1/index.html"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/styles.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha10-semantics.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha11-inventory-fixture.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "document",
+        "url": "http://127.0.0.1/settings.html"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/styles.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha10-semantics.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha11-inventory-fixture.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "document",
+        "url": "http://127.0.0.1/users.html"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/styles.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha10-semantics.css"
+      },
+      {
+        "allow": true,
+        "code": "ALLOWED_READ",
+        "method": "GET",
+        "origin": "http://127.0.0.1",
+        "resourceType": "stylesheet",
+        "url": "http://127.0.0.1/alpha11-inventory-fixture.css"
+      }
+    ],
+    "processNetworkIsolation": "NOT_MEASURED"
+  },
+  "packageVersion": "4.3.0",
+  "pages": [
+    {
+      "buttons": [
+        {
+          "bounds": {
+            "height": 44,
+            "width": 62,
+            "x": 515,
+            "y": 302.1
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "button.save",
+          "style": {
+            "backgroundColor": "rgb(9, 88, 217)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(9, 88, 217)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "none",
+            "color": "rgb(255, 255, 255)",
+            "columnGap": null,
+            "display": "inline-block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 14,
+            "fontWeight": "600",
+            "gap": null,
+            "height": 44,
+            "letterSpacing": null,
+            "lineHeight": 19.6,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 16,
+            "paddingRight": 16,
+            "paddingTop": 8,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 62
+          },
+          "tag": "button",
+          "text": "保存"
+        }
+      ],
+      "cards": [
+        {
+          "bounds": {
+            "height": 238.1,
+            "width": 852,
+            "x": 294,
+            "y": 133
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "section.card",
+          "style": {
+            "backgroundColor": "rgb(255, 255, 255)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(229, 231, 235)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px",
+            "color": "rgb(31, 41, 55)",
+            "columnGap": null,
+            "display": "block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "gap": null,
+            "height": 238.06,
+            "letterSpacing": null,
+            "lineHeight": null,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 24,
+            "paddingLeft": 24,
+            "paddingRight": 24,
+            "paddingTop": 24,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 852
+          },
+          "tag": "section",
+          "text": "首页用于 UI Asset Inventory 真实浏览器验收。示例输入框保存"
+        }
+      ],
+      "colors": [
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(229, 231, 235)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(31, 41, 55)"
+      ],
+      "dialogs": [],
+      "httpStatus": 200,
+      "icons": [],
+      "inputs": [
+        {
+          "bounds": {
+            "height": 44,
+            "width": 196,
+            "x": 319,
+            "y": 301.3
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "#inventory-query",
+          "style": {
+            "backgroundColor": "rgb(255, 255, 255)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(209, 213, 219)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "none",
+            "color": "rgb(31, 41, 55)",
+            "columnGap": null,
+            "display": "inline-block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "gap": null,
+            "height": 44,
+            "letterSpacing": null,
+            "lineHeight": 19.6,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 12,
+            "paddingRight": 12,
+            "paddingTop": 8,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 196
+          },
+          "tag": "input",
+          "text": ""
+        }
+      ],
+      "links": [
+        "http://127.0.0.1/index.html",
+        "http://127.0.0.1/users.html",
+        "http://127.0.0.1/settings.html"
+      ],
+      "path": "/index.html",
+      "radius": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "reason": null,
+      "screenshotRef": "index.html-213456-desktop.png",
+      "screenshotSha256": "a47c5d7629e22a4355993944184b0bc5e574a95dda7c6f1cd11f4f058f8425cc",
+      "spacing": [
+        16,
+        24,
+        16,
+        24,
+        16,
+        16,
+        16,
+        24,
+        24,
+        24,
+        24,
+        32,
+        270,
+        32,
+        270,
+        24,
+        24,
+        24,
+        24,
+        21.44,
+        21.44,
+        16,
+        16,
+        6,
+        8,
+        12,
+        8,
+        12,
+        8,
+        16,
+        8,
+        16
+      ],
+      "status": "scanned",
+      "tables": [],
+      "title": "首页",
+      "typography": [
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "nav"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "main"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "section"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 32,
+          "fontWeight": "700",
+          "letterSpacing": null,
+          "lineHeight": 38.4,
+          "semanticRole": "heading",
+          "tag": "h1"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "p"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "control-label",
+          "tag": "label"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": 19.6,
+          "semanticRole": "control",
+          "tag": "input"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "letterSpacing": null,
+          "lineHeight": 19.6,
+          "semanticRole": "control",
+          "tag": "button"
+        }
+      ],
+      "url": "http://127.0.0.1/index.html"
+    },
+    {
+      "buttons": [
+        {
+          "bounds": {
+            "height": 44,
+            "width": 62,
+            "x": 515,
+            "y": 302.1
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "button.save",
+          "style": {
+            "backgroundColor": "rgb(9, 88, 217)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(9, 88, 217)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "none",
+            "color": "rgb(255, 255, 255)",
+            "columnGap": null,
+            "display": "inline-block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 14,
+            "fontWeight": "600",
+            "gap": null,
+            "height": 44,
+            "letterSpacing": null,
+            "lineHeight": 19.6,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 16,
+            "paddingRight": 16,
+            "paddingTop": 8,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 62
+          },
+          "tag": "button",
+          "text": "保存"
+        }
+      ],
+      "cards": [
+        {
+          "bounds": {
+            "height": 238.1,
+            "width": 852,
+            "x": 294,
+            "y": 133
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "section.card",
+          "style": {
+            "backgroundColor": "rgb(255, 255, 255)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(229, 231, 235)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px",
+            "color": "rgb(31, 41, 55)",
+            "columnGap": null,
+            "display": "block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "gap": null,
+            "height": 238.06,
+            "letterSpacing": null,
+            "lineHeight": null,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 24,
+            "paddingLeft": 24,
+            "paddingRight": 24,
+            "paddingTop": 24,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 852
+          },
+          "tag": "section",
+          "text": "设置用于 UI Asset Inventory 真实浏览器验收。示例输入框保存"
+        }
+      ],
+      "colors": [
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(229, 231, 235)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(31, 41, 55)"
+      ],
+      "dialogs": [],
+      "httpStatus": 200,
+      "icons": [],
+      "inputs": [
+        {
+          "bounds": {
+            "height": 44,
+            "width": 196,
+            "x": 319,
+            "y": 301.3
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "#inventory-query",
+          "style": {
+            "backgroundColor": "rgb(255, 255, 255)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(209, 213, 219)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "none",
+            "color": "rgb(31, 41, 55)",
+            "columnGap": null,
+            "display": "inline-block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "gap": null,
+            "height": 44,
+            "letterSpacing": null,
+            "lineHeight": 19.6,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 12,
+            "paddingRight": 12,
+            "paddingTop": 8,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 196
+          },
+          "tag": "input",
+          "text": ""
+        }
+      ],
+      "links": [
+        "http://127.0.0.1/index.html",
+        "http://127.0.0.1/users.html",
+        "http://127.0.0.1/settings.html"
+      ],
+      "path": "/settings.html",
+      "radius": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "reason": null,
+      "screenshotRef": "settings.html-aa052d-desktop.png",
+      "screenshotSha256": "7eea4b5f5eb10e82121d12423234a871fbff37b5ec86ecc5779b19fbcc4c5ac2",
+      "spacing": [
+        16,
+        24,
+        16,
+        24,
+        16,
+        16,
+        16,
+        24,
+        24,
+        24,
+        24,
+        32,
+        270,
+        32,
+        270,
+        24,
+        24,
+        24,
+        24,
+        21.44,
+        21.44,
+        16,
+        16,
+        6,
+        8,
+        12,
+        8,
+        12,
+        8,
+        16,
+        8,
+        16
+      ],
+      "status": "scanned",
+      "tables": [],
+      "title": "设置",
+      "typography": [
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "nav"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "main"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "section"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 32,
+          "fontWeight": "700",
+          "letterSpacing": null,
+          "lineHeight": 38.4,
+          "semanticRole": "heading",
+          "tag": "h1"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "p"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "control-label",
+          "tag": "label"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": 19.6,
+          "semanticRole": "control",
+          "tag": "input"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "letterSpacing": null,
+          "lineHeight": 19.6,
+          "semanticRole": "control",
+          "tag": "button"
+        }
+      ],
+      "url": "http://127.0.0.1/settings.html"
+    },
+    {
+      "buttons": [
+        {
+          "bounds": {
+            "height": 44,
+            "width": 62,
+            "x": 515,
+            "y": 302.1
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "button.save",
+          "style": {
+            "backgroundColor": "rgb(9, 88, 217)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(9, 88, 217)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "none",
+            "color": "rgb(255, 255, 255)",
+            "columnGap": null,
+            "display": "inline-block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 14,
+            "fontWeight": "600",
+            "gap": null,
+            "height": 44,
+            "letterSpacing": null,
+            "lineHeight": 19.6,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 16,
+            "paddingRight": 16,
+            "paddingTop": 8,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 62
+          },
+          "tag": "button",
+          "text": "保存"
+        }
+      ],
+      "cards": [
+        {
+          "bounds": {
+            "height": 238.1,
+            "width": 852,
+            "x": 294,
+            "y": 133
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "section.card",
+          "style": {
+            "backgroundColor": "rgb(255, 255, 255)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(229, 231, 235)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px",
+            "color": "rgb(31, 41, 55)",
+            "columnGap": null,
+            "display": "block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "gap": null,
+            "height": 238.06,
+            "letterSpacing": null,
+            "lineHeight": null,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 24,
+            "paddingLeft": 24,
+            "paddingRight": 24,
+            "paddingTop": 24,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 852
+          },
+          "tag": "section",
+          "text": "用户用于 UI Asset Inventory 真实浏览器验收。示例输入框保存"
+        }
+      ],
+      "colors": [
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(229, 231, 235)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(9, 88, 217)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(229, 231, 235)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgba(0, 0, 0, 0)",
+        "rgb(31, 41, 55)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(209, 213, 219)",
+        "rgb(31, 41, 55)",
+        "rgb(255, 255, 255)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(9, 88, 217)",
+        "rgb(31, 41, 55)"
+      ],
+      "dialogs": [],
+      "httpStatus": 200,
+      "icons": [],
+      "inputs": [
+        {
+          "bounds": {
+            "height": 44,
+            "width": 196,
+            "x": 319,
+            "y": 301.3
+          },
+          "disabled": false,
+          "role": null,
+          "selector": "#inventory-query",
+          "style": {
+            "backgroundColor": "rgb(255, 255, 255)",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderTopColor": "rgb(209, 213, 219)",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "boxShadow": "none",
+            "color": "rgb(31, 41, 55)",
+            "columnGap": null,
+            "display": "inline-block",
+            "fill": "rgb(31, 41, 55)",
+            "fontFamily": "Arial, sans-serif",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "gap": null,
+            "height": 44,
+            "letterSpacing": null,
+            "lineHeight": 19.6,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 12,
+            "paddingRight": 12,
+            "paddingTop": 8,
+            "position": "static",
+            "rowGap": null,
+            "stroke": "none",
+            "width": 196
+          },
+          "tag": "input",
+          "text": ""
+        }
+      ],
+      "links": [
+        "http://127.0.0.1/index.html",
+        "http://127.0.0.1/users.html",
+        "http://127.0.0.1/settings.html"
+      ],
+      "path": "/users.html",
+      "radius": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "reason": null,
+      "screenshotRef": "users.html-0654b5-desktop.png",
+      "screenshotSha256": "5ce2e0c34c68ae917d93c0fbca16e42c648a6eb4ef8709628d642d669a86e617",
+      "spacing": [
+        16,
+        24,
+        16,
+        24,
+        16,
+        16,
+        16,
+        24,
+        24,
+        24,
+        24,
+        32,
+        270,
+        32,
+        270,
+        24,
+        24,
+        24,
+        24,
+        21.44,
+        21.44,
+        16,
+        16,
+        6,
+        8,
+        12,
+        8,
+        12,
+        8,
+        16,
+        8,
+        16
+      ],
+      "status": "scanned",
+      "tables": [],
+      "title": "用户",
+      "typography": [
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "nav"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "a"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "main"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "section"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 32,
+          "fontWeight": "700",
+          "letterSpacing": null,
+          "lineHeight": 38.4,
+          "semanticRole": "heading",
+          "tag": "h1"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "body",
+          "tag": "p"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "letterSpacing": null,
+          "lineHeight": null,
+          "semanticRole": "control-label",
+          "tag": "label"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "letterSpacing": null,
+          "lineHeight": 19.6,
+          "semanticRole": "control",
+          "tag": "input"
+        },
+        {
+          "fontFamily": "Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "600",
+          "letterSpacing": null,
+          "lineHeight": 19.6,
+          "semanticRole": "control",
+          "tag": "button"
+        }
+      ],
+      "url": "http://127.0.0.1/users.html"
+    }
+  ],
+  "producer": "web-ui-quality-ui-inventory",
+  "readOnly": true,
+  "schemaVersion": "1",
+  "sourceRoutes": [
+    {
+      "path": "/index.html",
+      "sourceEvidence": [
+        {
+          "file": "index.html",
+          "line": 1
+        },
+        {
+          "file": "settings.html",
+          "line": 1
+        },
+        {
+          "file": "users.html",
+          "line": 1
+        }
+      ],
+      "template": "/index.html"
+    },
+    {
+      "path": "/settings.html",
+      "sourceEvidence": [
+        {
+          "file": "index.html",
+          "line": 1
+        },
+        {
+          "file": "settings.html",
+          "line": 1
+        },
+        {
+          "file": "users.html",
+          "line": 1
+        }
+      ],
+      "template": "/settings.html"
+    },
+    {
+      "path": "/users.html",
+      "sourceEvidence": [
+        {
+          "file": "index.html",
+          "line": 1
+        },
+        {
+          "file": "settings.html",
+          "line": 1
+        },
+        {
+          "file": "users.html",
+          "line": 1
+        }
+      ],
+      "template": "/users.html"
+    }
+  ],
+  "stats": {
+    "pagesDiscovered": 3,
+    "pagesFailed": 0,
+    "pagesScanned": 3,
+    "pagesSkipped": 0
+  },
+  "status": "PASS",
+  "summary": {
+    "buttonStyles": 1,
+    "buttons": 3,
+    "colors": 5,
+    "fontSizes": 3,
+    "highPriorityIssues": 0,
+    "pagesDiscovered": 3,
+    "pagesFailed": 0,
+    "pagesScanned": 3,
+    "potentialDuplicateColorGroups": 0,
+    "radiusValues": 1,
+    "uiDriftCandidates": 0
+  },
+  "target": {
+    "projectRoot": ".",
+    "startUrl": "http://127.0.0.1/index.html",
+    "viewport": {
+      "height": 900,
+      "width": 1440
+    }
+  },
+  "tokenComparison": {
+    "claimBoundary": "Literal CSS token-like definitions vs rendered computed values; semantic token ownership is not proven.",
+    "cssFiles": 3,
+    "cssVariableCount": 18,
+    "definedColors": [
+      "#0000000D",
+      "#0958D9",
+      "#1F2937",
+      "#D1D5DB",
+      "#E5E7EB",
+      "#F5F7FB",
+      "#FFFFFF"
+    ],
+    "definedRadiusPx": [],
+    "existingDesignSystemMetrics": {
+      "colourTokenRatio": 69.2,
+      "consistencyScore": 65,
+      "spacingGridCoherence": 80.0,
+      "tokenReuseRatio": 46.8
+    },
+    "observedColorsOutsideDefinedSet": [],
+    "observedRadiusOutsideDefinedSetPx": [
+      8.0
+    ],
+    "uniqueColorCoveragePercent": 100.0,
+    "uniqueRadiusCoveragePercent": 0.0
+  },
+  "topIssues": []
+}

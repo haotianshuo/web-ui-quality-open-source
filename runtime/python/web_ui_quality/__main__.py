@@ -752,7 +752,7 @@ def _emit_human_repair_report(result: dict[str, Any], *, request: str | None = N
 
     print("结果：", file=stream)
     print(f"- {user_state}。", file=stream)
-    print(f"- 原因：{human_status_explanation(outcome)}", file=stream)
+    print(f"- 原因：{human_status_explanation(str(task.get('reasonCode') or outcome))}", file=stream)
     if outcome_upper in {"AUTH_REQUIRED"}:
         owner = "你需要先完成当前页面或宿主要求的认证。"
         continuity = "认证完成后可以继续同一任务；写权限不会因恢复自动获得。"
@@ -2015,6 +2015,8 @@ def main(argv: list[str] | None = None) -> int:
                     },
                 },
                 "browserStatus": capability_registry.get("browserStatus"),
+                "browserStatusMeaning": "LOCAL_LAUNCH_PREREQUISITES_ONLY",
+                "browserCapability": capability_registry.get("browserCapability"),
             }
             _emit(result, compact=args.compact)
             return 0 if result["schemaStatus"] == "PASS" else 1

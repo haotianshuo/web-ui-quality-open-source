@@ -14,6 +14,7 @@
     "executionStatus",
     "outcome",
     "subjectStatus",
+    "reasonCode",
     "coverage",
     "observations",
     "hypotheses",
@@ -71,6 +72,10 @@
       ]
     },
     "subjectStatus": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reasonCode": {
       "type": "string",
       "minLength": 1
     },
