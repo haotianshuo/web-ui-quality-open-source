@@ -597,7 +597,7 @@ def run_experience_fix(
             gate = evaluate_improvement_claim(
                 before_report, after_report,
                 condition_match=bool(condition_check["match"]), target_match=target_match, safe_task_match=safe_task_match,
-                browser_viewports=matrix,
+                browser_viewports=matrix, request=request,
             )
             comparison = {
                 **gate,

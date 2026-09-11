@@ -8,7 +8,12 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .intent_signals import has_whole_task_read_only, strip_negated_write_clauses
+from .intent_signals import (
+    extract_scoped_protected_scope,
+    extract_scoped_write_scope,
+    has_whole_task_read_only,
+    strip_negated_write_clauses,
+)
 
 
 def parse_control_intent(text: str | None) -> dict[str, Any]:
@@ -18,6 +23,7 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
         "schemaVersion": "1", "raw": raw, "action": "UNKNOWN", "mutation": "FORBIDDEN",
         "scope": None, "profile": None, "reportDepth": None, "resumeTarget": None, "resumeQuery": None,
         "assumptionRevision": False, "protectedScope": [], "confidence": "LOW",
+        "scopeIntent": "UNSPECIFIED", "allowedWriteScope": [],
         "requiresHostApproval": False, "safeFallback": True,
     }
     if not raw:
@@ -33,11 +39,12 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
     ))
     positive_write_text = strip_negated_write_clauses(raw)
     fix_requested = not verification_requested and bool(re.search(
-        r"(直接修|修一下|修复|修掉|帮我修|帮我优化|优化(?:一下|这个|当前|该)|修改|调整|改成|换成|更新|修正|\bfix\b|repair|\b(?:change|edit|update|adjust)\b)",
+        r"(直接修|修一下|修复|修掉|帮我修|帮我优化|优化(?:一下|这个|当前|该)|帮我处理|处理(?:好|一下|这个|当前|该)|帮我改善|改善(?:一下|这个|当前|该)|修改|调整|改成|换成|更新|修正|\bfix\b|repair|\b(?:change|edit|update|adjust|improve|handle)\b)",
         positive_write_text.casefold(),
     ))
+    scoped_write = extract_scoped_write_scope(raw)
     if read_only_requested:
-        return {**base, "action": "CHECK", "mutation": "FORBIDDEN", "confidence": "HIGH", "safeFallback": False}
+        return {**base, "action": "CHECK", "mutation": "FORBIDDEN", "scopeIntent": "READ_ONLY", "confidence": "HIGH", "safeFallback": False}
     if re.search(r"(先停一下|暂停|pause|checkpoint)", low):
         return {**base, "action": "CHECKPOINT", "mutation": "FORBIDDEN", "confidence": "HIGH", "safeFallback": False}
     if re.search(r"(继续上次任务|继续上一次|resume latest|continue last)", low):
@@ -59,7 +66,11 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
     if re.search(r"(修.*最严重.*三|最严重的?三个|top\s*3|three most severe)", low):
         result.update({"action": "FIX", "mutation": "HOST_GATED", "scope": "TOP_3", "requiresHostApproval": True, "confidence": "HIGH", "safeFallback": False}); matched = True
     elif fix_requested:
-        result.update({"action": "FIX", "mutation": "HOST_GATED", "requiresHostApproval": True, "confidence": "MEDIUM", "safeFallback": False}); matched = True
+        result.update({
+            "action": "FIX", "mutation": "HOST_GATED", "requiresHostApproval": True,
+            "scopeIntent": "WRITE_ALLOWED_WITH_SCOPE" if scoped_write else "WRITE_ALLOWED",
+            "allowedWriteScope": scoped_write, "confidence": "MEDIUM", "safeFallback": False,
+        }); matched = True
     if re.search(r"(简单点|简洁|concise|brief)", low):
         result["reportDepth"] = "concise"; matched = True
     if re.search(r"(详细一点|详细点|detailed|in detail)", low):
@@ -67,6 +78,11 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
     protected = re.findall(r"(?:不要动|不要碰|不要改|不要修改|别动|别碰|别改|别修改|do\s+not\s+touch|don't\s+touch)([^，。,.!！;；]+)", raw, flags=re.IGNORECASE)
     if protected:
         result["protectedScope"] = [x.strip() for x in protected if x.strip()]
+        result["safeFallback"] = False
+        matched = True
+    for value in extract_scoped_protected_scope(raw):
+        if value not in result["protectedScope"]:
+            result["protectedScope"].append(value)
         result["safeFallback"] = False
         matched = True
     if matched:
