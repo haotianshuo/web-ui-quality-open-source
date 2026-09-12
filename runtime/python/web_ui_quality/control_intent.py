@@ -12,12 +12,14 @@ from .intent_signals import (
     extract_scoped_protected_scope,
     extract_scoped_write_scope,
     has_whole_task_read_only,
+    normalize_signal_text,
     strip_negated_write_clauses,
 )
+from .intent_router import is_verification_request
 
 
 def parse_control_intent(text: str | None) -> dict[str, Any]:
-    raw = str(text or "").strip()
+    raw = normalize_signal_text(text)
     low = raw.casefold()
     base = {
         "schemaVersion": "1", "raw": raw, "action": "UNKNOWN", "mutation": "FORBIDDEN",
@@ -33,16 +35,14 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
     # Only direct optimization language counts as a mutation request. Phrases
     # such as “告诉我应该怎么优化” remain read-only because the optimization
     # verb is not used as an imperative action.
-    verification_requested = bool(re.search(
-        r"(验证(?:刚才|之前|已经)?|有没有(?:回归|问题)|verify|regression\s+check)",
-        low,
-    ))
+    verification_requested = is_verification_request(raw)
     positive_write_text = strip_negated_write_clauses(raw)
     fix_requested = not verification_requested and bool(re.search(
         r"(直接修|修一下|修复|修掉|帮我修|帮我优化|优化(?:一下|这个|当前|该)|帮我处理|处理(?:好|一下|这个|当前|该)|帮我改善|改善(?:一下|这个|当前|该)|修改|调整|改成|换成|更新|修正|\bfix\b|repair|\b(?:change|edit|update|adjust|improve|handle)\b)",
         positive_write_text.casefold(),
     ))
     scoped_write = extract_scoped_write_scope(raw)
+    fix_requested = fix_requested or bool(scoped_write)
     if read_only_requested:
         return {**base, "action": "CHECK", "mutation": "FORBIDDEN", "scopeIntent": "READ_ONLY", "confidence": "HIGH", "safeFallback": False}
     if re.search(r"(先停一下|暂停|pause|checkpoint)", low):

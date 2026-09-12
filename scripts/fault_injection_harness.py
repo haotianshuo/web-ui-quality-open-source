@@ -32,12 +32,23 @@ from web_ui_quality.benchmark_protocol import condition_fingerprint, create_inte
 from web_ui_quality.context_packet import build_relevant_context_packet, context_recall, context_retrieval_metrics  # noqa: E402
 from web_ui_quality.project_baseline import build_project_baseline  # noqa: E402
 from web_ui_quality.browser_locator import resolve_browser_executable  # noqa: E402
+from web_ui_quality.benchmark_evaluation import evaluate_problem_solved, normalize_execution_status, normalize_run_validity  # noqa: E402
 
 V1_CASES_PATH = ROOT / "tests" / "fixtures" / "fault-injection-v1" / "cases.json"
 V2_CASES_PATH = ROOT / "tests" / "fixtures" / "fault-injection-v2" / "cases.json"
 HOLDOUT_V1_CASES_PATH = ROOT / "tests" / "fixtures" / "fault-injection-holdout-v1" / "cases.json"
 TASK_FILE = ".wuq-benchmark-task.json"
 IGNORED_MUTATION_PATTERNS = [".wuq/**", "TASK.md", "host-result.json", "HOST_RESULT_TEMPLATE.json"]
+EXCLUDED_SOURCE_DIR_NAMES = {
+    ".git", ".venv", "venv", "env", "node_modules", "__pycache__", ".pytest_cache",
+    ".mypy_cache", ".ruff_cache", ".tox", "coverage", "dist", "build", "out", "_site", ".next",
+    ".wuq-oracle-home",
+}
+DEFAULT_RESPONSIVE_VIEWPORTS = (
+    {"width": 390, "height": 844},
+    {"width": 768, "height": 1024},
+    {"width": 1440, "height": 900},
+)
 
 
 def _sha256(path: Path) -> str:
@@ -49,11 +60,16 @@ def _matches(path: str, patterns: list[str]) -> bool:
     return any(fnmatch.fnmatch(path, pattern) or posix.match(pattern) for pattern in patterns)
 
 
-def _snapshot(root: Path) -> dict[str, str]:
+def _snapshot(root: Path, *, include_patterns: list[str] | None = None) -> dict[str, str]:
+    """Snapshot source-relevant files plus explicitly declared generated paths."""
+    include_patterns = [str(item) for item in (include_patterns or [])]
     rows: dict[str, str] = {}
     for path in sorted(p for p in root.rglob("*") if p.is_file() and not p.is_symlink()):
         rel = path.relative_to(root).as_posix()
         if _matches(rel, IGNORED_MUTATION_PATTERNS):
+            continue
+        parts = PurePosixPath(rel).parts
+        if any(part in EXCLUDED_SOURCE_DIR_NAMES for part in parts) and not _matches(rel, include_patterns):
             continue
         rows[rel] = _sha256(path)
     return rows
@@ -78,10 +94,22 @@ def _normalize_case(case: Mapping[str, Any]) -> dict[str, Any]:
         ]
     row.setdefault("expectation", "REPAIR")
     row.setdefault("protectedScope", [])
+    row.setdefault("generatedTargets", [])
+    row.setdefault("taskRelevantScope", [])
     row.setdefault("difficulty", "D2")
     row.setdefault("family", "legacy-v1")
     row.setdefault("archetype", str(row.get("id") or row.get("family") or "unknown"))
     return row
+
+
+def _scope_measurement_patterns(case: Mapping[str, Any]) -> list[str]:
+    values: list[str] = []
+    for key in ("allowedScope", "protectedScope", "generatedTargets", "taskRelevantScope"):
+        for item in list(case.get(key) or []):
+            value = str(item)
+            if value and value not in values:
+                values.append(value)
+    return values
 
 
 def load_cases(*, corpus: str = "v2") -> list[dict[str, Any]]:
@@ -112,6 +140,63 @@ def _write_project_files(root: Path, case: Mapping[str, Any]) -> None:
         path.write_text(str(content), encoding="utf-8")
 
 
+def _safe_project_file(project: Path, relative: str) -> Path | None:
+    candidate = (project / str(relative)).resolve(strict=False)
+    try:
+        candidate.relative_to(project.resolve())
+    except ValueError:
+        return None
+    return candidate
+
+
+def validate_defect_injection(case: Mapping[str, Any], project: Path) -> dict[str, Any]:
+    """Validate that evaluator setup actually installed the declared defect."""
+    expectation = str(case.get("expectation") or "REPAIR").upper()
+    injected = {str(path): str(content) for path, content in dict(case.get("injectedFiles") or {}).items()}
+    if not injected:
+        if expectation == "NO_MUTATION":
+            return {"status": "NOT_APPLICABLE", "defectPresent": False, "checks": [], "reasonCodes": []}
+        return {"status": "INVALID_SETUP", "defectPresent": False, "checks": [], "reasonCodes": ["INJECTED_DEFECT_MISSING"]}
+    checks: list[dict[str, Any]] = []
+    reasons: list[str] = []
+    differing_defects = 0
+    clean = {str(path): str(content) for path, content in dict(case.get("cleanFiles") or {}).items()}
+    for relative, expected in sorted(injected.items()):
+        path = _safe_project_file(project, relative)
+        if path is None:
+            checks.append({"path": relative, "check": "path-contained", "pass": False})
+            reasons.append("INJECTED_PATH_ESCAPE")
+            continue
+        exists = path.is_file() and not path.is_symlink()
+        checks.append({"path": relative, "check": "file-exists", "pass": exists})
+        if not exists:
+            reasons.append("INJECTED_FILE_MISSING")
+            continue
+        actual = path.read_text(encoding="utf-8", errors="ignore")
+        matches = actual == expected
+        checks.append({"path": relative, "check": "content-matches-injected", "pass": matches})
+        if not matches:
+            reasons.append("INJECTED_CONTENT_MISMATCH")
+        if relative in clean:
+            differs_from_clean = expected != clean[relative]
+            if differs_from_clean:
+                checks.append({"path": relative, "check": "differs-from-clean", "pass": True})
+                differing_defects += 1
+            else:
+                checks.append({"path": relative, "check": "support-file-equals-clean", "pass": True})
+        else:
+            differing_defects += 1
+    if not reasons and differing_defects == 0:
+        reasons.append("INJECTED_CONTENT_EQUALS_CLEAN")
+    status = "VALIDATED" if not reasons else "INVALID_SETUP"
+    return {
+        "status": status,
+        "defectPresent": status == "VALIDATED",
+        "checks": checks,
+        "reasonCodes": list(dict.fromkeys(reasons)),
+    }
+
+
 def prepare_case(
     case: Mapping[str, Any], destination: Path, *, run_id: str | None = None, repetition: int = 1,
     planned_host: Mapping[str, Any] | None = None, planned_conditions: Mapping[str, Any] | None = None,
@@ -121,6 +206,8 @@ def prepare_case(
     root = destination.resolve()
     root.mkdir(parents=True, exist_ok=True)
     _write_project_files(root, case)
+    measurement_patterns = _scope_measurement_patterns(case)
+    defect_injection = validate_defect_injection(case, root)
     run_id = run_id or f"{case['id']}-r{int(repetition):02d}"
     planned_host = dict(planned_host or {"name": "external-host", "version": "UNSPECIFIED", "model": "UNSPECIFIED"})
     planned_conditions = dict(planned_conditions or {
@@ -146,7 +233,15 @@ def prepare_case(
         "expectedRootSources": list(case.get("expectedRootSources") or []),
         "allowedScope": list(case.get("allowedScope") or []),
         "protectedScope": list(case.get("protectedScope") or []),
-        "oracle": list(case.get("oracle") or []), "initialFiles": _snapshot(root),
+        "oracle": list(case.get("oracle") or []), "initialFiles": _snapshot(root, include_patterns=measurement_patterns),
+        "scopeMeasurement": {
+            "version": "task-relevant-v1",
+            "includePatterns": measurement_patterns,
+            "excludedDirectoryNames": sorted(EXCLUDED_SOURCE_DIR_NAMES),
+        },
+        "defectInjection": defect_injection,
+        "defectOracle": case.get("defectOracle") or case.get("diagnosisOracle") or [],
+        "oracleMode": str(case.get("expectation") or "REPAIR").upper(),
         "ignoredMutationPatterns": list(IGNORED_MUTATION_PATTERNS),
         "claimBoundary": "Evaluator-only sealed ground truth. Never provide this manifest or its filesystem path to the Host Agent.",
     }
@@ -156,7 +251,9 @@ def prepare_case(
 
 def _project_changes(project: Path, evaluator: Mapping[str, Any]) -> dict[str, list[str]]:
     before = {str(k): str(v) for k, v in dict(evaluator.get("initialFiles") or {}).items()}
-    after = _snapshot(project)
+    measurement = dict(evaluator.get("scopeMeasurement") or {})
+    include_patterns = [str(item) for item in list(measurement.get("includePatterns") or [])]
+    after = _snapshot(project, include_patterns=include_patterns)
     before_keys, after_keys = set(before), set(after)
     added = sorted(after_keys - before_keys)
     removed = sorted(before_keys - after_keys)
@@ -235,10 +332,23 @@ def _browser_assertions(project: Path, path: Path, oracle: Mapping[str, Any]) ->
             "path": str(path.relative_to(project)),
             "reason": "synthetic Browser oracle refuses --no-sandbox; run under a sandbox-capable non-root Browser host",
         }
-    viewport = dict(oracle.get("viewport") or {"width": 390, "height": 844})
-    width = max(240, min(int(viewport.get("width") or 390), 2560))
-    height = max(240, min(int(viewport.get("height") or 844), 2560))
-    rows: list[dict[str, Any]] = []
+    requested_viewports = oracle.get("viewports") or oracle.get("viewportMatrix")
+    if isinstance(requested_viewports, Mapping):
+        requested_viewports = [requested_viewports]
+    if isinstance(requested_viewports, list) and requested_viewports:
+        viewport_specs = [dict(item) for item in requested_viewports if isinstance(item, Mapping)]
+    elif oracle.get("responsive"):
+        viewport_specs = [dict(item) for item in DEFAULT_RESPONSIVE_VIEWPORTS]
+    else:
+        viewport_specs = [dict(oracle.get("viewport") or {"width": 390, "height": 844})]
+    if not viewport_specs:
+        viewport_specs = [dict(oracle.get("viewport") or {"width": 390, "height": 844})]
+    viewport_specs = [
+        {"width": max(240, min(int(item.get("width") or 390), 2560)), "height": max(240, min(int(item.get("height") or 844), 2560))}
+        for item in viewport_specs
+    ]
+    viewport_results: list[dict[str, Any]] = []
+    browser = None
     try:
         with sync_playwright() as runtime:
             # Prefer a desktop/PATH executable before consulting the live sync
@@ -274,61 +384,83 @@ def _browser_assertions(project: Path, path: Path, oracle: Mapping[str, Any]) ->
                 browser_decision = fallback
                 kwargs["executable_path"] = alternate
                 browser = runtime.chromium.launch(**kwargs)
-            secure = create_secure_context(
-                browser,
-                context_options={"viewport": {"width": width, "height": height}},
-                allowed_origins=(),
-                authenticated=False,
-            )
-            context = secure.context
-            page = context.new_page()
             html = path.read_text(encoding="utf-8", errors="ignore")
             # Avoid environment-specific file:// navigation policies. The fixture HTML is
             # evaluator-controlled; linked stylesheet sources under test are injected
             # explicitly from the Host workspace. Network requests remain blocked.
             html = re.sub(r"<link\b[^>]*rel=[\"']?stylesheet[\"']?[^>]*>", "", html, flags=re.I)
-            page.set_content(html, wait_until="load", timeout=max(1000, min(int(oracle.get("timeoutMs") or 5000), 15000)))
-            for style_rel in list(oracle.get("stylePaths") or []):
-                style_path = (project / str(style_rel)).resolve(strict=False)
+            for viewport in viewport_specs:
+                secure = create_secure_context(
+                    browser,
+                    context_options={"viewport": viewport},
+                    allowed_origins=(),
+                    authenticated=False,
+                )
+                context = secure.context
                 try:
-                    style_path.relative_to(project.resolve())
-                except ValueError:
-                    raise RuntimeError("browser oracle stylesheet escapes project")
-                if not style_path.is_file() or style_path.is_symlink():
-                    raise RuntimeError("browser oracle stylesheet missing")
-                page.add_style_tag(path=str(style_path))
-            for assertion in list(oracle.get("assertions") or []):
-                kind = str(assertion.get("kind") or "").strip()
-                selector = str(assertion.get("selector") or "")
-                passed = False
-                detail: Any = None
-                if kind == "noPageHorizontalOverflow":
-                    detail = page.evaluate("() => ({scrollWidth: document.documentElement.scrollWidth, width: window.innerWidth})")
-                    passed = int(detail["scrollWidth"]) <= int(detail["width"]) + int(assertion.get("tolerance") or 1)
-                elif selector:
-                    locator = page.locator(selector).first
-                    if kind == "visible":
-                        detail = locator.is_visible(); passed = bool(detail) is bool(assertion.get("expected", True))
-                    elif kind == "withinViewport":
-                        detail = locator.evaluate("el => { const r=el.getBoundingClientRect(); return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height,vw:innerWidth,vh:innerHeight}; }")
-                        passed = detail["left"] >= 0 and detail["top"] >= 0 and detail["right"] <= detail["vw"] + 1 and detail["bottom"] <= detail["vh"] + 1
-                    elif kind == "minSize":
-                        detail = locator.evaluate("el => { const r=el.getBoundingClientRect(); return {width:r.width,height:r.height}; }")
-                        passed = detail["width"] >= float(assertion.get("minWidth") or 0) and detail["height"] >= float(assertion.get("minHeight") or 0)
-                    elif kind == "topMost":
-                        detail = locator.evaluate("el => { const r=el.getBoundingClientRect(); const x=r.left+r.width/2, y=r.top+r.height/2; const top=document.elementFromPoint(x,y); return {ok: !!top && (top===el || el.contains(top)), tag: top && top.tagName}; }")
-                        passed = bool(detail.get("ok"))
-                    elif kind == "textContains":
-                        detail = locator.inner_text(); passed = str(assertion.get("expected") or "") in detail
-                    elif kind == "cssContains":
-                        prop = str(assertion.get("property") or "")
-                        detail = locator.evaluate("(el, prop) => getComputedStyle(el).getPropertyValue(prop)", prop)
-                        passed = str(assertion.get("expected") or "") in str(detail)
-                rows.append({"kind": kind, "selector": selector or None, "pass": passed, "detail": detail})
-            context.close(); browser.close()
+                    page = context.new_page()
+                    page.set_content(html, wait_until="load", timeout=max(1000, min(int(oracle.get("timeoutMs") or 5000), 15000)))
+                    for style_rel in list(oracle.get("stylePaths") or []):
+                        style_path = (project / str(style_rel)).resolve(strict=False)
+                        try:
+                            style_path.relative_to(project.resolve())
+                        except ValueError:
+                            raise RuntimeError("browser oracle stylesheet escapes project")
+                        if not style_path.is_file() or style_path.is_symlink():
+                            raise RuntimeError("browser oracle stylesheet missing")
+                        page.add_style_tag(path=str(style_path))
+                    rows: list[dict[str, Any]] = []
+                    for assertion in list(oracle.get("assertions") or []):
+                        kind = str(assertion.get("kind") or "").strip()
+                        selector = str(assertion.get("selector") or "")
+                        passed = False
+                        detail: Any = None
+                        if kind == "noPageHorizontalOverflow":
+                            detail = page.evaluate("() => ({scrollWidth: document.documentElement.scrollWidth, width: window.innerWidth})")
+                            passed = int(detail["scrollWidth"]) <= int(detail["width"]) + int(assertion.get("tolerance") or 1)
+                        elif selector:
+                            locator = page.locator(selector).first
+                            if kind == "visible":
+                                detail = locator.is_visible(); passed = bool(detail) is bool(assertion.get("expected", True))
+                            elif kind == "withinViewport":
+                                detail = locator.evaluate("el => { const r=el.getBoundingClientRect(); return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height,vw:innerWidth,vh:innerHeight}; }")
+                                passed = detail["left"] >= 0 and detail["top"] >= 0 and detail["right"] <= detail["vw"] + 1 and detail["bottom"] <= detail["vh"] + 1
+                            elif kind == "minSize":
+                                detail = locator.evaluate("el => { const r=el.getBoundingClientRect(); return {width:r.width,height:r.height}; }")
+                                passed = detail["width"] >= float(assertion.get("minWidth") or 0) and detail["height"] >= float(assertion.get("minHeight") or 0)
+                            elif kind == "topMost":
+                                detail = locator.evaluate("el => { const r=el.getBoundingClientRect(); const x=r.left+r.width/2, y=r.top+r.height/2; const top=document.elementFromPoint(x,y); return {ok: !!top && (top===el || el.contains(top)), tag: top && top.tagName}; }")
+                                passed = bool(detail.get("ok"))
+                            elif kind == "textContains":
+                                detail = locator.inner_text(); passed = str(assertion.get("expected") or "") in detail
+                            elif kind == "cssContains":
+                                prop = str(assertion.get("property") or "")
+                                detail = locator.evaluate("(el, prop) => getComputedStyle(el).getPropertyValue(prop)", prop)
+                                passed = str(assertion.get("expected") or "") in str(detail)
+                        rows.append({"kind": kind, "selector": selector or None, "pass": passed, "detail": detail})
+                    viewport_results.append({"viewport": viewport, "pass": bool(rows) and all(row["pass"] for row in rows), "assertions": rows})
+                finally:
+                    context.close()
+            browser.close()
+            browser = None
     except Exception as error:
+        if browser is not None:
+            try:
+                browser.close()
+            except Exception:
+                pass
         return {"type": "BROWSER_ASSERT", "status": "EXECUTION_FAILED", "pass": False, "path": str(path.relative_to(project)), "reason": f"{type(error).__name__}: {str(error)[:180]}"}
-    return {"type": "BROWSER_ASSERT", "status": "MEASURED", "pass": bool(rows) and all(row["pass"] for row in rows), "path": str(path.relative_to(project)), "viewport": {"width": width, "height": height}, "assertions": rows, "networkPolicy": "HTTP_HTTPS_ABORTED", "fixtureMode": "SECURE_CONTEXT_LOCAL_SYNTHETIC_ONLY"}
+    result: dict[str, Any] = {
+        "type": "BROWSER_ASSERT", "status": "MEASURED", "pass": bool(viewport_results) and all(row["pass"] for row in viewport_results),
+        "path": str(path.relative_to(project)), "viewport": viewport_results[0]["viewport"],
+        "assertions": viewport_results[0]["assertions"], "networkPolicy": "HTTP_HTTPS_ABORTED",
+        "fixtureMode": "SECURE_CONTEXT_LOCAL_SYNTHETIC_ONLY",
+    }
+    if len(viewport_results) > 1:
+        result["viewports"] = [row["viewport"] for row in viewport_results]
+        result["viewportResults"] = viewport_results
+        result["viewportMatrix"] = "EXPLICIT_OR_RESPONSIVE"
+    return result
 
 
 def _oracle_result(project: Path, oracle: Mapping[str, Any]) -> dict[str, Any]:
@@ -385,6 +517,23 @@ def _oracle_result(project: Path, oracle: Mapping[str, Any]) -> dict[str, Any]:
     return {"type": kind or "UNKNOWN", "status": "UNSUPPORTED_ORACLE", "pass": False}
 
 
+def _oracle_list(value: Any) -> list[Mapping[str, Any]]:
+    if isinstance(value, Mapping):
+        return [value]
+    return [item for item in list(value or []) if isinstance(item, Mapping)]
+
+
+def _oracle_status_execution(oracle_rows: list[Mapping[str, Any]]) -> str | None:
+    statuses = {str(row.get("status") or "").upper() for row in oracle_rows}
+    if statuses & {"INVALID_ORACLE_POLICY", "INVALID_ORACLE_PATH", "UNSUPPORTED_ORACLE"}:
+        return "INVALID_SETUP"
+    if "NOT_MEASURED_ENVIRONMENT" in statuses:
+        return "INFRASTRUCTURE_BLOCKED"
+    if "EXECUTION_FAILED" in statuses:
+        return "FAILED"
+    return None
+
+
 def score_host_observation(evaluator: Mapping[str, Any], project: Path, observation: Mapping[str, Any]) -> dict[str, Any]:
     """Score Host output only from sealed evaluator state and workspace state."""
     project = project.resolve()
@@ -405,14 +554,52 @@ def score_host_observation(evaluator: Mapping[str, Any], project: Path, observat
     root_precision = (tp / (tp + fp)) if (tp + fp) else None
     root_recall = (tp / (tp + fn)) if (tp + fn) else None
     expectation = str(evaluator.get("expectation") or "REPAIR").upper()
-    oracle_rows = [_oracle_result(project, o) for o in evaluator.get("oracle", [])]
-    oracle_ok = all(row["pass"] for row in oracle_rows)
+    diagnosis_mode = expectation in {"DIAGNOSIS", "DIAGNOSE", "CHECK"}
+    oracle_specs = _oracle_list(evaluator.get("defectOracle") if diagnosis_mode else evaluator.get("oracle"))
+    oracle_rows = [_oracle_result(project, o) for o in oracle_specs]
+    oracle_ok = bool(oracle_rows) and all(bool(row.get("pass")) for row in oracle_rows)
+    injection = dict(evaluator.get("defectInjection") or {})
+    injection_status = str(injection.get("status") or "VALIDATED").upper()
     if expectation == "NO_MUTATION":
-        ground_truth_satisfied = not changed
-        task_success = bool(ground_truth_satisfied and outcome in {"NOT_VERIFIED", "REVIEW_REQUIRED"})
+        oracle_objective_satisfied: bool | None = bool(oracle_rows) and oracle_ok
+        ground_truth_satisfied = bool(not changed and oracle_objective_satisfied)
+        scope_correct = not changed
+    elif diagnosis_mode:
+        oracle_objective_satisfied = bool(oracle_rows) and oracle_ok
+        # Diagnosis is read-only: exact root identification is an independent
+        # evaluator gate and cannot be inferred from a positive claim alone.
+        root_identified = claimed_root == expected_roots
+        ground_truth_satisfied = bool(oracle_objective_satisfied and root_identified and not changed)
+        scope_correct = not changed and root_identified
     else:
-        ground_truth_satisfied = oracle_ok
-        task_success = bool(oracle_ok and not unexpected and not protected and not regressions)
+        oracle_objective_satisfied = bool(oracle_rows) and oracle_ok
+        ground_truth_satisfied = bool(oracle_objective_satisfied)
+        scope_correct = not unexpected and not protected
+    claim = observation.get("claim")
+    if claim in (None, ""):
+        # Legacy result templates predate the claim field.  Synthesize only a
+        # compatibility hint; the evaluator still requires the oracle and
+        # outcome gates below.
+        claim = "The task was completed successfully." if outcome == "VERIFIED" else "The task was not verified."
+    explicit_execution = observation.get("executionStatus")
+    execution_status = normalize_execution_status(explicit_execution) if explicit_execution not in (None, "") else "COMPLETED"
+    oracle_execution = _oracle_status_execution(oracle_rows)
+    if oracle_execution in {"INVALID_SETUP", "INFRASTRUCTURE_BLOCKED"}:
+        execution_status = oracle_execution
+    run_validity = normalize_run_validity(observation.get("runValidity"))
+    if injection_status == "INVALID_SETUP":
+        run_validity = "INVALID_SETUP"
+    evaluation = evaluate_problem_solved(
+        claim=claim,
+        outcome=outcome,
+        execution_status=execution_status,
+        run_validity=run_validity,
+        oracle_objective_satisfied=oracle_objective_satisfied,
+        scope_correct=scope_correct,
+        no_forbidden_drift=not regressions,
+        expectation=expectation,
+    )
+    task_success = evaluation["problemSolved"] is True
     false_verified = outcome == "VERIFIED" and not task_success
     scope_precision = None if not changed else sum(1 for path in changed if _matches(path, allowed_patterns)) / len(changed)
     attempted = bool(changed)
@@ -420,14 +607,20 @@ def score_host_observation(evaluator: Mapping[str, Any], project: Path, observat
     return {
         "schemaVersion": "4", "runId": evaluator.get("runId"), "caseId": evaluator.get("caseId"),
         "repetition": evaluator.get("repetition"), "difficulty": evaluator.get("difficulty"), "family": evaluator.get("family"),
-        "hostOutcome": outcome, "repairSuccess": task_success, "falseVerified": false_verified,
+        "hostOutcome": outcome, "repairSuccess": task_success, "problemSolved": evaluation["problemSolved"],
+        "eligibleForSuccessRate": evaluation["eligibleForSuccessRate"], "executionStatus": evaluation["executionStatus"],
+        "runValidity": evaluation["runValidity"], "falseVerified": false_verified,
         "rootCausePrecision": root_precision, "rootCauseRecall": root_recall,
         "rootCauseTP": tp, "rootCauseFP": fp, "rootCauseFN": fn,
         "scopePrecision": scope_precision, "repairAttempted": attempted,
         "regressionEscape": regression_escape, "changedFiles": changed,
         "unexpectedChanges": unexpected, "protectedScopeChanges": protected,
-        "groundTruthSatisfied": ground_truth_satisfied, "oracleResults": oracle_rows,
-        "claimBoundary": "Repair/task success is evaluator-computed from sealed source-contract/no-mutation/executable/browser fixture oracles and workspace state. Host self-reports cannot set success.",
+        "groundTruthSatisfied": ground_truth_satisfied, "oracleObjectiveSatisfied": oracle_objective_satisfied,
+        "oracleMode": "DIAGNOSIS" if diagnosis_mode else expectation, "diagnosisSuccess": task_success if diagnosis_mode else None,
+        "defectInjectionStatus": injection_status, "oracleResults": oracle_rows,
+        "claimClassification": evaluation["claimClassification"], "claimCompatible": evaluation["claimCompatible"],
+        "problemSolvedReasonCodes": evaluation["problemSolvedReasonCodes"],
+        "claimBoundary": "Repair, diagnosis and no-mutation success are evaluator-computed from sealed setup, source/behavior/browser oracles, workspace state and compatible outcome claims. Host self-reports cannot set problemSolved.",
     }
 
 

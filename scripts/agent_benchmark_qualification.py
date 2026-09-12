@@ -165,22 +165,28 @@ def aggregate(controller_dir: Path) -> dict[str, Any]:
 
     by_case: dict[str, list[dict[str, Any]]] = {}
     for row in scored:
-        by_case.setdefault(str(row["caseId"]), []).append(row)
+        if bool(row.get("eligibleForSuccessRate", True)):
+            by_case.setdefault(str(row["caseId"]), []).append(row)
     for rows in by_case.values():
         rows.sort(key=lambda item: int(item["repetition"]))
     repetitions = int(plan.get("repetitionsPerCase") or 1)
     pass_at: dict[str, float | None] = {}
     for k in sorted({1, min(3, repetitions), repetitions}):
         eligible = [rows for rows in by_case.values() if len(rows) >= k]
-        pass_at[f"pass@{k}"] = (sum(1 for rows in eligible if any(bool(item["repairSuccess"]) for item in rows[:k])) / len(eligible)) if eligible else None
+        pass_at[f"pass@{k}"] = (sum(1 for rows in eligible if any(item.get("problemSolved") is True for item in rows[:k])) / len(eligible)) if eligible else None
 
     completed = len(scored)
-    successes = sum(1 for row in scored if row["repairSuccess"])
+    eligible_rows = [row for row in scored if bool(row.get("eligibleForSuccessRate", True))]
+    eligible_runs = len(eligible_rows)
+    successes = sum(1 for row in eligible_rows if row.get("problemSolved") is True)
     verified = sum(1 for row in scored if row["hostOutcome"] == "VERIFIED")
-    attempted = sum(1 for row in scored if row["repairAttempted"])
+    attempted = sum(1 for row in eligible_rows if row["repairAttempted"])
     false_verified = sum(1 for row in scored if row["falseVerified"])
-    regressions = sum(1 for row in scored if row["regressionEscape"])
-    scope_values = [float(row["scopePrecision"]) for row in scored if isinstance(row.get("scopePrecision"), (int, float))]
+    regressions = sum(1 for row in eligible_rows if row["regressionEscape"])
+    scope_values = [float(row["scopePrecision"]) for row in eligible_rows if isinstance(row.get("scopePrecision"), (int, float))]
+    invalid_setup_runs = sum(1 for row in scored if row.get("runValidity") == "INVALID_SETUP")
+    infrastructure_blocked_runs = sum(1 for row in scored if row.get("executionStatus") == "INFRASTRUCTURE_BLOCKED")
+    unmeasured_runs = sum(1 for row in scored if not bool(row.get("eligibleForSuccessRate", True)))
     false_rate = false_verified / verified if verified else None
     rule_three = min(1.0, 3 / verified) if verified and false_verified == 0 else None
 
@@ -196,7 +202,12 @@ def aggregate(controller_dir: Path) -> dict[str, Any]:
     difficulty: dict[str, dict[str, Any]] = {}
     for level in sorted({str(row["difficulty"]) for row in scored}):
         rows = [row for row in scored if row["difficulty"] == level]
-        difficulty[level] = {"runs": len(rows), "repairSuccessRate": sum(1 for row in rows if row["repairSuccess"]) / len(rows) if rows else None, "falseVerified": sum(1 for row in rows if row["falseVerified"])}
+        eligible_difficulty = [row for row in rows if bool(row.get("eligibleForSuccessRate", True))]
+        difficulty[level] = {
+            "runs": len(rows), "eligibleRuns": len(eligible_difficulty),
+            "repairSuccessRate": sum(1 for row in eligible_difficulty if row.get("problemSolved") is True) / len(eligible_difficulty) if eligible_difficulty else None,
+            "falseVerified": sum(1 for row in rows if row["falseVerified"]),
+        }
 
     report = {
         "schemaVersion": "4", "kind": "REPORT", "protocolVersion": "4", "fixtureVersion": plan.get("fixtureVersion"),
@@ -204,8 +215,12 @@ def aggregate(controller_dir: Path) -> dict[str, Any]:
         "missingRuns": missing, "caseCount": int(plan.get("caseCount") or 0), "repetitionsPerCase": repetitions,
         "conditionCohorts": list(condition_cohorts.values()), "conditionAuthority": "CONTROLLER_PLANNED",
         "comparability": "SINGLE_CONDITION_FINGERPRINT" if len(condition_cohorts) == 1 else "NOT_ESTABLISHED" if not condition_cohorts else "MIXED_CONDITION_FINGERPRINTS",
-        "repairSuccessRate": successes / completed if completed else None,
-        "rootCause": _micro_root_metric(scored),
+        "repairSuccessRate": successes / eligible_runs if eligible_runs else None,
+        "successDenominator": eligible_runs, "eligibleRuns": eligible_runs,
+        "invalidSetupRuns": invalid_setup_runs, "infrastructureBlockedRuns": infrastructure_blocked_runs,
+        "unmeasuredRuns": unmeasured_runs,
+        "problemSolved": {"solved": successes, "eligibleRuns": eligible_runs, "unmeasuredRuns": unmeasured_runs},
+        "rootCause": _micro_root_metric(eligible_rows),
         "scopePrecision": {"attemptedRepairRuns": len(scope_values), "meanAmongAttemptedRepairs": _mean(scope_values), "noOpExcluded": True},
         "regressionEscape": {
             "count": regressions,

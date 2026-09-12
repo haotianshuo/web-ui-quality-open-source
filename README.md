@@ -19,9 +19,18 @@ not published to PyPI yet, so install it from a source checkout:
 ~~~bash
 git clone https://github.com/haotianshuo/web-ui-quality-open-source.git
 cd web-ui-quality-open-source
-python -m pip install -e .
+python -m pip install -e ".[browser]"
 web-ui-quality doctor
 ~~~
+
+The `[browser]` extra installs the Playwright driver. WUQ then uses an
+installed Chrome, Edge, or Chromium executable when one is available. If
+`doctor` reports `PYTHON_BROWSER_EXECUTABLE_MISSING`, install a browser binary
+with `python -m playwright install chromium` (or install Chrome/Edge) and run
+`web-ui-quality doctor` again. A missing driver and a missing browser
+executable are reported as different reason codes (`PYTHON_PLAYWRIGHT_MODULE_MISSING`
+versus `PYTHON_BROWSER_EXECUTABLE_MISSING`); neither status is Browser
+verification evidence by itself.
 
 To inspect a local Web project, describe the task in plain language:
 

@@ -11,7 +11,7 @@ import re
 from typing import Any
 
 from .control_intent import parse_control_intent
-from .intent_signals import extract_scoped_write_scope, has_whole_task_read_only, strip_negated_write_clauses
+from .intent_signals import extract_scoped_write_scope, has_whole_task_read_only, normalize_signal_text, strip_negated_write_clauses
 from .intent_router import route_user_intent
 
 _WRITE_REQUEST = re.compile(
@@ -33,7 +33,7 @@ def _public_intent(internal: str) -> str:
 
 def normalize_task_intent(text: str | None) -> dict[str, Any]:
     """Return a canonical, fail-closed task intent for ordinary UX surfaces."""
-    raw = str(text or "").strip()
+    raw = normalize_signal_text(text)
     routed = route_user_intent(raw)
     control = parse_control_intent(raw)
     internal_intent = str(routed.get("taskIntent") or "DIAGNOSE")
