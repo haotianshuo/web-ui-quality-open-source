@@ -28,7 +28,12 @@ def build_evidence_graph(result: Mapping[str, Any]) -> dict[str, Any]:
     mode = str(result.get("mode") or "CHECK").upper()
     repair = mode == "FIX_AND_VERIFY" or isinstance(result.get("repairReport"), Mapping)
     has_after = isinstance(result.get("after"), Mapping)
-    final_claim = str((result.get("repairVerification") or {}).get("status") if isinstance(result.get("repairVerification"), Mapping) else result.get("status") or "NOT_VERIFIED").upper()
+    # The claim gate is driven by the repair verification alone.  Falling back to
+    # the top-level status let an unrelated success claim satisfy the gate, and a
+    # verification object without a status produced the literal string "NONE".
+    verification = result.get("repairVerification")
+    verification_present = isinstance(verification, Mapping) and bool(verification)
+    final_claim = str(verification.get("status") or "NOT_VERIFIED").upper() if verification_present else "NOT_VERIFIED"
 
     nodes = [
         _node("task-goal", "POLICY", result.get("taskGoal"), required=True),
@@ -44,7 +49,11 @@ def build_evidence_graph(result: Mapping[str, Any]) -> dict[str, Any]:
         _node("patch-quality", "VERIFICATION", result.get("patchQuality"), required=repair and has_after),
         _node("project-drift", "VERIFICATION", result.get("projectDriftGate"), required=repair and has_after),
         _node("comparison", "VERIFICATION", result.get("comparison"), required=repair and has_after),
-        _node("repair-verification", "CLAIM_GATE", result.get("repairVerification"), required=repair and has_after, status=final_claim if has_after else None),
+        # Only an actually present verification object may carry a claim status;
+        # otherwise the node must read MISSING so it lands in requiredMissing.
+        _node("repair-verification", "CLAIM_GATE", result.get("repairVerification"),
+              required=repair and has_after,
+              status=final_claim if (has_after and verification_present) else None),
     ]
     required_missing = [node["id"] for node in nodes if node["required"] and node["status"] == "MISSING"]
 

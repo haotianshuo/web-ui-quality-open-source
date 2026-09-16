@@ -75,9 +75,16 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
         result["reportDepth"] = "concise"; matched = True
     if re.search(r"(详细一点|详细点|detailed|in detail)", low):
         result["reportDepth"] = "detailed"; matched = True
-    protected = re.findall(r"(?:不要动|不要碰|不要改|不要修改|别动|别碰|别改|别修改|do\s+not\s+touch|don't\s+touch)([^，。,.!！;；]+)", raw, flags=re.IGNORECASE)
-    if protected:
-        result["protectedScope"] = [x.strip() for x in protected if x.strip()]
+    # The capture must not stop at an interior dot, or ``不要动 src/theme.css`` would be
+    # recorded as ``src/theme`` and could never match the real path.
+    protected = re.findall(
+        r"(?:不要动|不要碰|不要改|不要修改|别动|别碰|别改|别修改|do\s+not\s+touch|don't\s+touch)"
+        r"([^，。,!！;；\n]+)",
+        raw, flags=re.IGNORECASE,
+    )
+    protected = [x.strip().rstrip(".。") for x in protected]
+    if any(protected):
+        result["protectedScope"] = [x for x in protected if x]
         result["safeFallback"] = False
         matched = True
     for value in extract_scoped_protected_scope(raw):

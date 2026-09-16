@@ -16,11 +16,11 @@ import unicodedata
 # not become a whole-task read-only request.
 WHOLE_TASK_READ_ONLY = re.compile(
     r"(?:先别改|不要改代码|别改代码|只看看|只检查|只分析|只解释|只告诉我|"
-    r"(?:不要|别|不许|禁止)\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
-    r"(?:修改|改|动|碰)(?:\s*(?:任何)?\s*(?:代码|项目|文件|东西))?"
+    r"(?:不要|别|不许|禁止|请勿|切勿|严禁)\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
+    r"(?:修改|编辑|改动|重写|覆盖|写入|写|改|动|碰)(?:\s*(?:任何)?\s*(?:代码|项目|文件|东西))?"
     r"(?=\s*(?:[，。,.!！;；\n]|$)))|"
     r"\bcheck\s+only\b|\bread[- ]?only\b|"
-    r"\b(?:do\s+not|don't|dont)\s+(?:edit|change|modify|touch|alter|update)"
+    r"\b(?:do\s+not|don't|dont|never)\s+(?:edit|change|modify|touch|alter|update|write|fix|repair|rewrite|refactor)"
     r"(?:\s+(?:any|all|the|this|your)\s+)?(?:files?|code|project|anything|changes?)?"
     r"(?=\s*(?:[,.!;；\n]|$))|"
     r"\b(?:make\s+no\s+changes?|change\s+nothing|touch\s+nothing|"
@@ -119,9 +119,9 @@ _SCOPED_PROTECTED_PATTERNS = (
 # request.  This is intentionally broader than WHOLE_TASK_READ_ONLY because a
 # scoped clause is still a non-goal and must not count as a write signal.
 NEGATED_WRITE_CLAUSE = re.compile(
-    r"(?:不要|别|不许|禁止)\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
-    r"(?:修改|改|动|碰|编辑)[^，。,.!！;；\n]*|"
-    r"(?:\bdo\s+not|\bdon't|\bdont)\s+(?:touch|edit|change|modify|update|adjust|alter)"
+    r"(?:不要|别|不许|禁止|请勿|切勿|严禁)\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
+    r"(?:修改|编辑|改动|重写|覆盖|写入|写|改|动|碰)[^，。,.!！;；\n]*|"
+    r"(?:\bdo\s+not|\bdon't|\bdont|\bnever)\s+(?:touch|edit|change|modify|update|adjust|alter|write|fix|repair|rewrite|refactor)"
     r"[^,.!?;；\n]*|"
     r"\b(?:make\s+no\s+changes?|change\s+nothing|touch\s+nothing|"
     r"leave\s+(?:all\s+)?files?\s+unchanged|leave\s+everything\s+unchanged|"

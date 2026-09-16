@@ -8,7 +8,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Mapping
 from urllib.parse import urlsplit
 
-from .contracts import ContractViolation, digest_json
+from .contracts import ContractViolation, digest_json, normalize_relative_text
 from .release_info import PACKAGE_VERSION
 from .risk_tier import classify_risk_tier
 from .change_budget import build_change_budget, evaluate_change_budget
@@ -63,7 +63,7 @@ def _scope_from_evidence(root: Path, evidence_path: Path | None) -> tuple[list[s
     confirmed: list[str] = []
     rejected: list[str] = []
     for raw in candidates:
-        normalized = raw.split("#", 1)[0].split(":", 1)[0].replace("\\", "/").lstrip("./")
+        normalized = normalize_relative_text(raw.split("#", 1)[0].split(":", 1)[0])
         if not normalized or Path(normalized).suffix.lower() not in _UI_SUFFIXES:
             continue
         try:
@@ -362,8 +362,12 @@ def prepare_fix_workflow(
     plan["planDigest"] = digest_json(plan)
     (output / "fix-plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
     (output / "index.html").write_text(_html(plan), encoding="utf-8")
+    # The plan-time gate cannot see the Host's diff yet, so the line ceiling is
+    # unmeasured.  Say so instead of letting an unqualified PASS read as if the
+    # line budget had been checked.
+    budget_line_note = "（行数尚未测量：本阶段只校验文件数量与范围）" if budget_gate.get("lineStatus") == "NOT_MEASURED" else ""
     (output / "summary.md").write_text(
-        f"# 修改准备\n\n- 状态：`{status}`\n- 风险：`{legacy_risk}` / `{risk_tier['tier']}`\n- Change Budget：最多 `{change_budget['maxFiles']}` 个文件 / `{change_budget['maxChangedLines']}` 行\n- Budget Gate：`{budget_gate['status']}`\n- Runtime 未修改项目。\n\n" + ("\n".join(f"- `{item}`" for item in scope) if scope else "- 尚无可确认的源码范围。") + "\n",
+        f"# 修改准备\n\n- 状态：`{status}`\n- 风险：`{legacy_risk}` / `{risk_tier['tier']}`\n- Change Budget：最多 `{change_budget['maxFiles']}` 个文件 / `{change_budget['maxChangedLines']}` 行\n- Budget Gate：`{budget_gate['status']}`{budget_line_note}\n- Runtime 未修改项目。\n\n" + ("\n".join(f"- `{item}`" for item in scope) if scope else "- 尚无可确认的源码范围。") + "\n",
         encoding="utf-8",
     )
     return {**plan, "open": "index.html", "plan": "fix-plan.json"}

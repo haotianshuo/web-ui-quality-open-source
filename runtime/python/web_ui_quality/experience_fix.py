@@ -1,6 +1,7 @@
 """Single default product entry for check, focused fix, redesign, and specialist audit."""
 from __future__ import annotations
 
+import fnmatch
 import json
 import re
 import uuid
@@ -10,7 +11,54 @@ from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from .comparison_gate import evaluate_improvement_claim
 from .condition_registry import RunConditions, compare_conditions, normalize_viewports
-from .contracts import ContractViolation, digest_json, sha256_hex
+from .contracts import ContractViolation, digest_json, normalize_relative_text, sha256_hex
+
+
+def _bounded_acceptance(*args: Any, **kwargs: Any) -> dict[str, Any]:
+    """Run the Browser acceptance step without letting a driver error escape raw.
+
+    A crashed browser or a broken driver must surface as a typed refusal the CLI can
+    explain to a non-technical user, not as an unhandled Python traceback.
+    """
+
+    try:
+        return run_smart_acceptance(*args, **kwargs)
+    except ContractViolation:
+        raise
+    except Exception as error:  # noqa: BLE001
+        raise ContractViolation(
+            "BROWSER_EXECUTION_FAILED",
+            [f"$: browser execution failed: {type(error).__name__}: {error}"],
+        ) from error
+
+
+def _protected_scope_hits(source_scope: Sequence[str], protected: Sequence[str]) -> list[str]:
+    """Return scope paths the user explicitly protected.
+
+    A protected entry may be an exact path, a directory, or a glob.  Free-text
+    non-goals such as ``登录逻辑`` simply never match a path.
+    """
+
+    hits: list[str] = []
+    for path in source_scope:
+        candidate = normalize_relative_text(path).casefold()
+        for raw in protected:
+            item = normalize_relative_text(str(raw)).casefold().strip()
+            if not item:
+                continue
+            if item.endswith("/**"):
+                base = item[:-3].rstrip("/")
+                if candidate == base or candidate.startswith(base + "/"):
+                    hits.append(path)
+                    break
+            elif any(token in item for token in "*?["):
+                if fnmatch.fnmatch(candidate, item):
+                    hits.append(path)
+                    break
+            elif candidate == item or candidate.startswith(item.rstrip("/") + "/"):
+                hits.append(path)
+                break
+    return hits
 from .core import audit_project
 from .experience_run import (
     create_experience_run,
@@ -490,7 +538,7 @@ def run_experience_fix(
     execution.advance("PLAN", status="PASS", input_ref="target+conditions", output_ref="bounded-work-plan")
 
     if selected == "CHECK":
-        report = run_smart_acceptance(
+        report = _bounded_acceptance(
             target, output_dir=run_dir / "before", url=actual_url,
             business_context=business_context, viewports=matrix, locale=locale, theme=theme,
             allow_origins=allowed_origins, environment=environment, browser_name=browser, browser_executable=browser_executable, storage_state=storage_state, task_goal=task_goal, approved_requests=bound_approved_requests,
@@ -501,7 +549,7 @@ def run_experience_fix(
     elif selected == "FIX_AND_VERIFY":
         current_run = load_experience_run(run_dir)
         if current_run["phases"]["before"]["status"] != "SEALED":
-            before_report = run_smart_acceptance(
+            before_report = _bounded_acceptance(
                 target, output_dir=run_dir / "before", url=actual_url,
                 business_context=business_context, viewports=matrix, locale=locale, theme=theme,
                 allow_origins=allowed_origins, environment=environment, browser_name=browser, browser_executable=browser_executable, storage_state=storage_state, task_goal=task_goal, approved_requests=bound_approved_requests,
@@ -587,7 +635,7 @@ def run_experience_fix(
                 for item in trusted_tool_results:
                     require_verified_host_tool_result(item)
                 tool_gate = summarise_host_tool_results(trusted_tool_results)
-            after_report = run_smart_acceptance(
+            after_report = _bounded_acceptance(
                 after_project or target, output_dir=run_dir / "after", url=normalized_after_url,
                 business_context=business_context, viewports=matrix, locale=locale, theme=theme,
                 allow_origins=allowed_origins, environment=environment, browser_name=browser, browser_executable=browser_executable, storage_state=storage_state, task_goal=task_goal, approved_requests=bound_approved_requests,
@@ -643,7 +691,8 @@ def run_experience_fix(
                 f"Browser/Before-After: {gate['status']}",
                 *(tool_lines or ["Project tools: NOT_APPLICABLE"]),
                 *([f"Patch quality: {patch_quality.get('status')}"] if patch_quality else []),
-                f"Change budget: {change_budget_gate.get('status')}",
+                f"Change budget: {change_budget_gate.get('status')}"
+                + (" (changed lines not measured)" if change_budget_gate.get("lineStatus") == "NOT_MEASURED" else ""),
                 f"Project drift: {drift_gate.get('status')}",
                 f"Overall repair verification: {final_verification['status']}",
             ]
@@ -740,6 +789,19 @@ def run_experience_fix(
                     except ContractViolation:
                         continue
             source_scope = [item["path"] for item in plan["files"]]
+            # A protected scope the user named must not reach the Host write binding.
+            # Until now it was recorded and displayed but never enforced, so the plan
+            # could authorize a write the user explicitly forbade.
+            protected_names = list(dict.fromkeys(
+                [str(x) for x in (task_goal.get("nonGoals") or [])]
+                + [str(x) for x in (control.get("protectedScope") or [])]
+            ))
+            protected_hits = _protected_scope_hits(source_scope, protected_names)
+            if protected_hits:
+                raise ContractViolation(
+                    "PROTECTED_SCOPE_CONFLICT",
+                    [f"$: plan writes protected path {item!r}" for item in protected_hits],
+                )
             scope_baseline = build_scope_baseline(project, project_baseline or {}, source_scope=source_scope)
             toolchain_digest = digest_json(tool_plans)
             verification_context_digest = digest_json({

@@ -230,6 +230,22 @@ def plan_digest(plan: Mapping[str, Any]) -> str:
     return digest_json(canonical_plan_payload(plan))
 
 
+def normalize_relative_text(value: Any) -> str:
+    """Normalise a relative project path without mangling legitimate dot-names.
+
+    ``str.lstrip("./")`` removes *any* leading run of ``"."`` and ``"/"`` characters,
+    so it rewrites ``.config/a.ts`` as ``config/a.ts`` and ``../lib/a.css`` as
+    ``lib/a.css``.  Only a genuine leading ``./`` prefix is removed here, and a
+    path that escapes the project is left intact so the existing escape checks can
+    still see it instead of silently addressing a different file.
+    """
+
+    text = str(value).replace("\\", "/")
+    while text.startswith("./"):
+        text = text[2:]
+    return text
+
+
 def _normalize_relative_path(raw: str) -> str:
     if not isinstance(raw, str) or not raw.strip():
         raise ContractViolation("SOURCE_SCOPE_INVALID", ["$.path: expected non-empty string"])

@@ -72,6 +72,11 @@ def build_public_v3_apply_binding(
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Build a persisted V3 apply binding from a pre-write Host patch candidate."""
+    # The candidate crosses a Host trust boundary, so validate the container before
+    # reading fields from it instead of raising a bare AttributeError.
+    if not isinstance(candidate, Mapping):
+        raise ContractViolation("HOST_PATCH_CANDIDATE_INVALID",
+                                [f"$: patch candidate must be a mapping, got {type(candidate).__name__}"])
     if str(candidate.get("runId") or "") != run_id or str(candidate.get("taskId") or "") != task_id or str(candidate.get("sessionId") or "") != session_id:
         raise ContractViolation("HOST_PATCH_CANDIDATE_RUN_MISMATCH", ["$: patch candidate must bind the current run/task/session"])
     host_identity = str(candidate.get("hostIdentity") or "").strip()

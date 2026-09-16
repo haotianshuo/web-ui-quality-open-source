@@ -76,7 +76,7 @@ from .workflow_policy import (
 from .implementation_agent import finalize_design_selection
 from .outcome_measurement import export_outcome_report, measure_outcome
 from .production_validation import browser_runtime_capability, validate_transformation
-from .release_info import PACKAGE_VERSION, configure_stdout, package_identity, release_identity, experimental_identity
+from .release_info import PACKAGE_VERSION, configure_stdout, installation_identity, package_identity, release_identity, experimental_identity
 from .adaptive_intelligence import verification_profile
 from .schema_validation import check_schema_bundle, validate_instance
 from .capability_registry import build_capability_registry
@@ -169,6 +169,10 @@ def _parser() -> argparse.ArgumentParser:
         description=f"Web UI Quality {PACKAGE_VERSION} — inspect, fix, redesign, or run an explicit audit",
         epilog="普通任务使用 run；doctor 用于环境诊断，auth 用于显式登录态，expert 仅用于高级与兼容入口。",
     )
+    # --version is the standard CLI idiom; without it the parser reported only
+    # "the following arguments are required", which tells the user nothing.
+    parser.add_argument("--version", action="version",
+                        version=f"web-ui-quality {PACKAGE_VERSION}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     run_cmd = subparsers.add_parser("run", help="默认入口：一句话描述问题，系统自动建立基线、诊断、规划修复并验证")
@@ -666,6 +670,9 @@ def _parser() -> argparse.ArgumentParser:
     doctor = subparsers.add_parser("doctor", help="check runtime, schemas, and optional Browser capability")
     doctor.add_argument("--browser-executable", type=Path, help="显式 Browser 路径；不传时自动探测本机 Chrome/Edge/Chromium")
     doctor.add_argument("--compact", action="store_true", help="终端输出紧凑 JSON")
+    # doctor already emits JSON; accept --json so the flag works the same way it does
+    # for `run` instead of failing with "unrecognized arguments".
+    doctor.add_argument("--json", action="store_true", help="与 run 一致：输出 JSON（doctor 默认即为 JSON）")
 
     prepare = subparsers.add_parser("prepare-change-set", help="host-gated API only; CLI cannot verify conversation approval")
     prepare.add_argument("project_root")
@@ -1984,6 +1991,7 @@ def main(argv: list[str] | None = None) -> int:
                 "screenshotInput": screenshot_capability(),
                 "designIntelligence": {"archetypes": len(archetype_catalog()), "componentSources": len(source_catalog()), "visualBuilder": "AVAILABLE"},
                 "packageIdentity": package_identity(),
+                "installation": installation_identity(),
                 "productExperience": {
                     **release_identity(),
                     "smartProductDiscovery": "AVAILABLE",

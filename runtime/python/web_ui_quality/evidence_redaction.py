@@ -14,7 +14,13 @@ _SECRET_KEY_RE = re.compile(r"(?:auth|token|secret|credential|cookie|session|csr
 _BEARER_RE = re.compile(r"\bBearer\s+[A-Za-z0-9._~+/=-]{8,}", re.I)
 _JWT_RE = re.compile(r"\beyJ[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{6,}\b")
 _QUERY_SECRET_RE = re.compile(r"([?&](?:access[_-]?token|token|key|api[_-]?key|secret|session|code)=)[^&#\s]+", re.I)
-_ASSIGN_SECRET_RE = re.compile(r"\b((?:access[_-]?token|token|api[_-]?key|secret|password|session|cookie|authorization)\s*[:=]\s*)([^\s,;]{4,})", re.I)
+_ASSIGN_SECRET_RE = re.compile(r"\b((?:access[_-]?token|token|api[_-]?key|secret|password|session|cookie|authorization)\s*[:=]\s*)([^\s,;]+)", re.I)
+# ``Authorization: Basic <base64>`` names a scheme and then the credential.  The
+# assignment rule above stops at the space after the scheme, so it would mask the
+# scheme word and persist the real credential; redact the credential separately.
+_AUTH_SCHEME_RE = re.compile(r"\b(Basic|Bearer|Digest|Negotiate|NTLM|Token)\s+([A-Za-z0-9._~+/=-]{8,})", re.I)
+# Credentials embedded in a URL survive every rule above.
+_URL_USERINFO_RE = re.compile(r"(?P<scheme>\bhttps?://)[^\s/@:]+:[^\s/@]+@", re.I)
 _EMAIL_RE = re.compile(r"(?<![\w.+-])([A-Z0-9._%+-]+)@([A-Z0-9.-]+\.[A-Z]{2,})(?![\w.-])", re.I)
 _PHONE_RE = re.compile(r"(?<!\d)(?:\+?\d[\d ()-]{7,}\d)(?!\d)")
 
@@ -26,6 +32,8 @@ def redact_text(value: Any, *, pii: bool = True) -> str:
     text = _BEARER_RE.sub("Bearer " + REDACTED, text)
     text = _JWT_RE.sub(REDACTED, text)
     text = _QUERY_SECRET_RE.sub(lambda m: m.group(1) + REDACTED, text)
+    text = _URL_USERINFO_RE.sub(lambda m: m.group("scheme") + REDACTED + "@", text)
+    text = _AUTH_SCHEME_RE.sub(lambda m: m.group(1) + " " + REDACTED, text)
     text = _ASSIGN_SECRET_RE.sub(lambda m: m.group(1) + REDACTED, text)
     if pii:
         text = _EMAIL_RE.sub(REDACTED, text)

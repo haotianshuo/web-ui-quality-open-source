@@ -4,6 +4,26 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 
+_RESOURCE_CONSOLE_PREFIX = "failed to load resource:"
+
+
+def _is_resource_load_console_error(item: Mapping[str, Any]) -> bool:
+    """Recognize a browser resource-load diagnostic without masking app errors.
+
+    Chromium attaches the failed resource URL as the console message location
+    and uses a stable diagnostic prefix.  Requiring both pieces keeps ordinary
+    application ``console.error`` calls and unstructured evidence fail-closed.
+    """
+
+    if str(item.get("type") or "").casefold() != "error":
+        return False
+    location = item.get("location")
+    if not isinstance(location, Mapping) or not str(location.get("url") or "").strip():
+        return False
+    text = str(item.get("text") or "").strip().casefold()
+    return text.startswith(_RESOURCE_CONSOLE_PREFIX)
+
+
 def assess_readiness(
     metrics: Mapping[str, Any],
     *,
@@ -24,13 +44,21 @@ def assess_readiness(
     ready_state = str(metrics.get("readyState") or "")
     main_present = bool(metrics.get("mainPresent", text_length >= 24))
     fonts = str(metrics.get("fontStatus") or metrics.get("fontsStatus") or "unknown")
+    # Only genuine console *errors* can break a page.  Warnings are collected as
+    # evidence too, so without this type gate a benign console.warn would be
+    # reported as an unhandled runtime error.
+    runtime_console_errors = [
+        item
+        for item in console_errors
+        if str(item.get("type") or "").casefold() == "error" and not _is_resource_load_console_error(item)
+    ]
     reasons: list[str] = []
     if http_status in {401, 403} or auth_hint:
         status = "AUTH_REQUIRED"; reasons.append("authentication wall detected")
-    elif page_errors or any(str(item.get("type")) == "error" for item in console_errors):
+    elif page_errors or runtime_console_errors:
         status = "RUNTIME_BROKEN"; reasons.append("unhandled runtime error")
     elif core_resource_failures:
-        status = "RUNTIME_BROKEN"; reasons.append("core resource failure")
+        status = "PARTIAL"; reasons.append("core resource failure")
     elif skeletons > 0 or loading:
         status = "DATA_NOT_READY"; reasons.append("loading or skeleton state remains")
     elif timed_out:

@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from .contracts import ContractViolation, digest_json, hash_file
+from .contracts import ContractViolation, digest_json, hash_file, normalize_relative_text
 from .experience_run import load_experience_run, write_phase_file
 
 _EXCLUDED = {".git", "node_modules", "dist", "build", ".next", "coverage", "__pycache__", ".venv", "venv", ".wuq"}
@@ -119,7 +119,7 @@ def _project_metadata(root: Path) -> dict[str, Any]:
 
 
 def _normalise_targets(target_files: Iterable[str]) -> set[str]:
-    return {str(item).replace("\\", "/").lstrip("./") for item in target_files if str(item).strip()}
+    return {normalize_relative_text(item) for item in target_files if str(item).strip()}
 
 
 def _target_dirs(root: Path, targets: set[str]) -> set[Path]:
