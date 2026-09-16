@@ -108,6 +108,18 @@ def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int 
         if page_status in health_titles:
             rid, severity, title = health_titles[page_status]
             add(rid, severity, title, record, [record.get("pageHealth") or {}])
+        # Geometry and rendered-quality observations collected while the page is
+        # not ready are not product-defect evidence.  A boot screen, skeleton,
+        # blocked resource, or unstable DOM can legitimately occlude or clip
+        # elements in the transient state.  Keep the readiness boundary visible
+        # above, but do not promote those observations to VERIFIED UI findings.
+        visual_blocked_statuses = {
+            "RUNTIME_BROKEN", "AUTH_REQUIRED", "RESTRICTED_RENDER", "DATA_NOT_READY",
+            "TASK_FAILED", "NOT_VERIFIED", "SIMULATED_PREVIEW",
+        }
+        evidence_status = str(record.get("evidenceStatus") or "").upper()
+        if page_status in visual_blocked_statuses or evidence_status == "NOT_VERIFIED":
+            continue
         http_status = record.get("httpStatus")
         if record.get("status") == "FAIL":
             classified = classify_record(record)

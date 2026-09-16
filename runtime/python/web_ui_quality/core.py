@@ -434,29 +434,35 @@ def _semantic_findings(
         if source.path not in html:
             continue
 
-        for script in SCRIPT_BLOCK_RE.finditer(source.text):
-            attrs = _html_attrs(script.group("attrs"))
-            script_type = attrs.get("type", "").strip().casefold()
-            if script_type == "module" or (script_type and script_type not in {
-                "text/javascript", "application/javascript", "text/ecmascript", "application/ecmascript"
-            }):
-                continue
-            script_source = _local_script_source(source, attrs["src"], by_path) if attrs.get("src") else None
-            inspected = script_source.text if script_source else script.group("body")
-            if not inspected or ESM_SYNTAX_RE.search(inspected) is None:
-                continue
-            factory.add(
-                "SEM-SCRIPT-MODULE-MISMATCH",
-                category="logic",
-                severity="P1",
-                file=source.path,
-                line=_line_for(source.text, script.start()),
-                selector="script",
-                summary="经典 script 加载路径包含可确定识别的 ESM import/export 语法。",
-                impact="浏览器会按经典脚本解析，模块语法可能导致页面脚本无法执行。",
-                recommendation="将该 script 明确标记为 type=\"module\"，或改为加载不含 ESM 语法的经典构建产物。",
-                reason_code="CLASSIC_SCRIPT_WITH_ESM_SYNTAX",
-            )
+        # This rule describes scripts parsed directly by an HTML document.
+        # Framework component files (for example Svelte's <script lang="ts">)
+        # use the same delimiters but are compiled before the browser sees them;
+        # treating their imports as a classic-script runtime defect is a false
+        # positive.
+        if Path(source.path).suffix.casefold() in {".html", ".htm"}:
+            for script in SCRIPT_BLOCK_RE.finditer(source.text):
+                attrs = _html_attrs(script.group("attrs"))
+                script_type = attrs.get("type", "").strip().casefold()
+                if script_type == "module" or (script_type and script_type not in {
+                    "text/javascript", "application/javascript", "text/ecmascript", "application/ecmascript"
+                }):
+                    continue
+                script_source = _local_script_source(source, attrs["src"], by_path) if attrs.get("src") else None
+                inspected = script_source.text if script_source else script.group("body")
+                if not inspected or ESM_SYNTAX_RE.search(inspected) is None:
+                    continue
+                factory.add(
+                    "SEM-SCRIPT-MODULE-MISMATCH",
+                    category="logic",
+                    severity="P1",
+                    file=source.path,
+                    line=_line_for(source.text, script.start()),
+                    selector="script",
+                    summary="经典 script 加载路径包含可确定识别的 ESM import/export 语法。",
+                    impact="浏览器会按经典脚本解析，模块语法可能导致页面脚本无法执行。",
+                    recommendation="将该 script 明确标记为 type=\"module\"，或改为加载不含 ESM 语法的经典构建产物。",
+                    reason_code="CLASSIC_SCRIPT_WITH_ESM_SYNTAX",
+                )
 
         facts = html[source.path]
         declares_filter = any(FILTER_ACTION_RE.fullmatch(item.strip()) for item in facts.operations)
