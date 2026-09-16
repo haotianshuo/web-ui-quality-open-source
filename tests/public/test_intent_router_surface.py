@@ -59,3 +59,29 @@ def test_clean_inspection_never_routes_to_repair_or_host_receipt(text: str) -> N
     assert result["writeRequested"] is False
     assert result["writeAuthorized"] is False
     assert result["requiresHostApproval"] is False
+
+
+def test_bare_chinese_negative_write_language_is_read_only() -> None:
+    result = normalize_task_intent(
+        "检查全站 UI，关注移动端溢出和控件一致性，不修改文件"
+    )
+
+    assert result["taskIntent"] == "CHECK"
+    assert result["internalTaskIntent"] == "SPECIALIZED_AUDIT"
+    assert result["writeRequested"] is False
+    assert result["readOnlyRequired"] is True
+    assert result["mutation"] == "FORBIDDEN"
+    assert result["scopeIntent"] == "READ_ONLY"
+    assert result["requiresHostApproval"] is False
+    assert result["writeAuthorized"] is False
+
+
+def test_bare_chinese_negative_subscope_is_not_whole_task_read_only() -> None:
+    result = normalize_task_intent("修复按钮，但不修改登录逻辑")
+
+    assert result["taskIntent"] == "REPAIR"
+    assert result["writeRequested"] is True
+    assert result["readOnlyRequired"] is False
+    assert result["mutation"] == "HOST_GATED"
+    assert result["requiresHostApproval"] is True
+    assert any("登录逻辑" in value for value in result["protectedScope"])

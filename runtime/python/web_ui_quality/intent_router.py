@@ -134,7 +134,7 @@ def _specialty(text: str, task_intent: str) -> str | None:
     # before classification so “不要动登录逻辑” cannot relabel an unrelated UI
     # repair as SECURITY.
     specialty_text = re.sub(
-        r"(?:不要|别|不许|禁止|do\s+not|don't)\s*(?:修改|改|动|碰|touch|change|modify)?[^，。,.；;\n]{0,48}",
+        r"(?:不要|别|不许|禁止|不|do\s+not|don't)\s*(?:修改|改|动|碰|touch|change|modify)?[^，。,.；;\n]{0,48}",
         "", text, flags=re.I,
     )
     groups = (
