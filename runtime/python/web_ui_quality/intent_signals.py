@@ -19,6 +19,13 @@ WHOLE_TASK_READ_ONLY = re.compile(
     r"(?:不要|别|不许|禁止|请勿|切勿|严禁)\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
     r"(?:修改|编辑|改动|重写|覆盖|写入|写|改|动|碰)(?:\s*(?:任何)?\s*(?:代码|项目|文件|东西))?"
     r"(?=\s*(?:[，。,.!！;；\n]|$)))|"
+    # Natural Chinese often omits ``要`` in a global prohibition (``不修改文件``).
+    # Keep this branch target-bounded so a protected sub-scope such as
+    # ``不修改登录逻辑`` is not promoted to a whole-task read-only request.
+    r"不\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
+    r"(?:修改|编辑|改动|重写|覆盖|写入|写|改|动|碰)\s*"
+    r"(?:(?:任何|所有|本|这个|当前)\s*)?(?:代码|项目|文件|东西)"
+    r"(?=\s*(?:[，。,.!！;；\n]|$))|"
     r"\bcheck\s+only\b|\bread[- ]?only\b|"
     r"\b(?:do\s+not|don't|dont|never)\s+(?:edit|change|modify|touch|alter|update|write|fix|repair|rewrite|refactor)"
     r"(?:\s+(?:any|all|the|this|your)\s+)?(?:files?|code|project|anything|changes?)?"
@@ -103,13 +110,13 @@ _SCOPED_PROTECTED_PATTERNS = (
         re.IGNORECASE,
     ),
     re.compile(
-        r"(?:别|不要|不许|禁止)\s*(?:修改|改|编辑|动|碰)\s*"
+        r"(?:别|不要|不许|禁止|不)\s*(?:修改|改|编辑|动|碰)\s*"
         r"(?P<scope>任何?其他文件|其它文件|其余文件|配置文件)",
         re.IGNORECASE,
     ),
     re.compile(
         r"(?P<scope>配置文件|其它文件|其他文件|其余文件)\s*"
-        r"(?:不要|别|不许|禁止)\s*(?:修改|改|编辑|动|碰)",
+        r"(?:不要|别|不许|禁止|不)\s*(?:修改|改|编辑|动|碰)",
         re.IGNORECASE,
     ),
 )
@@ -119,7 +126,7 @@ _SCOPED_PROTECTED_PATTERNS = (
 # request.  This is intentionally broader than WHOLE_TASK_READ_ONLY because a
 # scoped clause is still a non-goal and must not count as a write signal.
 NEGATED_WRITE_CLAUSE = re.compile(
-    r"(?:不要|别|不许|禁止|请勿|切勿|严禁)\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
+    r"(?:不要|别|不许|禁止|请勿|切勿|严禁|不)\s*(?:为了[^，。,.!！;；\n]{0,48}\s*)?"
     r"(?:修改|编辑|改动|重写|覆盖|写入|写|改|动|碰)[^，。,.!！;；\n]*|"
     r"(?:\bdo\s+not|\bdon't|\bdont|\bnever)\s+(?:touch|edit|change|modify|update|adjust|alter|write|fix|repair|rewrite|refactor)"
     r"[^,.!?;；\n]*|"

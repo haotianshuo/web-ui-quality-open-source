@@ -78,7 +78,7 @@ def parse_control_intent(text: str | None) -> dict[str, Any]:
     # The capture must not stop at an interior dot, or ``不要动 src/theme.css`` would be
     # recorded as ``src/theme`` and could never match the real path.
     protected = re.findall(
-        r"(?:不要动|不要碰|不要改|不要修改|别动|别碰|别改|别修改|do\s+not\s+touch|don't\s+touch)"
+        r"(?:不要动|不要碰|不要改|不要修改|别动|别碰|别改|别修改|不动|不碰|不改|不修改|do\s+not\s+touch|don't\s+touch)"
         r"([^，。,!！;；\n]+)",
         raw, flags=re.IGNORECASE,
     )
