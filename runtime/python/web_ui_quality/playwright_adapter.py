@@ -152,6 +152,11 @@ def _viewport_pair(value: Any) -> dict[str, int] | None:
     return {"width": width, "height": height}
 
 
+def _structural_stability_signature(value: Mapping[str, Any]) -> tuple[Any, ...]:
+    """Compare stable document structure, not live data counters or text."""
+    return tuple(value.get(key) for key in ("readyState", "scrollWidth", "scrollHeight"))
+
+
 def _console_location(message: Any) -> dict[str, Any] | None:
     """Return redacted, query-free Playwright console source coordinates."""
 
@@ -327,6 +332,7 @@ def _capture_one(
             pass
         stability = {"status": "NOT_VERIFIED", "samples": 0}
         last_signature = None
+        last_stability_signature = None
         stable_count = 0
         for sample_index in range(8):
             page.wait_for_timeout(150 if sample_index else 250)
@@ -340,11 +346,13 @@ def _capture_one(
                 })"""
             )
             stability["samples"] = sample_index + 1
-            if signature == last_signature and signature.get("readyState") in {"interactive", "complete"}:
+            stability_signature = _structural_stability_signature(signature)
+            if stability_signature == last_stability_signature and signature.get("readyState") in {"interactive", "complete"}:
                 stable_count += 1
             else:
                 stable_count = 0
             last_signature = signature
+            last_stability_signature = stability_signature
             if stable_count >= 2:
                 stability = {"status": "STABLE", "samples": sample_index + 1, "signature": signature}
                 break
@@ -374,9 +382,17 @@ def _capture_one(
               bodyTextLength: document.body ? (document.body.innerText || '').trim().length : 0,
               textLength: document.body ? (document.body.innerText || '').trim().length : 0,
               elementCount: document.body ? document.body.getElementsByTagName('*').length : 0,
-              mainPresent: Boolean(document.querySelector('main,[role=main],#app,#__next')),
+              mainPresent: Boolean(document.querySelector('main,[role=main],#app,#__next,#root,#main')),
               skeletonCount: document.querySelectorAll('[class*=skeleton i],[aria-busy=true],[data-loading=true]').length,
-              loadingHint: /(?:正在加载|加载中|loading\.?\.?)$/i.test((document.body?.innerText || '').trim().slice(-80)),
+              loadingHint: /(?:正在加载|加载中|loading\.?\.?)$/i.test((document.body?.innerText || '').trim().slice(-80)) || Array.from(document.querySelectorAll('body *')).some((element) => {
+                const style = getComputedStyle(element);
+                const rect = element.getBoundingClientRect();
+                const text = (element.innerText || '').trim().slice(0, 400);
+                return style.position === 'fixed'
+                  && rect.width >= window.innerWidth * 0.9
+                  && rect.height >= window.innerHeight * 0.9
+                  && /(?:loading|initializ|collecting|processing|connecting|awaiting|preparing|sweep|加载|初始化|准备)/i.test(text);
+              }),
               authWallHint: Boolean(document.querySelector('input[type=password]')) || /登录|登陆|sign\s*in|log\s*in|验证码|verification code/i.test((document.body?.innerText || '').slice(0,4000))
             })
             """
@@ -431,7 +447,9 @@ def _capture_one(
         page_health = evaluate_page_health(
             readiness=composite_readiness, resource_integrity=resource_integrity,
             runtime_errors=page_errors, auth_required=bool(metrics.get("authWallHint")),
-            task_status=None, visual_findings=int(rendered_quality.get("findingCount") or 0), browser_executed=True,
+            # quick-ui performs a page capture only; no interaction task was
+            # requested, so the absent journey is neutral for page health.
+            task_status="PASS", visual_findings=int(rendered_quality.get("findingCount") or 0), browser_executed=True,
         )
         result = {
             "label": label,

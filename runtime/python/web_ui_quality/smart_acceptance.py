@@ -25,7 +25,7 @@ from .error_classifier import classify_record
 from .user_language import status_label
 from .journey import JourneyPolicy, execute_journey, validate_journey
 from .playwright_adapter import _context_options, _normalize_viewports, _origin, _safe_url, playwright_capability
-from .quick_ui import QUICK_UI_VIEWPORTS, run_quick_ui
+from .quick_ui import QUICK_UI_VIEWPORTS, _PAGE_HEALTH_BOUNDARY_FINDING_IDS, run_quick_ui
 from .release_info import PACKAGE_VERSION
 from .repair_recipe import build_repair_recipes
 from .condition_registry import STANDARD_VIEWPORTS
@@ -362,25 +362,26 @@ def _finding_candidates(
     for item in (quick_report or {}).get("topIssues", []):
         issue_id = str(item.get("id") or "VISUAL")
         result_label = str(item.get("userLabel") or "用起来别扭")
-        runtime_boundary = result_label == "暂时无法确认"
+        page_health_observation = issue_id.startswith("PAGE-")
+        runtime_boundary = issue_id in _PAGE_HEALTH_BOUNDARY_FINDING_IDS or result_label == "暂时无法确认"
         blocking = not runtime_boundary and (result_label == "现在会出错" or issue_id in {"UI-FIXED-OCCLUSION", "UI-ELEMENT-OVERLAP", "UI-DIALOG-FIT", "UI-NAV-OVERFLOW", "UI-HTTP-FAILURE", "HTTP_SERVER_ERROR"})
         candidates.append({
             "targetIdentity": target, "routeTemplate": route or "/",
-            "issueType": "RUNTIME_HEALTH" if runtime_boundary else "RESPONSIVE_BLOCK" if blocking else "VISUAL_FRICTION",
+            "issueType": "RUNTIME_HEALTH" if page_health_observation or runtime_boundary else "RESPONSIVE_BLOCK" if blocking else "VISUAL_FRICTION",
             "semanticTarget": str((item.get("samples") or [{}])[0].get("evidence", {}).get("selector") or item.get("title") or "page layout"),
             "state": "default", "viewportClass": _viewport_class(str((item.get("viewports") or ["unknown"])[0])),
             "expectedOutcomeKey": "content_and_actions_remain_usable",
             "observedOutcomeKey": issue_id.lower().replace("-", "_"),
             "expectedOutcomeSummary": "关键内容和操作在目标尺寸下应保持可读、可达、可命中。",
             "observedOutcomeSummary": str(item.get("title")),
-            "evidenceKinds": ["runtime"] if runtime_boundary else ["geometry", "screenshot"],
+            "evidenceKinds": ["runtime"] if page_health_observation or runtime_boundary else ["geometry", "screenshot"],
             "evidenceRefs": [str(record.get("screenshotRef")) for record in (quick_report or {}).get("records", []) if f"{(record.get('viewport') or {}).get('width')}x{(record.get('viewport') or {}).get('height')}" in set(item.get("viewports") or []) and record.get("screenshotRef")] or [f"quick-ui-report.json#{issue_id}"],
             "ruleId": issue_id, "ruleVersion": "2.3-p0a",
             "verificationState": "NOT_VERIFIED" if runtime_boundary else "VERIFIED",
-            "resultLabel": result_label if result_label in {"现在会出错", "用起来别扭", "建议考虑补充", "暂时无法确认"} else "用起来别扭",
+            "resultLabel": "暂时无法确认" if runtime_boundary else result_label if result_label in {"现在会出错", "用起来别扭", "建议考虑补充"} else "用起来别扭",
             "severity": "medium" if runtime_boundary else "high" if blocking else "medium",
             "summary": str(item.get("title") or "页面存在明显体验问题"),
-            "impact": "当前证据不足以判断页面本身；不应因此修改源码。" if runtime_boundary else "关键内容或操作可能被遮挡或无法完成。" if blocking else "用户仍可操作，但理解和操作成本明显增加。",
+            "impact": "当前运行条件不足以判断页面本身；不应因此修改源码。" if runtime_boundary else "页面运行时出现异常，需要先恢复页面后再做 UI 验证。" if page_health_observation else "关键内容或操作可能被遮挡或无法完成。" if blocking else "用户仍可操作，但理解和操作成本明显增加。",
             "recommendation": str(item.get("recommendation") or "在原设计系统内做最小修复并按相同条件复验。"),
         })
     for run in journey_report.get("runs", []):

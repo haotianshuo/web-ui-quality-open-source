@@ -68,6 +68,7 @@ DANGEROUS_DOM_PATTERNS = (
 OUTLINE_NONE_RE = re.compile(r"(?i)\boutline\s*:\s*(?:none|0)\b")
 TOKEN_RE = re.compile(r"(--[A-Za-z0-9_-]+)\s*:")
 SCRIPT_BLOCK_RE = re.compile(r"(?is)<script\b(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>")
+HTML_DOCUMENT_SUFFIXES = frozenset({".html", ".htm"})
 HTML_ATTR_RE = re.compile(
     r'''(?ix)(?P<name>[A-Za-z_:][-A-Za-z0-9_:.]*)\s*=\s*(?:"(?P<double>[^"]*)"|'(?P<single>[^']*)'|(?P<bare>[^\s>]+))'''
 )
@@ -439,7 +440,7 @@ def _semantic_findings(
         # use the same delimiters but are compiled before the browser sees them;
         # treating their imports as a classic-script runtime defect is a false
         # positive.
-        if Path(source.path).suffix.casefold() in {".html", ".htm"}:
+        if Path(source.path).suffix.casefold() in HTML_DOCUMENT_SUFFIXES:
             for script in SCRIPT_BLOCK_RE.finditer(source.text):
                 attrs = _html_attrs(script.group("attrs"))
                 script_type = attrs.get("type", "").strip().casefold()

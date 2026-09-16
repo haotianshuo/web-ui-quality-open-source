@@ -16,3 +16,12 @@ def test_compiled_component_script_is_not_treated_as_classic_html(tmp_path) -> N
     result = audit_project(tmp_path)
 
     assert not any(item["id"] == "SEM-SCRIPT-MODULE-MISMATCH" for item in result["findings"])
+
+
+def test_vue_component_script_is_not_treated_as_classic_html(tmp_path) -> None:
+    component = tmp_path / "Example.vue"
+    component.write_text('<script setup>\n  import value from "./module";\n</script>\n<template><div>{{ value }}</div></template>\n', encoding="utf-8")
+
+    result = audit_project(tmp_path)
+
+    assert not any(item["id"] == "SEM-SCRIPT-MODULE-MISMATCH" for item in result["findings"])
