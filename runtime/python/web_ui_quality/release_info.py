@@ -79,6 +79,39 @@ def package_identity() -> dict[str, str]:
     }
 
 
+def installation_identity() -> dict[str, str]:
+    """Report which installation is actually running.
+
+    Version constants cannot tell two different source trees apart: a stale
+    editable checkout and a wheel install both report the same ``packageVersion``.
+    The resolved module location is the only reliable answer to "which code is
+    running right now", so a user can notice that the code they are executing is
+    not the checkout they think they are executing.
+    """
+
+    from pathlib import Path
+
+    module = Path(__file__).resolve()
+    package_root = module.parent
+    under_site_packages = "site-packages" in str(package_root).lower()
+
+    package = sys.modules.get(__package__ or "")
+    declared = str(getattr(package, "__version__", "") or "").strip() or "UNKNOWN"
+
+    return {
+        "modulePath": str(module),
+        "packageRoot": str(package_root),
+        "installationKind": "site-packages" if under_site_packages else "source-tree-or-editable",
+        "declaredVersion": declared,
+        "packageVersion": PACKAGE_VERSION,
+        "executablePath": sys.executable,
+        "claimBoundary": (
+            "This names the installation this process imported. It does not prove the installation is "
+            "current, intact, or the one the user intended; compare modulePath against the intended checkout."
+        ),
+    }
+
+
 def experimental_identity() -> dict[str, str]:
     """Identity for the additive 4.4 alpha Shadow/Advisory track."""
     return {

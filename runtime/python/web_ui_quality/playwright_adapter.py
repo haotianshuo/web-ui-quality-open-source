@@ -95,7 +95,10 @@ def _normalize_viewports(viewports: Sequence[Sequence[int]] | None) -> tuple[tup
         if len(item) != 2:
             raise ContractViolation("BROWSER_VIEWPORT_INVALID", [f"$.viewports[{index}]: expected width,height"])
         width, height = int(item[0]), int(item[1])
-        if width < 320 or height < 480 or width > 3840 or height > 2160:
+        # The height floor matches the width floor so a rotated phone (for example
+        # 844x390) is verifiable; the previous 480 floor made every landscape
+        # mobile viewport uncheckable.
+        if width < 320 or height < 320 or width > 3840 or height > 2160:
             raise ContractViolation("BROWSER_VIEWPORT_INVALID", [f"$.viewports[{index}]: unsupported dimensions"])
         normalized.append((width, height))
     if len(normalized) != len(set(normalized)):
@@ -147,6 +150,35 @@ def _viewport_pair(value: Any) -> dict[str, int] | None:
     if width <= 0 or height <= 0:
         return None
     return {"width": width, "height": height}
+
+
+def _console_location(message: Any) -> dict[str, Any] | None:
+    """Return redacted, query-free Playwright console source coordinates."""
+
+    try:
+        raw = message.location
+    except Exception:
+        return None
+    if not isinstance(raw, Mapping):
+        return None
+    location: dict[str, Any] = {}
+    raw_url = str(raw.get("url") or "").strip()
+    if raw_url:
+        parsed = urlsplit(raw_url)
+        if parsed.scheme and parsed.netloc:
+            raw_url = parsed._replace(query="", fragment="").geturl()
+        else:
+            raw_url = raw_url.split("?", 1)[0].split("#", 1)[0]
+        if raw_url:
+            location["url"] = redact_text(raw_url, pii=False)
+    for key in ("lineNumber", "columnNumber"):
+        try:
+            value = int(raw.get(key))
+        except (TypeError, ValueError):
+            continue
+        if value >= 0:
+            location[key] = value
+    return location or None
 
 
 def _normalize_viewport_observation(
@@ -263,17 +295,21 @@ def _capture_one(
     )
     context = secure.context
     page = context.new_page()
-    console_errors: list[dict[str, str]] = []
+    console_errors: list[dict[str, Any]] = []
     page_errors: list[str] = []
     request_failures: list[dict[str, str]] = []
     blocked_requests = secure.blocked_requests
     firewall = secure.firewall
-    page.on(
-        "console",
-        lambda message: console_errors.append({"type": message.type, "text": redact_text(message.text[:500])})
-        if message.type in {"error", "warning"}
-        else None,
-    )
+    def on_console(message: Any) -> None:
+        if message.type not in {"error", "warning"}:
+            return
+        item: dict[str, Any] = {"type": message.type, "text": redact_text(message.text[:500])}
+        location = _console_location(message)
+        if location is not None:
+            item["location"] = location
+        console_errors.append(item)
+
+    page.on("console", on_console)
     page.on("pageerror", lambda error: page_errors.append(redact_text(str(error)[:500])))
     page.on(
         "requestfailed",
@@ -346,7 +382,10 @@ def _capture_one(
             """
         )
         rendered_quality = inspect_rendered_page(page)
-        experience_geometry = inspect_experience_geometry(page, viewport_id=label)
+        # The geometry row id identifies the measured viewport.  Passing the run label
+        # ("before"/"after") here gave every viewport the same id, so downstream
+        # findings were deduped by id and the other viewports were silently lost.
+        experience_geometry = inspect_experience_geometry(page, viewport_id=f"{label}-{width}x{height}")
         viewport_normalization = _normalize_viewport_observation(viewport, metrics, experience_geometry)
         sidecar_refs: dict[str, str] = {}
         if persist_dom_sidecars:

@@ -41,6 +41,15 @@ _RECOMMENDATIONS = {
     "UI-NAV-OVERFLOW": "在窄屏切换为折叠菜单、横向滚动标签或更合适的分组，不要硬缩桌面导航。",
     "UI-ALIGNMENT-DRIFT": "收敛页面容器、标题、工具栏和内容区的左边界令牌。",
     "UI-HTTP-FAILURE": "根据真实 HTTP 状态或运行时错误恢复页面访问后，再进行 UI 验证。",
+    # Page-health conditions are not layout defects; sending the user to edit component
+    # styles for them wastes effort and can damage healthy source code.
+    "PAGE-RUNTIME-BROKEN": "先修复页面运行时异常（查看控制台与堆栈），确认页面能稳定启动后再做 UI 验证。",
+    "PAGE-AUTH-REQUIRED": "提供任务专属的测试登录态或测试账号；不要用修改前端路由的方式绕过权限。",
+    "PAGE-RESTRICTED-RENDER": "恢复被阻止的必要资源（网络策略或代理），让页面具备代表性后再复验。",
+    "PAGE-DATA-NOT-READY": "确认数据加载完成、页面脱离加载或骨架状态后，再按相同视口复验。",
+    "PAGE-TASK-FAILED": "检查失败的安全任务探针，修复后重跑该任务并复核页面是否恢复。",
+    "PAGE-SIMULATED": "改用真实页面重跑一次；模拟预览不能作为真实产品的验收证据。",
+    "PAGE-NOT-VERIFIED": "先恢复可验证条件（页面可访问、就绪稳定、证据充分），再按相同视口复验；不要据此修改源码。",
 }
 
 
@@ -56,7 +65,11 @@ def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int 
 
     def add(rule_id: str, severity: str, title: str, record: Mapping[str, Any], samples: Sequence[Any]) -> None:
         viewport = _viewport_label(record)
-        runtime_boundaries = {"POLICY_BLOCKED", "CONNECTION_REFUSED", "DNS_FAILURE", "TLS_FAILURE", "AUTH_REQUIRED", "NAVIGATION_TIMEOUT", "PAGE_CRASHED", "BROWSER_PROVIDER_MISSING", "UNKNOWN_RUNTIME_FAILURE"}
+        # Rule ids that say "the evidence cannot tell us" rather than "the page is broken".
+        # PAGE-NOT-VERIFIED / PAGE-SIMULATED belong here: their own titles state that
+        # conditions were insufficient to verify, so they must never be rendered as an
+        # assertion of breakage (that would also make downstream verificationState VERIFIED).
+        runtime_boundaries = {"POLICY_BLOCKED", "CONNECTION_REFUSED", "DNS_FAILURE", "TLS_FAILURE", "AUTH_REQUIRED", "NAVIGATION_TIMEOUT", "PAGE_CRASHED", "BROWSER_PROVIDER_MISSING", "UNKNOWN_RUNTIME_FAILURE", "PAGE-NOT-VERIFIED", "PAGE-SIMULATED"}
         user_label = "暂时无法确认" if rule_id in runtime_boundaries else "现在会出错" if severity in {"P0", "P1"} else "用起来别扭" if severity == "P2" else "建议考虑补充"
         issue = aggregated.setdefault(
             rule_id,

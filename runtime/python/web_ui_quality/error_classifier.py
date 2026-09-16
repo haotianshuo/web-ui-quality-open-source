@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 
 
 _ERROR_DEFINITIONS: tuple[dict[str, Any], ...] = (
@@ -69,29 +69,41 @@ def _http_classification(status: int | None) -> dict[str, Any] | None:
     return None
 
 
-def classify_runtime_error(*, error: str | None = None, http_status: int | None = None) -> dict[str, Any]:
-    raw = str(error or "").strip()
-    http = _http_classification(http_status)
-    if http:
-        return {**http, "rawError": raw or None, "httpStatus": http_status, "sourceCodeChangeSuggested": False}
-    for definition in _ERROR_DEFINITIONS:
-        if any(re.search(pattern, raw, flags=re.IGNORECASE) for pattern in definition["patterns"]):
-            return {
-                "category": definition["category"],
-                "userMessage": definition["message"],
-                "recoveryActions": list(definition["actions"]),
-                "rawError": raw or None,
-                "httpStatus": http_status,
-                "sourceCodeChangeSuggested": False,
-            }
+def _advice(category: str, message: str, actions: Iterable[str], *, raw: str, http_status: int | None) -> dict[str, Any]:
+    """Emit one recovery-advice contract for every failure path.
+
+    Consumers read ``userMessage``/``recoveryActions``; ``message``/``actions``
+    stay as legacy aliases so a caller never has to guess which shape it got.
+    """
+
+    actions = list(actions)
     return {
-        "category": "UNKNOWN_RUNTIME_FAILURE",
-        "userMessage": "页面验证失败，但当前信息不足以可靠判断根因。",
-        "recoveryActions": ["查看原始错误和技术日志", "确认项目服务、网络和浏览器能力", "修复运行环境后按相同条件重试"],
+        "category": category,
+        "userMessage": message,
+        "recoveryActions": actions,
+        "message": message,
+        "actions": list(actions),
         "rawError": raw or None,
         "httpStatus": http_status,
         "sourceCodeChangeSuggested": False,
     }
+
+
+def classify_runtime_error(*, error: str | None = None, http_status: int | None = None) -> dict[str, Any]:
+    raw = str(error or "").strip()
+    http = _http_classification(http_status)
+    if http:
+        return _advice(http["category"], http["message"], http["actions"], raw=raw, http_status=http_status)
+    for definition in _ERROR_DEFINITIONS:
+        if any(re.search(pattern, raw, flags=re.IGNORECASE) for pattern in definition["patterns"]):
+            return _advice(definition["category"], definition["message"], definition["actions"], raw=raw, http_status=http_status)
+    return _advice(
+        "UNKNOWN_RUNTIME_FAILURE",
+        "页面验证失败，但当前信息不足以可靠判断根因。",
+        ["查看原始错误和技术日志", "确认项目服务、网络和浏览器能力", "修复运行环境后按相同条件重试"],
+        raw=raw,
+        http_status=http_status,
+    )
 
 
 def classify_record(record: Mapping[str, Any]) -> dict[str, Any] | None:

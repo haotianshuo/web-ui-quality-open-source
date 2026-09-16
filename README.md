@@ -6,7 +6,7 @@ Web UI Quality helps you check an AI-generated Web change before calling it
 done: what the AI was allowed to change, what actually changed, what was
 verified, and what is still unknown.
 
-[![OSS Preview](https://img.shields.io/badge/status-OSS%20Preview-166B4F)](https://github.com/haotianshuo/web-ui-quality-open-source/releases/tag/v4.3.0-oss-preview.1)
+[![OSS Preview](https://img.shields.io/badge/status-OSS%20Preview-166B4F)](https://github.com/haotianshuo/web-ui-quality-open-source/releases)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 [![Public CI](https://github.com/haotianshuo/web-ui-quality-open-source/actions/workflows/ci.yml/badge.svg)](https://github.com/haotianshuo/web-ui-quality-open-source/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-yellow)](pyproject.toml)
@@ -19,9 +19,18 @@ not published to PyPI yet, so install it from a source checkout:
 ~~~bash
 git clone https://github.com/haotianshuo/web-ui-quality-open-source.git
 cd web-ui-quality-open-source
-python -m pip install -e .
+python -m pip install -e ".[browser]"
 web-ui-quality doctor
 ~~~
+
+The `[browser]` extra installs the Playwright driver. WUQ then uses an
+installed Chrome, Edge, or Chromium executable when one is available. If
+`doctor` reports `PYTHON_BROWSER_EXECUTABLE_MISSING`, install a browser binary
+with `python -m playwright install chromium` (or install Chrome/Edge) and run
+`web-ui-quality doctor` again. A missing driver and a missing browser
+executable are reported as different reason codes (`PYTHON_PLAYWRIGHT_MODULE_MISSING`
+versus `PYTHON_BROWSER_EXECUTABLE_MISSING`); neither status is Browser
+verification evidence by itself.
 
 To inspect a local Web project, describe the task in plain language:
 
@@ -32,6 +41,37 @@ web-ui-quality run ./path/to/your-web-project "检查结账页移动端布局，
 The default workflow is bounded and does not grant write authority. A repair
 that needs a source change must receive the applicable Host write receipt and
 current verification evidence before it can be reported as `VERIFIED`.
+
+## What changed in this preview
+
+This preview includes the boundary-hardening update from [PR #6](https://github.com/haotianshuo/web-ui-quality-open-source/pull/6):
+
+- real-user intent routing keeps verification-only requests, scoped repairs,
+  and conflicting instructions separate; write-capable repairs remain
+  Host-gated;
+- evaluator-side benchmark logic separates Host claims from sealed oracle
+  results and classifies invalid setup and infrastructure failures
+  conservatively;
+- evidence graphs and provider envelopes fail closed on missing verification
+  and empty evidence (`NOT_MEASURED`/`NOT_VERIFIED`), including the V2-F001
+  resource-load regression;
+- path, protected-scope, credential-redaction, and installation-identity
+  checks make the source-only workflow more explicit;
+- landscape mobile viewport coverage and the CLI `--version`/`doctor`
+  diagnostics are included.
+
+The update is covered by the public CI matrix and the full-tree regression
+suite. Browser, Real Host, External Blind Holdout, Formal, and Commercial GA
+qualification remain outside this source-only preview; see
+[KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
+
+## Download the preview
+
+Release archives are published on the [OSS preview releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases).
+Each release includes `.zip` and `.tar.gz` source archives plus matching
+`.sha256` and `.build.json` metadata. Verify the SHA-256 file before unpacking.
+These archives are source distributions, not a PyPI/npm publication or a
+production qualification.
 
 ## What WUQ verifies
 
@@ -69,9 +109,11 @@ accuracy or production behavior.
 
 ## Current status
 
-The current public release is **`v4.3.0-oss-preview.1`**, an Apache-2.0
-open-source preview. The historical `v4.3.0` release is a separate MIT-licensed
-source snapshot; it is retained as history and is not the current preview.
+The current public source and release line is the **`4.3.0 OSS preview`**, an
+Apache-2.0 open-source preview. The latest packaged build is listed on the
+[OSS preview releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases).
+The historical `v4.3.0` release is a separate MIT-licensed source snapshot; it
+is retained as history and is not the current preview.
 
 | Area | Status |
 | --- | --- |

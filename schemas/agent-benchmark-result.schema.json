@@ -150,6 +150,30 @@
     "observation": {
       "additionalProperties": false,
       "properties": {
+        "claim": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "defectInjectionStatus": {
+          "enum": [
+            "VALIDATED",
+            "NOT_APPLICABLE",
+            "INVALID_SETUP",
+            "NOT_MEASURED"
+          ]
+        },
+        "executionStatus": {
+          "enum": [
+            "COMPLETED",
+            "FAILED",
+            "USAGE_LIMIT",
+            "QUOTA_EXCEEDED",
+            "RATE_LIMITED",
+            "INFRASTRUCTURE_BLOCKED",
+            "NOT_MEASURED",
+            "INVALID_SETUP"
+          ]
+        },
         "outcome": {
           "enum": [
             "VERIFIED",
@@ -163,6 +187,12 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "runValidity": {
+          "enum": [
+            "VALID",
+            "INVALID_SETUP"
+          ]
         },
         "rootCauseFiles": {
           "items": {

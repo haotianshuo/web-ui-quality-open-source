@@ -790,6 +790,14 @@ def _visual_proof(trusted_receipt: TrustedUIBrowserEvidence | None) -> dict[str,
             "requestFailures": list(item.get("requestFailures") or []),
             "horizontalOverflow": bool(item.get("horizontalOverflow")),
             "geometryStatus": geometry.get("status"),
+            # The page's own quality audit is part of what the proof artifact must
+            # disclose; without it afterQuality reads as a clean page.
+            "renderedQualityStatus": _text(_mapping(item.get("renderedQuality")).get("status")) or None,
+            "renderedQualityFindings": [
+                _text(row.get("id"))
+                for row in _rows(_mapping(item.get("renderedQuality")).get("findings"))
+                if _text(row.get("id"))
+            ],
             "authority": "browser-measured",
             "sourceRef": _source_ref(trusted.evidence_ref, item.get("label"), viewport.get("width")),
         }
@@ -811,12 +819,22 @@ def _visual_proof(trusted_receipt: TrustedUIBrowserEvidence | None) -> dict[str,
         value.startswith("UNVERIFIED") or value == "VERIFICATION_NEEDED"
         for value in boundaries.values()
     )
+    # A P1 rendered-quality failure is a real page defect even when the runtime is
+    # clean, so it must be able to prevent a PASS proof.
+    quality_failures = sorted(
+        {
+            int(_mapping(item.get("viewport")).get("width") or 0)
+            for item in after
+            if _text(item.get("renderedQualityStatus")).upper() == "FAIL"
+        }
+    )
     runtime_fail = (
         _text(payload.get("status")).upper() == "FAIL"
         or console_errors > 0
         or page_errors > 0
         or request_failures > 0
         or bool(overflow)
+        or bool(quality_failures)
     )
     if not three_pairs or not equal_pairs or not artifact_complete:
         status = "INCOMPLETE"
@@ -843,6 +861,10 @@ def _visual_proof(trusted_receipt: TrustedUIBrowserEvidence | None) -> dict[str,
             "pageErrors": page_errors,
             "requestFailures": request_failures,
             "horizontalOverflowViewports": overflow,
+            "renderedQualityFailures": quality_failures,
+            "renderedQualityFindings": sorted(
+                {finding for item in after for finding in (item.get("renderedQualityFindings") or [])}
+            ),
         },
         "expertReview": _rows(payload.get("step10")),
         "toolBoundaries": boundaries,

@@ -94,7 +94,16 @@ def normalize_envelopes(
     for item in normalized_issues:
         item["sources"] = sorted(item["sources"], key=lambda value: (value["providerId"], value["runId"], value["evidenceHash"]))
     diagnostics.sort(key=lambda item: (str(item["ruleId"]), str(item["providerId"]), str(item["providerStatus"])))
-    result = "FAIL" if normalized_issues else ("NOT_VERIFIED" if any(item["mappedStatus"] == "NOT_VERIFIED" for item in diagnostics) else "PASS")
+    if not normalized_issues and not diagnostics:
+        # No envelope was supplied or recognised at all: absence of evidence is
+        # NOT_MEASURED, never PASS.
+        result = "NOT_MEASURED"
+    elif normalized_issues:
+        result = "FAIL"
+    elif any(item["mappedStatus"] == "NOT_VERIFIED" for item in diagnostics):
+        result = "NOT_VERIFIED"
+    else:
+        result = "PASS"
     payload: dict[str, object] = {"issues": normalized_issues, "diagnostics": diagnostics, "result": result}
     payload["digest"] = digest_json(payload)
     return payload

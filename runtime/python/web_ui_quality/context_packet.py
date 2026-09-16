@@ -10,6 +10,8 @@ import re
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from .contracts import normalize_relative_text
+
 _TOKEN = re.compile(r"[A-Za-z0-9_.$/@-]{2,}|[\u4e00-\u9fff]{2,}")
 _EXCLUDED = {".git", "node_modules", "dist", "build", ".next", "coverage", "__pycache__", ".venv", "venv", ".wuq"}
 
@@ -47,7 +49,7 @@ def _tokens(text: str) -> set[str]:
 
 
 def _safe_rel(root: Path, value: str) -> str | None:
-    text = str(value).replace("\\", "/").lstrip("./")
+    text = normalize_relative_text(value)
     path = (root / text).resolve()
     try:
         path.relative_to(root)
@@ -219,7 +221,7 @@ def build_relevant_context_packet(
 
 
 def context_recall(packet: Mapping[str, Any], expected_paths: Iterable[str], *, k: int | None = None) -> dict[str, Any]:
-    expected = {str(path).replace("\\", "/").lstrip("./") for path in expected_paths}
+    expected = {normalize_relative_text(path) for path in expected_paths}
     rows = [row for row in packet.get("sourceRefs", []) if isinstance(row, Mapping)]
     if k is not None:
         rows = rows[: max(0, int(k))]
@@ -233,7 +235,7 @@ def context_recall(packet: Mapping[str, Any], expected_paths: Iterable[str], *, 
 
 
 def context_retrieval_metrics(packet: Mapping[str, Any], expected_paths: Iterable[str], *, k: int | None = None) -> dict[str, Any]:
-    expected = {str(path).replace("\\", "/").lstrip("./") for path in expected_paths}
+    expected = {normalize_relative_text(path) for path in expected_paths}
     rows = [row for row in packet.get("sourceRefs", []) if isinstance(row, Mapping)]
     if k is not None:
         rows = rows[: max(0, int(k))]

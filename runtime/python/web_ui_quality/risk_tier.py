@@ -11,6 +11,8 @@ from pathlib import PurePosixPath
 import re
 from typing import Any, Iterable
 
+from .contracts import normalize_relative_text
+
 _TIER_ORDER = {"T0": 0, "T1": 1, "T2": 2, "T3": 3, "T4": 4}
 
 _CRITICAL_TERMS = re.compile(
@@ -67,7 +69,7 @@ def classify_risk_tier(
         r"(?:不要|别|不许|禁止|do\s+not|don't)\s*(?:修改|改|动|碰|touch|change|modify)?[^，。,.；;\n]{0,48}",
         "", text, flags=re.I,
     )
-    files = sorted({str(item).replace("\\", "/").lstrip("./") for item in source_scope if str(item).strip()})
+    files = sorted({normalize_relative_text(item) for item in source_scope if str(item).strip()})
     tier = "T0" if files and all(PurePosixPath(path).suffix.casefold() in _STYLE_SUFFIXES for path in files) else "T1"
     reasons: list[str] = []
 

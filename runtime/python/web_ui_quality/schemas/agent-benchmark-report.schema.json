@@ -30,6 +30,10 @@
     "empiricalPassAtK": {
       "type": "object"
     },
+    "eligibleRuns": {
+      "minimum": 0,
+      "type": "integer"
+    },
     "falseVerified": {
       "type": "object"
     },
@@ -88,8 +92,23 @@
       ],
       "type": "object"
     },
+    "invalidSetupRuns": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "infrastructureBlockedRuns": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "problemSolved": {
+      "type": "object"
+    },
     "schemaVersion": {
       "const": "4"
+    },
+    "successDenominator": {
+      "minimum": 0,
+      "type": "integer"
     },
     "scopePrecision": {
       "required": [
@@ -98,6 +117,10 @@
         "noOpExcluded"
       ],
       "type": "object"
+    },
+    "unmeasuredRuns": {
+      "minimum": 0,
+      "type": "integer"
     }
   },
   "required": [

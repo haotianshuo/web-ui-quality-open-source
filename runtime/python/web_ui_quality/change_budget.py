@@ -4,6 +4,8 @@ from __future__ import annotations
 import re
 from typing import Any, Iterable, Mapping
 
+from .contracts import normalize_relative_text
+
 _NARROW_REQUEST = re.compile(r"(?:只|仅|最小|不要动|别动|不要改|只修|only|minimal|smallest|do not touch|don't touch)", re.I)
 _DEPENDENCY_NAMES = {"package.json", "package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lockb"}
 _CONFIG_HINTS = ("config.", "tsconfig", "eslint", "prettier", "vite.config", "next.config", "webpack.config")
@@ -26,7 +28,7 @@ def build_change_budget(
 ) -> dict[str, Any]:
     tier = str(risk_tier or "T1").upper()
     base = dict(_DEFAULTS.get(tier, _DEFAULTS["T1"]))
-    explicit = sorted({str(item).replace("\\", "/").lstrip("./") for item in explicit_files if str(item).strip()})
+    explicit = sorted({normalize_relative_text(item) for item in explicit_files if str(item).strip()})
     narrow = bool(_NARROW_REQUEST.search(str(request or "")))
     if explicit:
         # Explicit source scope is a ceiling, not permission to add neighboring files.
@@ -58,8 +60,8 @@ def evaluate_change_budget(
     changed_lines: int | None = None,
     new_files: Iterable[str] = (),
 ) -> dict[str, Any]:
-    files = sorted({str(item).replace("\\", "/").lstrip("./") for item in changed_files if str(item).strip()})
-    new = sorted({str(item).replace("\\", "/").lstrip("./") for item in new_files if str(item).strip()})
+    files = sorted({normalize_relative_text(item) for item in changed_files if str(item).strip()})
+    new = sorted({normalize_relative_text(item) for item in new_files if str(item).strip()})
     blockers: list[str] = []
     warnings: list[str] = []
     max_files = int(budget.get("maxFiles") or 0)

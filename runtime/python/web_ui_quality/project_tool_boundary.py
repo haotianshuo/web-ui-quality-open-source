@@ -11,7 +11,7 @@ from pathlib import Path
 from dataclasses import dataclass
 from typing import Any, Iterable, Mapping, Sequence
 
-from .contracts import ContractViolation, digest_json, hash_file, sha256_hex
+from .contracts import ContractViolation, digest_json, hash_file, normalize_relative_text, sha256_hex
 
 _ALLOWED = {
     "tsc": ("--noEmit",),
@@ -135,7 +135,7 @@ def verify_host_tool_result(project_root: str | Path, plan: Mapping[str, Any], r
     unexpected_writes_raw = receipt.get("unexpectedWrites", [])
     if not isinstance(unexpected_writes_raw, list) or any(not isinstance(item, str) for item in unexpected_writes_raw):
         raise ContractViolation("PROJECT_TOOL_RESULT_INVALID", ["$.unexpectedWrites: array of project-relative strings required"])
-    unexpected_writes = sorted({item.replace("\\", "/").lstrip("./") for item in unexpected_writes_raw if item.strip()})
+    unexpected_writes = sorted({normalize_relative_text(item) for item in unexpected_writes_raw if item.strip()})
     if any(item.startswith("../") or item.startswith("/") for item in unexpected_writes):
         raise ContractViolation("PROJECT_TOOL_RESULT_INVALID", ["$.unexpectedWrites: project-relative paths required"])
     policy_ok = network_ok and resource_ok and filesystem_ok

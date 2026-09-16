@@ -13,10 +13,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from .contracts import ContractViolation, digest_json, hash_file
+from .contracts import ContractViolation, digest_json, hash_file, normalize_relative_text
 from .experience_run import load_experience_run, write_phase_file
 
 _EXCLUDED = {".git", "node_modules", "dist", "build", ".next", "coverage", "__pycache__", ".venv", "venv", ".wuq"}
+_GENERATED_OUTPUT_DIRS = {"dist", "build", "out", "_site", ".next"}
 _CONFIG_NAMES = {
     "package.json", "package-lock.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", "yarn.lock", "bun.lockb",
     "tsconfig.json", "jsconfig.json", "turbo.json", "nx.json", "workspace.json",
@@ -60,12 +61,13 @@ def _quality_signals(path: Path) -> dict[str, int]:
     }
 
 
-def _file_row(root: Path, path: Path) -> dict[str, Any] | None:
+def _file_row(root: Path, path: Path, *, allow_generated_output: bool = False) -> dict[str, Any] | None:
     try:
         rel = path.relative_to(root)
     except ValueError:
         return None
-    if not path.is_file() or path.is_symlink() or any(part in _EXCLUDED for part in rel.parts):
+    generated_output = any(part in _GENERATED_OUTPUT_DIRS for part in rel.parts)
+    if not path.is_file() or path.is_symlink() or (any(part in _EXCLUDED for part in rel.parts) and not (allow_generated_output and generated_output)):
         return None
     try:
         return {
@@ -117,7 +119,7 @@ def _project_metadata(root: Path) -> dict[str, Any]:
 
 
 def _normalise_targets(target_files: Iterable[str]) -> set[str]:
-    return {str(item).replace("\\", "/").lstrip("./") for item in target_files if str(item).strip()}
+    return {normalize_relative_text(item) for item in target_files if str(item).strip()}
 
 
 def _target_dirs(root: Path, targets: set[str]) -> set[Path]:
@@ -196,7 +198,7 @@ def build_project_baseline(project_root: str | Path, *, max_files: int = 5000, t
 
     # Explicit repair targets are indexed independently of the bounded global scan.
     for rel_text in sorted(targets - indexed):
-        row = _file_row(root, (root / rel_text).resolve())
+        row = _file_row(root, (root / rel_text).resolve(), allow_generated_output=True)
         if row is not None:
             files.append(row)
             indexed.add(row["path"])

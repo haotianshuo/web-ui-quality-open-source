@@ -77,3 +77,11 @@ def test_doctor_exposes_capability_layers_without_claiming_verification() -> Non
     assert clarity["targetReachable"] == "NOT_MEASURED"
     assert clarity["evidenceCollected"] == "NOT_MEASURED"
     assert clarity["verificationStatus"] == "NOT_MEASURED"
+
+
+def test_readme_browser_onboarding_names_driver_and_executable_paths() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert 'pip install -e ".[browser]"' in readme
+    assert "PYTHON_PLAYWRIGHT_MODULE_MISSING" in readme
+    assert "PYTHON_BROWSER_EXECUTABLE_MISSING" in readme
+    assert "playwright install chromium" in readme
