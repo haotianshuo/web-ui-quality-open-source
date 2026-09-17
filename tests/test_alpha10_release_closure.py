@@ -113,7 +113,7 @@ def test_candidate_recommendation_is_not_silent_selection_and_gate_is_honest():
 def test_current_root_api_matches_explicit_alpha10_manifest():
     import web_ui_quality
     manifest = json.loads((ROOT / "runtime/python/web_ui_quality/public-api-manifest.json").read_text(encoding="utf-8"))
-    assert manifest["packageVersion"] == "4.3.0"
+    assert manifest["packageVersion"] == web_ui_quality.__version__
     assert manifest["kernelVersion"] == "4.2.3"
     assert manifest["kernelBaseVersion"] == "4.0.0-rc.1"
     assert manifest["count"] == len(web_ui_quality.__all__)

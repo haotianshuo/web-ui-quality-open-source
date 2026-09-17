@@ -1,11 +1,12 @@
 # Public source boundary
 
-This repository is the public Web UI Quality 4.3.0 Apache-2.0 source preview.
-The public repository and the current preview release are already available:
+This repository is the Web UI Quality 4.3.1 Apache-2.0 source release
+candidate for the normal OSS release channel. This local task does not publish
+the candidate to GitHub:
 
 - repository: <https://github.com/haotianshuo/web-ui-quality-open-source>;
-- current preview: `v4.3.0-oss-preview.1`;
-- license for the current preview: Apache-2.0;
+- candidate version: `4.3.1`;
+- license for the candidate: Apache-2.0;
 - PyPI/npm: not published.
 
 The engineering review is closed for the distributed files in
@@ -37,12 +38,11 @@ The engineering review is closed for the distributed files in
 
 The historical GitHub release `v4.3.0` is a separate MIT-licensed public
 source snapshot at its recorded commit. It remains in Git history as a real
-historical artifact. It was not rewritten as Apache-2.0. The current
-`v4.3.0-oss-preview.1` source on `main` is the Apache-2.0 preview and is the
-recommended current source for evaluation.
+historical artifact. It was not rewritten as Apache-2.0. The current 4.3.1
+candidate is the Apache-2.0 source line built from the 4.3.1 release baseline.
 
 The root Apache license covers only the project-owned material included in
-the current preview. A third-party item, if ever included, keeps its own
+the current candidate. A third-party item, if ever included, keeps its own
 license and required notice; the root license does not relicense it.
 
 ## Provenance and boundary rules
@@ -61,5 +61,5 @@ external repository checkouts, or private audit material.
 
 The public tests prove only the self-contained package contract. Real Host
 qualification and the External Blind Holdout remain `NOT_MEASURED`. This
-preview does not establish Commercial GA, production compatibility, model
+release candidate does not establish Commercial GA, production compatibility, model
 accuracy, or legal clearance of future additions.

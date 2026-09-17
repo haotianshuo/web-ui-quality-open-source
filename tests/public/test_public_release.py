@@ -59,7 +59,8 @@ def test_public_plugin_and_runtime_import() -> None:
     assert manifest["name"] == "web-ui-quality"
     skill_path = ROOT / "skills" / "audit-and-fix-web-ui" / "SKILL.md"
     assert skill_path.is_file()
-    assert "4.3.0" in skill_path.read_text(encoding="utf-8")
+    from web_ui_quality.release_info import PACKAGE_VERSION
+    assert PACKAGE_VERSION in skill_path.read_text(encoding="utf-8")
 
     completed = subprocess.run(
         [sys.executable, "-B", "scripts/run_runtime.py", "--help"],

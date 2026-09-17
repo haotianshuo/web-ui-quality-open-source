@@ -19,7 +19,7 @@ from web_ui_quality.outcome_verification import combine_repair_verification  # n
 from web_ui_quality.release_info import PACKAGE_VERSION, configure_stdout  # noqa: E402
 from web_ui_quality.risk_tier import classify_risk_tier  # noqa: E402
 
-EXPECTED_VERSION = "4.3.0"
+EXPECTED_VERSION = PACKAGE_VERSION
 
 
 def _intent(text: str, *, task: str, specialty: str | None, control: str, read_only: bool) -> str:

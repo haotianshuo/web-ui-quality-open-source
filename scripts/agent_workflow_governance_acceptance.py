@@ -22,7 +22,7 @@ from web_ui_quality.run_checkpoint import create_checkpoint, resume_checkpoint
 from web_ui_quality.task_goal import create_task_goal, update_task_goal
 from web_ui_quality.release_info import PACKAGE_VERSION
 
-EXPECTED_VERSION = "4.3.0"
+EXPECTED_VERSION = PACKAGE_VERSION
 
 
 def main() -> int:

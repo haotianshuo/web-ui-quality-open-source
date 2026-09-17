@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Package-level public acceptance for Web UI Quality 4.3.0 with Trust Kernel 4.2.3."""
+"""Package-level public acceptance for Web UI Quality 4.3.1 with Trust Kernel 4.2.3."""
 from __future__ import annotations
 import json,re,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]; RUNTIME=ROOT/'runtime'/'python'
 if str(RUNTIME) not in sys.path: sys.path.insert(0,str(RUNTIME))
 from web_ui_quality.release_info import PACKAGE_VERSION,KERNEL_VERSION,KERNEL_BASE_VERSION,PROTOCOL_VERSION,RECEIPT_PROTOCOL_VERSION,EVIDENCE_SCHEMA_VERSION
-EXPECTED='4.3.0'
+EXPECTED=PACKAGE_VERSION
 def row(cid,ok,detail): return {'id':cid,'status':'PASS' if ok else 'FAIL','detail':detail}
 def main():
  plugin=json.loads((ROOT/'.codex-plugin/plugin.json').read_text(encoding='utf-8')); py=(ROOT/'pyproject.toml').read_text(encoding='utf-8'); quick=(ROOT/'GUIDED_REPAIR_QUICKSTART.md').read_text(encoding='utf-8'); skill=(ROOT/'skills/audit-and-fix-web-ui/SKILL.md').read_text(encoding='utf-8'); checks=[]; declared=re.search(r'(?m)^version\s*=\s*"([^"]+)"',py)
@@ -15,7 +15,7 @@ def main():
  checks.append(row('PKG-PUB-003',PROTOCOL_VERSION=='3.0' and RECEIPT_PROTOCOL_VERSION=='3.0' and EVIDENCE_SCHEMA_VERSION=='3.0',{'protocol':PROTOCOL_VERSION,'receipt':RECEIPT_PROTOCOL_VERSION,'evidence':EVIDENCE_SCHEMA_VERSION}))
  checks.append(row('PKG-PUB-004',EXPECTED in quick and EXPECTED in skill,'public docs current identity'))
  completed=subprocess.run([sys.executable,'-B',str(ROOT/'scripts/run_runtime.py'),'--help'],cwd=ROOT,text=True,encoding='utf-8',errors='replace',capture_output=True)
- checks.append(row('PKG-PUB-005',completed.returncode==0 and '4.3.0' in completed.stdout,{'returncode':completed.returncode}))
+ checks.append(row('PKG-PUB-005',completed.returncode==0 and EXPECTED in completed.stdout,{'returncode':completed.returncode}))
  completed=subprocess.run([sys.executable,'-B',str(ROOT/'scripts/public_acceptance.py')],cwd=ROOT,text=True,encoding='utf-8',errors='replace',capture_output=True)
  try: kernel=json.loads(completed.stdout)
  except Exception: kernel={}

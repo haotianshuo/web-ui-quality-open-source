@@ -3,11 +3,11 @@ name: audit-and-fix-web-ui
 description: Check, prepare and verify Host-applied repairs, deeply redesign, or explicitly audit real Web product experiences. Use run. Keep Before tamper-evident, never promote unsupported source text to syntax PASS, and keep all source writes in the Codex Host.
 ---
 
-# Web UI Quality 4.3.0
+# Web UI Quality 4.3.1
 
 **唯一公共运行入口：** `python -B scripts/run_runtime.py ...`。Skill 内部脚本仅为实现细节，测试与文档不得绕开该入口。
 
-> Current plugin/package: 4.3.0 · Current Trust Kernel: 4.2.3 · Kernel base: 4.0.0-rc.1 · Receipt protocol: 3.0 · Evidence schema: 3.0
+> Current plugin/package: 4.3.1 · Current Trust Kernel: 4.2.3 · Kernel base: 4.0.0-rc.1 · Receipt protocol: 3.0 · Evidence schema: 3.0
 
 ## Default product entry
 

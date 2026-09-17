@@ -149,7 +149,7 @@ def _entries() -> list[tuple[str, bytes, int]]:
         "schemaVersion": "2", "product": PRODUCT_NAME, **identity, "packageTreeDigest": tree_digest,
         "realCodexHostQualification": "NOT_MEASURED", "nativeWindowsQualification": "NOT_MEASURED",
         "v5Included": False, "adaptiveGuidanceActive": False, "adaptiveExplorationActive": False,
-        "claimBoundary": "4.3.0 Release Integrity + Trust UX Closure identity and tree composition only; historical 4.1.1 evidence is not promoted into 4.3.0.",
+        "claimBoundary": f"{PACKAGE_VERSION} Release Integrity + Trust UX Closure identity and tree composition only; historical 4.1.1 evidence is not promoted into {PACKAGE_VERSION}.",
     }
     for name, payload in (("RELEASE-MANIFEST.json", release_manifest), ("COMPOSITE-RELEASE-MANIFEST.json", composite)):
         data=(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)+"\n").encode("utf-8")
@@ -210,7 +210,7 @@ def _validate_identity() -> None:
     if schema_version != PACKAGE_VERSION: raise SystemExit("product report schema package identity mismatch")
     expected_doc_identity = {
         "packageVersion": PACKAGE_VERSION,
-        "packageStage": "4.3.0-open-source",
+        "packageStage": PACKAGE_STAGE,
         "kernelVersion": KERNEL_VERSION,
         "kernelBaseVersion": KERNEL_BASE_VERSION,
         "receiptProtocol": RECEIPT_PROTOCOL_VERSION,
@@ -393,8 +393,8 @@ def validate() -> dict[str, object]:
         "openSourceLicense": "Apache-2.0",
         "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
         "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-        "publicationStatus": "PUBLISHED_PREVIEW",
-        "promotionStatus": "PREVIEW_NOT_GA",
+        "publicationStatus": "NORMAL_RELEASE_CANDIDATE_LOCAL_ONLY",
+        "promotionStatus": "GA_NOT_ESTABLISHED",
         "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
         "version": PACKAGE_VERSION,
         "packageStage": PACKAGE_STAGE,
@@ -452,8 +452,8 @@ def main() -> int:
             "openSourceLicense": "Apache-2.0",
             "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
             "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-            "publicationStatus": "PUBLISHED_PREVIEW",
-            "promotionStatus": "PREVIEW_NOT_GA",
+            "publicationStatus": "NORMAL_RELEASE_CANDIDATE_LOCAL_ONLY",
+            "promotionStatus": "GA_NOT_ESTABLISHED",
             "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
             "version": PACKAGE_VERSION,
             "packageStage": PACKAGE_STAGE,

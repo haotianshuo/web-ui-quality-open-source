@@ -1,8 +1,8 @@
-> Package: **4.3.0** · Package Stage: **4.3.0-open-source** · Trust Kernel: **4.2.3** · Kernel Base Lineage: **4.0.0-rc.1** · Receipt Protocol: **3.0** · Evidence Schema: **3.0**
+> Package: **4.3.1** · Package Stage: **4.3.1-open-source** · Trust Kernel: **4.2.3** · Kernel Base Lineage: **4.0.0-rc.1** · Receipt Protocol: **3.0** · Evidence Schema: **3.0**
 
 # Adaptive Trust Kernel RFC
 
-**Status:** `NOT_ACTIVE_IN_4.3.0`
+**Status:** `NOT_ACTIVE_IN_4.3.1`
 
 This is a non-authoritative design note. It cannot change write authority,
 verification thresholds, or the default workflow.

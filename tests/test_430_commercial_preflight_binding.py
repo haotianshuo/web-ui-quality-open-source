@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import zipfile
 
+import web_ui_quality.commercial_preflight as commercial_preflight
 from web_ui_quality.commercial_preflight import run_preflight
 
 
@@ -180,7 +181,12 @@ def test_preflight_binds_commercial_files_to_candidate_bytes(tmp_path) -> None:
     assert license_row["match"] is False
 
 
-def test_preflight_accepts_exact_commercial_files_from_candidate(tmp_path) -> None:
+def test_preflight_accepts_exact_commercial_files_from_candidate(tmp_path, monkeypatch) -> None:
+    # This fixture intentionally exercises the historical 4.3.0 commercial
+    # stable identity.  Keep it independent from the current OSS candidate's
+    # package version so a normal 4.3.1 release cannot silently rewrite the
+    # commercial gate's historical contract.
+    monkeypatch.setattr(commercial_preflight, "PACKAGE_VERSION", "4.3.0")
     package, candidate = _write_complete_fixture(tmp_path)
     with zipfile.ZipFile(candidate) as archive:
         (package / "RELEASE-MANIFEST.json").write_bytes(archive.read("web-ui-quality/RELEASE-MANIFEST.json"))
