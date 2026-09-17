@@ -6,16 +6,15 @@ Web UI Quality helps you check an AI-generated Web change before calling it
 done: what the AI was allowed to change, what actually changed, what was
 verified, and what is still unknown.
 
-[![OSS Preview](https://img.shields.io/badge/status-OSS%20Preview-166B4F)](https://github.com/haotianshuo/web-ui-quality-open-source/releases)
+[![Release](https://img.shields.io/badge/status-Normal%20OSS%20Release-166B4F)](https://github.com/haotianshuo/web-ui-quality-open-source/releases)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 [![Public CI](https://github.com/haotianshuo/web-ui-quality-open-source/actions/workflows/ci.yml/badge.svg)](https://github.com/haotianshuo/web-ui-quality-open-source/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-yellow)](pyproject.toml)
 
 ## Quick Start
 
-This repository contains the current Apache-2.0 open-source release
-candidate. It is not published to PyPI yet, so install it from a source
-checkout:
+This repository contains the current Apache-2.0 open-source release. It is not
+published to PyPI yet, so install it from a source checkout:
 
 ~~~bash
 git clone https://github.com/haotianshuo/web-ui-quality-open-source.git
@@ -66,9 +65,9 @@ suite. Browser, Real Host, External Blind Holdout, Formal, and Commercial GA
 qualification remain outside this source-only package; see
 [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
 
-## Download the release candidate
+## Download the release
 
-The eventual normal-release archives belong on the [project releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases); this local candidate has not been uploaded by this task.
+Release archives are published on the [project releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases).
 Each release includes `.zip` and `.tar.gz` source archives plus matching
 `.sha256` and `.build.json` metadata. Verify the SHA-256 file before unpacking.
 These archives are source distributions, not a PyPI/npm publication or a
@@ -111,9 +110,8 @@ accuracy or production behavior.
 ## Current status
 
 The current source and release line is **Web UI Quality 4.3.1**, an Apache-2.0
-correctness and reliability maintenance release candidate for the normal OSS
-release channel. This local candidate has not been published to GitHub by this
-task. The intended release page is the
+correctness and reliability maintenance release for the normal OSS release
+channel. Release archives are published on the
 [project releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases).
 The historical `v4.3.0` release is a separate MIT-licensed source snapshot; it
 is retained as history and is not the current 4.3.1 release line.
@@ -121,7 +119,7 @@ is retained as history and is not the current 4.3.1 release line.
 | Area | Status |
 | --- | --- |
 | Public source and engineering checks | PASS |
-| License for the current release candidate | Apache-2.0 |
+| License for the current release | Apache-2.0 |
 | PyPI/npm | Not published |
 | Real Host qualification | `NOT_MEASURED` |
 | External Blind Holdout | `NOT_MEASURED` |

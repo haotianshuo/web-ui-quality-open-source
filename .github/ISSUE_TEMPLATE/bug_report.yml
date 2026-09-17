@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible problem in the public source preview
+description: Report a reproducible problem in the public source release
 title: "bug: "
 labels:
   - bug
@@ -12,7 +12,7 @@ body:
     id: version
     attributes:
       label: Version or commit
-      description: Include the preview version or exact commit you tested.
+      description: Include the release version or exact commit you tested.
     validations:
       required: true
   - type: textarea

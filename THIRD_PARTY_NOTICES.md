@@ -1,6 +1,6 @@
 # Third-party notices
 
-The current public preview does not distribute third-party source code,
+The current public release does not distribute third-party source code,
 fixtures, images, fonts, icons, screenshots, browser binaries, or model
 weights. It therefore has no third-party redistribution notices to attach to
 this source tree.

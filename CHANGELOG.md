@@ -1,9 +1,9 @@
-# 4.3.1 — Apache OSS correctness and reliability maintenance release candidate
+# 4.3.1 — Apache OSS correctness and reliability maintenance release
 
-This candidate carries the 4.3.1 runtime identity and the existing 4.2.3
+This release carries the 4.3.1 runtime identity and the existing 4.2.3
 Trust Kernel without changing the product behavior contract.
 
-## Candidate changes
+## Release changes
 
 - hardened readiness and authentication false-positive handling for visible
   page-level signals;
@@ -12,8 +12,8 @@ Trust Kernel without changing the product behavior contract.
 - kept Real Host, External Blind Holdout, Commercial GA, and production
   qualification claims explicitly separate and unmeasured here.
 
-This candidate is intended for review as a normal OSS release, not a preview
-or prerelease identity. GitHub publication remains a separate authorized step.
+This is a normal OSS release, not a preview or prerelease identity. Release
+archives are published on the project Releases page.
 
 # 4.3.0 — Apache source candidate
 

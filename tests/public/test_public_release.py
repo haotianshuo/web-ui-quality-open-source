@@ -84,3 +84,22 @@ def test_public_manifest_is_deterministically_hashable() -> None:
         rows.append((path.relative_to(ROOT).as_posix(), digest))
     assert rows
     assert len(rows) == len({path for path, _ in rows})
+
+
+def test_current_publication_identity_is_normal_release() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    publication = (ROOT / "PUBLICATION.md").read_text(encoding="utf-8")
+    release_script = (ROOT / "scripts" / "release.py").read_text(encoding="utf-8")
+    manifest = json.loads((ROOT / "FINAL_PUBLIC_SOURCE_MANIFEST.json").read_text(encoding="utf-8"))
+
+    stale_badge = "OSS " + "Preview"
+    stale_wording = "release " + "candidate"
+    stale_status = "NORMAL_RELEASE_" + "CANDIDATE_LOCAL_ONLY"
+
+    assert stale_badge not in readme
+    assert stale_wording not in readme.casefold()
+    assert stale_wording not in publication.casefold()
+    assert manifest["candidate"]["candidateOnly"] is False
+    assert manifest["candidate"]["publicGithubRelease"] == "NORMAL_RELEASE"
+    assert '"publicationStatus": PUBLICATION_STATUS' in release_script
+    assert stale_status not in release_script
