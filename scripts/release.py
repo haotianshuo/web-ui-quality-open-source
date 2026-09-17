@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate and reproducibly package the Web UI Quality Apache source candidate."""
+"""Validate and reproducibly package the Web UI Quality Apache source release."""
 from __future__ import annotations
 
 import argparse
@@ -24,7 +24,7 @@ RUNTIME = ROOT / "runtime" / "python"
 if str(RUNTIME) not in sys.path:
     sys.path.insert(0, str(RUNTIME))
 
-from web_ui_quality.release_info import (PRODUCT_NAME, PACKAGE_STAGE, PACKAGE_VERSION, KERNEL_VERSION, KERNEL_BASE_VERSION, PROTOCOL_VERSION, RECEIPT_PROTOCOL_VERSION, EVIDENCE_SCHEMA_VERSION, RELEASE_STAGE)  # noqa: E402
+from web_ui_quality.release_info import (PRODUCT_NAME, PACKAGE_STAGE, PACKAGE_VERSION, KERNEL_VERSION, KERNEL_BASE_VERSION, PROTOCOL_VERSION, RECEIPT_PROTOCOL_VERSION, EVIDENCE_SCHEMA_VERSION, RELEASE_STAGE, PUBLICATION_STATUS)  # noqa: E402
 
 
 ROOT_FILES = {
@@ -393,7 +393,7 @@ def validate() -> dict[str, object]:
         "openSourceLicense": "Apache-2.0",
         "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
         "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-        "publicationStatus": "NORMAL_RELEASE_CANDIDATE_LOCAL_ONLY",
+        "publicationStatus": PUBLICATION_STATUS,
         "promotionStatus": "GA_NOT_ESTABLISHED",
         "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
         "version": PACKAGE_VERSION,
@@ -452,7 +452,7 @@ def main() -> int:
             "openSourceLicense": "Apache-2.0",
             "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
             "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-            "publicationStatus": "NORMAL_RELEASE_CANDIDATE_LOCAL_ONLY",
+            "publicationStatus": PUBLICATION_STATUS,
             "promotionStatus": "GA_NOT_ESTABLISHED",
             "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
             "version": PACKAGE_VERSION,

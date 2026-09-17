@@ -1,12 +1,12 @@
 # Public source boundary
 
-This repository is the Web UI Quality 4.3.1 Apache-2.0 source release
-candidate for the normal OSS release channel. This local task does not publish
-the candidate to GitHub:
+This repository is the Web UI Quality 4.3.1 Apache-2.0 source release for the
+normal OSS release channel. Release archives are published on the
+[project Releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases):
 
 - repository: <https://github.com/haotianshuo/web-ui-quality-open-source>;
-- candidate version: `4.3.1`;
-- license for the candidate: Apache-2.0;
+- release version: `4.3.1`;
+- license for the release: Apache-2.0;
 - PyPI/npm: not published.
 
 The engineering review is closed for the distributed files in
@@ -39,10 +39,10 @@ The engineering review is closed for the distributed files in
 The historical GitHub release `v4.3.0` is a separate MIT-licensed public
 source snapshot at its recorded commit. It remains in Git history as a real
 historical artifact. It was not rewritten as Apache-2.0. The current 4.3.1
-candidate is the Apache-2.0 source line built from the 4.3.1 release baseline.
+release is the Apache-2.0 source line built from the 4.3.1 release baseline.
 
 The root Apache license covers only the project-owned material included in
-the current candidate. A third-party item, if ever included, keeps its own
+the current release. A third-party item, if ever included, keeps its own
 license and required notice; the root license does not relicense it.
 
 ## Provenance and boundary rules
@@ -59,7 +59,7 @@ external repository checkouts, or private audit material.
 
 ## Claim boundary
 
-The public tests prove only the self-contained package contract. Real Host
-qualification and the External Blind Holdout remain `NOT_MEASURED`. This
-release candidate does not establish Commercial GA, production compatibility, model
-accuracy, or legal clearance of future additions.
+The public tests prove only the self-contained package contract. Commercial GA
+remains `NOT_ESTABLISHED`; Real Host, External Blind Holdout, and Browser
+qualification remain `NOT_MEASURED`. This release does not establish
+production compatibility, model accuracy, or legal clearance of future additions.

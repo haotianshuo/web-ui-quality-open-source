@@ -22,6 +22,8 @@ EVIDENCE_SCHEMA_VERSION = "3.0"
 CONTRACT_VERSION = "3.0"
 WORKFLOW_CONTRACT_VERSION = "5"
 RELEASE_STAGE = "4.3.1-open-source"
+# Stable publication identity; qualification and GA status remain separate.
+PUBLICATION_STATUS = "NORMAL_RELEASE"
 # The shadow archive used for this migration is kept outside the public
 # package identity. It must not make a stable public release mutable.
 EXPERIMENTAL_VERSION = "NOT_INCLUDED"

@@ -11,12 +11,12 @@
     {
       "bytes": 1175,
       "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
-      "sha256": "59bc7983ccebabb4f547848a6320344e81594f791bee774b2bc751a12516d48b"
+      "sha256": "cb44324e6e8050772bf0829786e3947bf7d5db7e68f2aeacabd7a7386c4443db"
     },
     {
       "bytes": 946,
       "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
-      "sha256": "9b7682a011e7b16230a1c61edad0a02d95c5ae701a442a16edfd08ab59dd24bc"
+      "sha256": "af70c10bf0bb4621dec924a02d1cba7c6cc2accd17623c0fa51793c688342584"
     },
     {
       "bytes": 715,
@@ -49,9 +49,9 @@
       "sha256": "1a764dc65eb2276d6d6b7769c3d0af789cf278d1b4ea715afda6535932832d18"
     },
     {
-      "bytes": 1541,
+      "bytes": 1518,
       "path": "CHANGELOG.md",
-      "sha256": "c4712cc96d3a8314c5d58aa1b9dd290711129df5439e7704d1796c79ee95bf81"
+      "sha256": "a3bef70fa28e3d15b403c4c011eafcc44fbfefe74f59e721064308820858f5ed"
     },
     {
       "bytes": 730,
@@ -69,14 +69,14 @@
       "sha256": "272652e39f4e91482974a66c8e6feed7f40c8bba7b2060beedfeb4c882b0c82a"
     },
     {
-      "bytes": 3214,
+      "bytes": 3206,
       "path": "DEPENDENCY_LICENSE_REVIEW.md",
-      "sha256": "1c68f98f4a97d19d9046c6f4b0f2ff9f21e7afc83ed746e90aa53103e5349669"
+      "sha256": "5d7f8ad59f89ea898a774d0b740cab58737c262585efdb15ede336e38c270966"
     },
     {
-      "bytes": 474134,
+      "bytes": 474095,
       "path": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
-      "sha256": "4190f03439dc5ebbf13e9e93766782f14b47eeef427a89e98b0f59cfe3871b0c"
+      "sha256": "789bddf9227ca2a3c9236c954afd25277678ef1fa3543df317945d22e16c4cc1"
     },
     {
       "bytes": 1301,
@@ -109,14 +109,14 @@
       "sha256": "27963ed0289540b6bb441eec731d0288da785af387a18305be575625db9601ef"
     },
     {
-      "bytes": 3034,
+      "bytes": 3120,
       "path": "PUBLICATION.md",
-      "sha256": "1ca16efaa68198a98a685ed89c6be7d120923cc396beba4ea4b0ceb8184d59e8"
+      "sha256": "a68a75f3978247267193f423dcf39f9f69aa405cf036ffedc7187b70cf8e7935"
     },
     {
-      "bytes": 8618,
+      "bytes": 8465,
       "path": "README.md",
-      "sha256": "cd0a99abef6108ade97f8259ab9611b86c39d71d27e2badd6ce762096e01da45"
+      "sha256": "13dc3f5539167211ef74b27854c05f3a15359a2ef7ffcfbdc1d68c4c693cccc1"
     },
     {
       "bytes": 1022,
@@ -141,7 +141,7 @@
     {
       "bytes": 1292,
       "path": "THIRD_PARTY_NOTICES.md",
-      "sha256": "b684bf505e450a3c39864c22f435a51978f5681261f7d32d9f70df8070c8a1b2"
+      "sha256": "2fedd637aaf793967290d5997852331fc4b8ed181c2f467c828bc6f08f3d5224"
     },
     {
       "bytes": 491,
@@ -874,9 +874,9 @@
       "sha256": "b69df6b4b97f7abbc101a02698fbeddea8c47f1f868c0cd747203c4cfbd18abc"
     },
     {
-      "bytes": 4800,
+      "bytes": 4921,
       "path": "runtime/python/web_ui_quality/release_info.py",
-      "sha256": "e5aa2d751cb364883952534003736edccc4b68523f0121d26799281e7728552c"
+      "sha256": "05d13f5df88adb4b63789971b64c91da2d74cd96a9a5438bc2710c825d403e7a"
     },
     {
       "bytes": 29602,
@@ -2234,9 +2234,9 @@
       "sha256": "f9f949b358c0ef01716d4acd1674b4a4ea49ccbb49c58da84857f6fc40619cdd"
     },
     {
-      "bytes": 23596,
+      "bytes": 23582,
       "path": "scripts/release.py",
-      "sha256": "489aea06cb4ad006a174f1674dfae1ad6f342c6db747292e724e5efbd4745a77"
+      "sha256": "4b4538d6f1153f6ab903a85fc6665ac8f50183a52a1d7550f9cb26cabb9efa42"
     },
     {
       "bytes": 6265,
@@ -2454,9 +2454,9 @@
       "sha256": "5fe83a07986da64b634f58491135b62a8f17798dc071140969190d57e354cd42"
     },
     {
-      "bytes": 3123,
+      "bytes": 4070,
       "path": "tests/public/test_public_release.py",
-      "sha256": "cf4a1d4116cf5b3fa9832c2813f0ef8cb39e0e0c62c00043425499fe04f0c058"
+      "sha256": "50d4b697e28dc33c8c7313dc6f76b52504d2448eecc7ebc8f4e6ae212f2de0d0"
     },
     {
       "bytes": 4147,
@@ -2872,7 +2872,7 @@
   "kernelBaseVersion": "4.0.0-rc.1",
   "kernelVersion": "4.2.3",
   "packageStage": "4.3.1-open-source",
-  "packageTreeDigest": "d8ab73c54e897a2e3d9f5ae8fd2b75f088ef606e4713d479e5b1dacc1da20c7d",
+  "packageTreeDigest": "29338acd38786b22b0ad51ad37989c33d81b8b4724a9e611172294e6e2818fdb",
   "packageVersion": "4.3.1",
   "pluginVersion": "4.3.1",
   "product": "web-ui-quality",

@@ -4,9 +4,9 @@
   "RIGHTS_BLOCKED": 0,
   "auditedAt": "2026-09-17",
   "candidate": {
-    "candidateOnly": true,
+    "candidateOnly": false,
     "product": "web-ui-quality",
-    "publicGithubRelease": "LOCAL_NORMAL_RELEASE_CANDIDATE_NOT_PUBLISHED",
+    "publicGithubRelease": "NORMAL_RELEASE",
     "rootLicense": "Apache-2.0",
     "stage": "4.3.1-open-source",
     "version": "4.3.1"
@@ -9387,7 +9387,7 @@
     "THIRD_PARTY_APACHE_COMPATIBLE": 1,
     "WUQ_ORIGINAL_CONFIRMED": 338
   },
-  "title": "Final public source manifest for the Web UI Quality 4.3.1 release candidate",
+  "title": "Final public source manifest for the Web UI Quality 4.3.1 release",
   "validationContract": {
     "allDistributedFilesHaveAllowedProvenance": true,
     "allowedProvenance": [
