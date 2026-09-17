@@ -52,6 +52,16 @@ _RECOMMENDATIONS = {
     "PAGE-NOT-VERIFIED": "先恢复可验证条件（页面可访问、就绪稳定、证据充分），再按相同视口复验；不要据此修改源码。",
 }
 
+_PAGE_HEALTH_BOUNDARY_FINDING_IDS = frozenset({
+    "PAGE-AUTH-REQUIRED", "PAGE-RESTRICTED-RENDER", "PAGE-DATA-NOT-READY",
+    "PAGE-TASK-FAILED", "PAGE-NOT-VERIFIED", "PAGE-SIMULATED",
+})
+
+_VISUAL_BLOCKED_PAGE_STATUSES = frozenset({
+    "RUNTIME_BROKEN", "AUTH_REQUIRED", "RESTRICTED_RENDER", "DATA_NOT_READY",
+    "TASK_FAILED", "NOT_VERIFIED", "SIMULATED_PREVIEW",
+})
+
 
 def _viewport_label(record: Mapping[str, Any]) -> str:
     viewport = record.get("viewport") or {}
@@ -66,10 +76,10 @@ def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int 
     def add(rule_id: str, severity: str, title: str, record: Mapping[str, Any], samples: Sequence[Any]) -> None:
         viewport = _viewport_label(record)
         # Rule ids that say "the evidence cannot tell us" rather than "the page is broken".
-        # PAGE-NOT-VERIFIED / PAGE-SIMULATED belong here: their own titles state that
-        # conditions were insufficient to verify, so they must never be rendered as an
-        # assertion of breakage (that would also make downstream verificationState VERIFIED).
-        runtime_boundaries = {"POLICY_BLOCKED", "CONNECTION_REFUSED", "DNS_FAILURE", "TLS_FAILURE", "AUTH_REQUIRED", "NAVIGATION_TIMEOUT", "PAGE_CRASHED", "BROWSER_PROVIDER_MISSING", "UNKNOWN_RUNTIME_FAILURE", "PAGE-NOT-VERIFIED", "PAGE-SIMULATED"}
+        # Page-health boundary findings describe the observation conditions, not a
+        # source defect.  Keep the labels aligned with the downstream claim boundary
+        # so they cannot be promoted to VERIFIED layout findings.
+        runtime_boundaries = {"POLICY_BLOCKED", "CONNECTION_REFUSED", "DNS_FAILURE", "TLS_FAILURE", "AUTH_REQUIRED", "NAVIGATION_TIMEOUT", "PAGE_CRASHED", "BROWSER_PROVIDER_MISSING", "UNKNOWN_RUNTIME_FAILURE", *_PAGE_HEALTH_BOUNDARY_FINDING_IDS}
         user_label = "暂时无法确认" if rule_id in runtime_boundaries else "现在会出错" if severity in {"P0", "P1"} else "用起来别扭" if severity == "P2" else "建议考虑补充"
         issue = aggregated.setdefault(
             rule_id,
@@ -118,6 +128,16 @@ def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int 
                 add(rule_id, "P0", str(classified.get("userMessage") or "页面验证失败"), record, [classified])
             elif http_status is None or not 200 <= int(http_status) < 300:
                 add("UI-HTTP-FAILURE", "P0", "页面没有返回可用于验收的成功响应", record, [{"httpStatus": http_status, "error": record.get("errorMessage")}])
+
+        # Geometry and rendered-quality observations collected while the page is
+        # not ready are not product-defect evidence.  A boot screen, skeleton,
+        # blocked resource, or unstable DOM can legitimately occlude or clip
+        # elements in the transient state.  Keep the readiness boundary and
+        # independent runtime/transport failures visible above, but do not
+        # promote those observations to VERIFIED UI findings.
+        evidence_status = str(record.get("evidenceStatus") or "").upper()
+        if page_status in _VISUAL_BLOCKED_PAGE_STATUSES or evidence_status == "NOT_VERIFIED":
+            continue
 
         for finding in (record.get("renderedQuality") or {}).get("findings", []):
             add(
