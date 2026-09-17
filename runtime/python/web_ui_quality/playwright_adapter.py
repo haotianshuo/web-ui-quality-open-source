@@ -16,6 +16,7 @@ from typing import Any, Iterable, Mapping, Sequence
 from urllib.parse import urlsplit
 
 from .contracts import ContractViolation, digest_json
+from .auth_detection import AUTH_WALL_HINT_SCRIPT, DOM_VISIBILITY_HELPER
 from .trusted_evidence import TrustedUIBrowserEvidence, bind_local_browser_evidence
 from .journey import JourneyPolicy, execute_journey, validate_journey
 from .visual_diff import compare_images
@@ -360,7 +361,9 @@ def _capture_one(
             stability["signature"] = last_signature
         metrics = page.evaluate(
             r"""
-            () => ({
+            () => {
+""" + DOM_VISIBILITY_HELPER + r"""
+              return ({
               innerWidth: window.innerWidth,
               innerHeight: window.innerHeight,
               clientWidth: document.documentElement ? document.documentElement.clientWidth : 0,
@@ -383,7 +386,9 @@ def _capture_one(
               textLength: document.body ? (document.body.innerText || '').trim().length : 0,
               elementCount: document.body ? document.body.getElementsByTagName('*').length : 0,
               mainPresent: Boolean(document.querySelector('main,[role=main],#app,#__next,#root,#main')),
-              skeletonCount: document.querySelectorAll('[class*=skeleton i],[aria-busy=true],[data-loading=true]').length,
+              skeletonCount: [...document.querySelectorAll('[class*=skeleton i],[aria-busy=true],[data-loading=true]')]
+                .filter(visibleInViewport)
+                .length,
               loadingHint: /(?:正在加载|加载中|loading\.?\.?)$/i.test((document.body?.innerText || '').trim().slice(-80)) || Array.from(document.querySelectorAll('body *')).some((element) => {
                 const style = getComputedStyle(element);
                 const rect = element.getBoundingClientRect();
@@ -393,10 +398,11 @@ def _capture_one(
                   && rect.height >= window.innerHeight * 0.9
                   && /(?:loading|initializ|collecting|processing|connecting|awaiting|preparing|sweep|加载|初始化|准备)/i.test(text);
               }),
-              authWallHint: Boolean(document.querySelector('input[type=password]')) || /登录|登陆|sign\s*in|log\s*in|验证码|verification code/i.test((document.body?.innerText || '').slice(0,4000))
-            })
+              });
+            }
             """
         )
+        metrics["authWallHint"] = bool(page.evaluate(AUTH_WALL_HINT_SCRIPT))
         rendered_quality = inspect_rendered_page(page)
         # The geometry row id identifies the measured viewport.  Passing the run label
         # ("before"/"after") here gave every viewport the same id, so downstream
