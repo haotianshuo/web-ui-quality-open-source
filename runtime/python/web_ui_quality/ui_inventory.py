@@ -11,6 +11,7 @@ from typing import Any, Iterable, Mapping, Sequence
 from urllib.parse import urljoin, urlsplit, urlunsplit
 
 from .contracts import ContractViolation
+from .auth_detection import AUTH_WALL_HINT_SCRIPT
 from .design_system_map import build_design_system_map
 from .mutation_firewall import BrowserMutationFirewall, origin
 from .release_info import PACKAGE_VERSION
@@ -65,7 +66,7 @@ _INVENTORY_JS = r"""
   }
   const body=compact(document.body?.innerText||'');
   return {title:document.title||'',url:location.href.split('#')[0],links:[...document.querySelectorAll('a[href]')].map(a=>a.href).filter(Boolean).slice(0,500),
-    authHint:Boolean(document.querySelector('input[type=password]'))||/登录|登陆|sign\s*in|log\s*in|验证码|verification code/i.test(body.slice(0,1200)),permissionHint:/无权限|没有权限|permission denied|access denied|forbidden|not authorized/i.test(body.slice(0,1500)),
+    permissionHint:/无权限|没有权限|permission denied|access denied|forbidden|not authorized/i.test(body.slice(0,1500)),
     buttons:list(buttonLike),inputs:mode==='quick'?[]:list(inputLike),cards:mode==='quick'?[]:list(cardLike),dialogs:mode==='quick'?[]:list(dialogLike),tables:mode==='quick'?[]:list(tableLike),icons:mode==='quick'?[]:list(iconLike),colors,typography,radius,spacing};
 }
 """
@@ -408,7 +409,7 @@ def _scan_page(page: Any, url: str, path: str, mode: str, shots: Path, timeout_m
         response=page.goto(url,wait_until="domcontentloaded",timeout=timeout_ms)
         try:page.evaluate("document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()")
         except Exception:pass
-        page.wait_for_timeout(250); data=page.evaluate(_INVENTORY_JS,mode); status_code=response.status if response else None
+        page.wait_for_timeout(250); data=page.evaluate(_INVENTORY_JS,mode); data["authHint"] = bool(page.evaluate(AUTH_WALL_HINT_SCRIPT)); status_code=response.status if response else None
         if status_code==401 or data.get("authHint"):status,reason="auth_required","authentication wall detected"
         elif status_code==403 or data.get("permissionHint"):status,reason="permission_denied","permission wall detected"
         elif status_code and status_code>=500:status,reason="broken",f"HTTP {status_code}"
