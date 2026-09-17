@@ -16,7 +16,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_VERSION = "4.3.0"
+EXPECTED_VERSION = "4.3.1"
 EXPECTED_KERNEL_VERSION = "4.2.3"
 EXPECTED_KERNEL_BASE_VERSION = "4.0.0-rc.1"
 EXPECTED_ARTIFACTS = {
@@ -389,7 +389,7 @@ def _resolve_browser_for_gate(browser_executable: Path | None) -> tuple[bool, Pa
 
 def verify(browser_executable: Path | None = None, *, release_run_id: str | None = None) -> dict[str, Any]:
     checks: list[dict[str, str]] = []
-    release_run_id = str(release_run_id or os.environ.get("WUQ_RELEASE_RUN_ID") or f"wuq-4.3.0-distribution-{uuid.uuid4().hex[:16]}").strip()
+    release_run_id = str(release_run_id or os.environ.get("WUQ_RELEASE_RUN_ID") or f"wuq-4.3.1-distribution-{uuid.uuid4().hex[:16]}").strip()
     # The workflow auto-discovers Chrome/Edge/Chromium when no explicit path is
     # supplied.  Gate semantics must follow that same capability decision;
     # checking only ``browser_executable`` incorrectly labels an auto-discovered

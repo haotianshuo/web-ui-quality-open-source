@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Single authoritative 4.3.0 package-local release gate over the sealed 4.2.3 Trust Kernel.
+"""Single authoritative 4.3.1 package-local release gate over the sealed 4.2.3 Trust Kernel.
 
 Core mode is dependency-aware and may report Browser as NOT_MEASURED when the
 optional browser extra is absent. Full mode requires Playwright + a usable
@@ -651,7 +651,7 @@ def build_gate_commands(mode: str) -> list[list[str]]:
     """Build the authoritative command list for core or exact Full Gate mode."""
     if mode == "core":
         core_tests = (
-            "tests/test_411_ga_identity_closure.py",
+            "tests/test_422_release_integrity_trust_ux.py",
             "tests/test_430_plain_user_flow.py",
             "tests/test_schema_bundle_parity.py",
             "tests/test_write_boundary_guard.py",
@@ -694,7 +694,7 @@ def main() -> int:
     parser.add_argument("--compact", action="store_true")
     parser.add_argument("--release-run-id")
     args = parser.parse_args()
-    release_run_id = str(args.release_run_id or os.environ.get("WUQ_RELEASE_RUN_ID") or f"wuq-4.3.0-release-{uuid.uuid4().hex[:16]}").strip()
+    release_run_id = str(args.release_run_id or os.environ.get("WUQ_RELEASE_RUN_ID") or f"wuq-4.3.1-release-{uuid.uuid4().hex[:16]}").strip()
     preflight = _dependency_preflight(args.mode)
     rows: list[dict[str, object]] = []
     if preflight["status"] != "PASS":

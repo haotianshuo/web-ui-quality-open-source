@@ -64,10 +64,10 @@
           "const": "web-ui-quality"
         },
         "packageVersion": {
-          "const": "4.3.0"
+          "const": "4.3.1"
         },
         "pluginVersion": {
-          "const": "4.3.0"
+          "const": "4.3.1"
         },
         "protocolVersion": {
           "const": "3.0"
@@ -76,7 +76,7 @@
           "const": "3.0"
         },
         "stage": {
-          "const": "4.3.0-open-source"
+          "const": "4.3.1-open-source"
         },
         "workflowContractVersion": {
           "const": "5"

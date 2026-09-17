@@ -20,6 +20,7 @@ from web_ui_quality.browser_request_policy import (
 from web_ui_quality.condition_registry import RunConditions, compare_conditions
 from web_ui_quality.contracts import ContractViolation
 from web_ui_quality.mutation_firewall import BrowserMutationFirewall
+from web_ui_quality.release_info import PACKAGE_VERSION
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -288,7 +289,7 @@ def test_release_closure_ignores_external_old_package(tmp_path):
     )
     assert completed.returncode == 0, completed.stderr
     payload = json.loads(completed.stdout)
-    assert payload["version"] == "4.3.0"
+    assert payload["version"] == PACKAGE_VERSION
     assert Path(payload["runtimeFile"]).resolve().is_relative_to((ROOT / "runtime" / "python").resolve())
     assert payload["runtimeIdentityDigest"]
 

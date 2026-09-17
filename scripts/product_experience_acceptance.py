@@ -25,7 +25,7 @@ from web_ui_quality.quick_ui import QUICK_UI_VIEWPORTS, summarize_top_ui_issues 
 from web_ui_quality.release_info import KERNEL_BASE_VERSION, KERNEL_VERSION, PACKAGE_VERSION  # noqa: E402
 
 EXPECTED_VERSION = "4.2.3"
-EXPECTED_PACKAGE_VERSION = "4.3.0"
+EXPECTED_PACKAGE_VERSION = PACKAGE_VERSION
 
 
 def _tree_digest(root: Path) -> str:

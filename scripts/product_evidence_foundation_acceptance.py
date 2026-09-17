@@ -23,7 +23,7 @@ from web_ui_quality.release_info import PACKAGE_VERSION  # noqa: E402
 from web_ui_quality.schema_validation import validate_instance  # noqa: E402
 from web_ui_quality.task_result import build_task_result  # noqa: E402
 
-EXPECTED_VERSION = "4.3.0"
+EXPECTED_VERSION = PACKAGE_VERSION
 
 
 def _fixture_result() -> dict:

@@ -13,8 +13,9 @@ verified, and what is still unknown.
 
 ## Quick Start
 
-This repository contains the current Apache-2.0 open-source preview. It is
-not published to PyPI yet, so install it from a source checkout:
+This repository contains the current Apache-2.0 open-source release
+candidate. It is not published to PyPI yet, so install it from a source
+checkout:
 
 ~~~bash
 git clone https://github.com/haotianshuo/web-ui-quality-open-source.git
@@ -42,9 +43,9 @@ The default workflow is bounded and does not grant write authority. A repair
 that needs a source change must receive the applicable Host write receipt and
 current verification evidence before it can be reported as `VERIFIED`.
 
-## What changed in this preview
+## What changed in this release
 
-This preview includes the boundary-hardening update from [PR #6](https://github.com/haotianshuo/web-ui-quality-open-source/pull/6):
+This release includes the boundary-hardening update from [PR #6](https://github.com/haotianshuo/web-ui-quality-open-source/pull/6), plus the visible auth/readiness fixes from PR #8 and PR #9:
 
 - real-user intent routing keeps verification-only requests, scoped repairs,
   and conflicting instructions separate; write-capable repairs remain
@@ -62,12 +63,12 @@ This preview includes the boundary-hardening update from [PR #6](https://github.
 
 The update is covered by the public CI matrix and the full-tree regression
 suite. Browser, Real Host, External Blind Holdout, Formal, and Commercial GA
-qualification remain outside this source-only preview; see
+qualification remain outside this source-only package; see
 [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
 
-## Download the preview
+## Download the release candidate
 
-Release archives are published on the [OSS preview releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases).
+The eventual normal-release archives belong on the [project releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases); this local candidate has not been uploaded by this task.
 Each release includes `.zip` and `.tar.gz` source archives plus matching
 `.sha256` and `.build.json` metadata. Verify the SHA-256 file before unpacking.
 These archives are source distributions, not a PyPI/npm publication or a
@@ -109,22 +110,24 @@ accuracy or production behavior.
 
 ## Current status
 
-The current public source and release line is the **`4.3.0 OSS preview`**, an
-Apache-2.0 open-source preview. The latest packaged build is listed on the
-[OSS preview releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases).
+The current source and release line is **Web UI Quality 4.3.1**, an Apache-2.0
+correctness and reliability maintenance release candidate for the normal OSS
+release channel. This local candidate has not been published to GitHub by this
+task. The intended release page is the
+[project releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases).
 The historical `v4.3.0` release is a separate MIT-licensed source snapshot; it
-is retained as history and is not the current preview.
+is retained as history and is not the current 4.3.1 release line.
 
 | Area | Status |
 | --- | --- |
 | Public source and engineering checks | PASS |
-| License for the current preview | Apache-2.0 |
+| License for the current release candidate | Apache-2.0 |
 | PyPI/npm | Not published |
 | Real Host qualification | `NOT_MEASURED` |
 | External Blind Holdout | `NOT_MEASURED` |
 | Commercial GA qualification | `NOT_ELIGIBLE` |
 
-This preview does not claim real Codex/Claude/other Host accuracy, real-user
+This release does not claim real Codex/Claude/other Host accuracy, real-user
 benefit, production compatibility, universal accessibility, remote
 attestation, or token savings. Missing Browser or Host evidence remains
 unverified.
@@ -170,7 +173,7 @@ part of this public core.
 The following compact identity block is kept for package and manifest checks;
 it is not a product capability claim.
 
-> Package: **4.3.0** · Package Stage: **4.3.0-open-source** · Trust Kernel: **4.2.3** · Kernel Base Lineage: **4.0.0-rc.1** · Receipt Protocol: **3.0** · Evidence Schema: **3.0**
+> Package: **4.3.1** · Package Stage: **4.3.1-open-source** · Trust Kernel: **4.2.3** · Kernel Base Lineage: **4.0.0-rc.1** · Receipt Protocol: **3.0** · Evidence Schema: **3.0**
 
 ## Security and contact
 

@@ -1,7 +1,7 @@
 # Dependency license review
 
-This is a qualification record for the current `4.3.0-open-source` source
-preview. It is not a runtime lockfile and it does not mean that these packages
+This is a qualification record for the current `4.3.1-open-source` source
+release candidate. It is not a runtime lockfile and it does not mean that these packages
 are bundled in the Web UI Quality source archive or wheel. Runtime dependency
 ranges remain in `pyproject.toml`.
 

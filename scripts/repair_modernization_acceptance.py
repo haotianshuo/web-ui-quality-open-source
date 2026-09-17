@@ -24,7 +24,7 @@ from web_ui_quality.repair_report import build_repair_report
 from web_ui_quality.systemic_repair import analyze_repair_scope
 from web_ui_quality.verification_budget import select_verification_budget
 
-EXPECTED = "4.3.0"
+EXPECTED = PACKAGE_VERSION
 
 
 def main() -> int:
