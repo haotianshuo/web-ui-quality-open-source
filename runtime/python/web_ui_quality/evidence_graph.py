@@ -34,6 +34,8 @@ def build_evidence_graph(result: Mapping[str, Any]) -> dict[str, Any]:
     verification = result.get("repairVerification")
     verification_present = isinstance(verification, Mapping) and bool(verification)
     final_claim = str(verification.get("status") or "NOT_VERIFIED").upper() if verification_present else "NOT_VERIFIED"
+    local_record = result.get("localOperationRecord")
+    local_operation = isinstance(local_record, Mapping) and local_record.get("recordType") == "WEB_UI_QUALITY_LOCAL_OPERATION_RECORD_V1"
 
     nodes = [
         _node("task-goal", "POLICY", result.get("taskGoal"), required=True),
@@ -43,7 +45,8 @@ def build_evidence_graph(result: Mapping[str, Any]) -> dict[str, Any]:
         _node("risk-tier", "POLICY", result.get("riskTier"), required=repair),
         _node("change-budget", "POLICY", result.get("changeBudget"), required=repair),
         _node("fix-plan", "PLAN", result.get("fixPlan"), required=repair and not has_after),
-        _node("host-write-receipt", "MUTATION_RECEIPT", result.get("hostWriteReceipt"), required=repair and has_after),
+        _node("host-write-receipt", "MUTATION_RECEIPT", result.get("hostWriteReceipt"), required=repair and has_after and not local_operation),
+        _node("local-operation-record", "LOCAL_MUTATION_OBSERVATION", local_record, required=repair and has_after and local_operation),
         _node("after", "OBSERVATION", result.get("after"), required=repair and has_after),
         _node("project-tools", "VERIFICATION", result.get("projectToolGate"), required=False),
         _node("patch-quality", "VERIFICATION", result.get("patchQuality"), required=repair and has_after),
@@ -65,12 +68,15 @@ def build_evidence_graph(result: Mapping[str, Any]) -> dict[str, Any]:
 
     for source in ("task-goal", "project-baseline", "before", "risk-tier", "change-budget"):
         link(source, "fix-plan")
+    mutation_record_node = "local-operation-record" if local_operation else "host-write-receipt"
     for source in ("fix-plan", "scope-baseline"):
-        link(source, "host-write-receipt")
+        link(source, mutation_record_node)
     for source in ("host-write-receipt", "after"):
         link(source, "comparison")
+    link("local-operation-record", "comparison")
     for source in ("comparison", "project-tools", "patch-quality", "project-drift", "host-write-receipt"):
         link(source, "repair-verification")
+    link("local-operation-record", "repair-verification")
 
     if required_missing:
         graph_status = "INCOMPLETE"
@@ -88,7 +94,7 @@ def build_evidence_graph(result: Mapping[str, Any]) -> dict[str, Any]:
         "edges": edges,
         "requiredMissing": required_missing,
         "finalClaim": final_claim,
-        "claimBoundary": "Graph completeness proves evidence dependencies are present; only the underlying Trust Kernel gates can authorize VERIFIED.",
+        "claimBoundary": "Graph completeness proves evidence dependencies are present; a local-operation-record node is not a Host receipt and cannot authorize VERIFIED.",
     }
     graph["graphDigest"] = digest_json(graph)
     return graph

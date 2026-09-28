@@ -78,6 +78,13 @@ from .user_outcome import user_outcome
 from .intent_router import route_user_intent
 from .control_intent import parse_control_intent
 from .task_intent_adapter import normalize_task_intent
+from .local_operation_record import (
+    check_local_operation_prewrite,
+    complete_local_operation_record,
+    observe_local_operation,
+    prepare_local_operation,
+    record_related_run,
+)
 from .capability_router import route_capabilities
 from .task_goal import create_task_goal, load_task_goal, auto_fix_allowed
 from .run_checkpoint import (create_checkpoint, build_run_health, find_latest_compatible_run, find_latest_compatible_checkpoint, find_checkpoint_before, resume_checkpoint)
@@ -132,7 +139,9 @@ def _project_fingerprint(path: Path | None) -> str | None:
     excluded = {"node_modules", ".git", "dist", "build", ".next", "coverage", "artifacts", "__pycache__"}
     rows: list[dict[str, Any]] = []
     for file in sorted(path.rglob("*")):
-        if not file.is_file() or file.is_symlink() or any(part in excluded for part in file.relative_to(path).parts):
+        relative_parts = file.relative_to(path).parts
+        is_runtime_evidence = bool(relative_parts and relative_parts[0] == ".wuq")
+        if not file.is_file() or file.is_symlink() or is_runtime_evidence or any(part in excluded for part in relative_parts):
             continue
         rel = file.relative_to(path).as_posix()
         try:
@@ -329,6 +338,9 @@ def run_experience_fix(
     host_patch_candidate: Mapping[str, Any] | None = None,
     host_receipt_hmac_key: bytes | str | None = None,
     host_tool_results: Sequence[Mapping[str, Any]] = (),
+    local_operation: bool = False,
+    local_operation_prewrite_check: bool = False,
+    related_run: str | Path | None = None,
 ) -> dict[str, Any]:
     canonical_intent = normalize_task_intent(request)
     if canonical_intent["conflictStatus"] == "INTENT_CONFLICT":
@@ -350,9 +362,35 @@ def run_experience_fix(
         selected = requested_mode
     if selected is None:
         raise ContractViolation("EXPERIENCE_MODE_INVALID", [f"$: unsupported mode {mode!r}"])
+    files = tuple(str(item) for item in files)
+    if local_operation:
+        if selected != "FIX_AND_VERIFY":
+            raise ContractViolation("LOCAL_OPERATION_MODE_INVALID", ["$: local operation records are available only for FIX_AND_VERIFY"])
+        if host_write_receipt is not None or host_patch_candidate is not None:
+            raise ContractViolation("LOCAL_OPERATION_V3_MIXED", ["$: local records cannot replace or accompany a V3/legacy receipt or V3 candidate"])
+        if related_run and existing_run:
+            raise ContractViolation("RELATED_RUN_INVALID", ["$: a related repair run must be new; do not mutate the discovery run"])
+        if local_operation_prewrite_check:
+            if not existing_run or after_url or related_run or files:
+                raise ContractViolation("LOCAL_OPERATION_PREWRITE_CHECK_INVALID", ["$: write-readiness checks require the exact existing run before After, without a new scope"])
+        elif not after_url and not files:
+            raise ContractViolation("LOCAL_OPERATION_EXPLICIT_SCOPE_REQUIRED", ["$: local Host apply requires an explicit project-relative --file scope"])
+        if after_url and not existing_run:
+            raise ContractViolation("LOCAL_OPERATION_RUN_REQUIRED", ["$: local After requires the exact existing run"])
+    elif related_run is not None or local_operation_prewrite_check:
+        raise ContractViolation("LOCAL_OPERATION_MODE_REQUIRED", ["$: related-run and pre-write checks require explicit local-operation mode"])
     execution = ExecutionState()
     target_identity, project, actual_url = _target_identity(target, url)
+    if local_operation and project is None:
+        raise ContractViolation("LOCAL_OPERATION_PROJECT_REQUIRED", ["$: local operation records require a local project root"])
     artifacts = Path(artifacts_root).expanduser().resolve()
+    related_meta: Mapping[str, Any] | None = None
+    if related_run is not None:
+        related_meta = load_experience_run(related_run)
+        if related_meta.get("taskId") != task_id or related_meta.get("targetDigest") != digest_json(target_identity):
+            raise ContractViolation("RELATED_RUN_MISMATCH", ["$: related discovery run belongs to a different project or route"])
+        if related_meta.get("phases", {}).get("before", {}).get("status") != "SEALED":
+            raise ContractViolation("RELATED_RUN_BEFORE_REQUIRED", ["$: related discovery run has no sealed Before"])
     existing_meta: Mapping[str, Any] | None = load_experience_run(existing_run) if existing_run else None
     run_id = str(existing_meta.get("runId")) if existing_meta is not None else f"wuq-{uuid.uuid4().hex[:16]}"
     if existing_meta is not None:
@@ -449,12 +487,43 @@ def run_experience_fix(
         run_dir = Path(run["runDir"])
         if run["taskId"] != task_id or run["sessionId"] != session_id or run.get("mode") != selected:
             raise ContractViolation("BASELINE_IDENTITY_MISMATCH", ["$: current task, session, or mode differs from immutable run"])
+        if local_operation_prewrite_check:
+            stored_target = dict(run.get("target") or {})
+            if digest_json(stored_target) != digest_json(target_identity):
+                raise ContractViolation("TARGET_IDENTITY_MISMATCH", ["$: local pre-write check target differs from the selected run"])
+            stored_conditions = dict(run.get("conditions") or {})
+            condition_check = compare_conditions(stored_conditions, conditions.to_dict())
+            if not condition_check["match"]:
+                raise ContractViolation("CONDITIONS_MISMATCH", ["$: local pre-write check conditions differ from the sealed Before"])
+            prewrite_check = check_local_operation_prewrite(
+                run_dir, project, task_id=task_id, session_id=session_id,
+            )
+            return {
+                "schemaVersion": "2",
+                "producer": "web-ui-quality-experience-fix",
+                "packageVersion": PACKAGE_VERSION,
+                "status": "LOCAL_OPERATION_READY_FOR_HOST_APPLY",
+                "mode": selected,
+                "runId": str(run["runId"]),
+                "taskId": task_id,
+                "sessionId": session_id,
+                "localOperationPrewriteCheck": prewrite_check,
+                "writeAuthorization": False,
+                "hostWriteProtocol": "LOCAL_OPERATION_RECORD_V1",
+                "independentHostAttestation": "NOT_PROVIDED",
+                "claimBoundary": "This check records that the prepared project scope still matches sealed Before immediately before Host editing; it does not authorize a write or prove who performs it.",
+            }
+        related_run_record = None
     else:
         run = create_experience_run(
             artifacts, task_id=task_id, session_id=session_id, mode=selected,
             target=target_identity, conditions=conditions.to_dict(), run_id=run_id,
         )
         run_dir = Path(run["runDir"])
+        related_run_record = record_related_run(
+            run_dir, related_run, task_id=task_id, target_digest=str(run["targetDigest"]),
+            reason=("The discovery run's first-discovery plan is sealed; changing it would invalidate that record. The repair uses a new run from the still-unmodified project and carries the Host-confirmed source scope through the public --file entry."),
+        ) if related_run is not None else None
 
     # Every run has an explicit goal anchor. Existing runs retain their original
     # anchor; scope changes must use task_goal.update_task_goal rather than being
@@ -523,6 +592,7 @@ def run_experience_fix(
         "changeBudget": initial_change_budget,
         "runDir": ".",
         "sourceProjectChanged": False,
+        "relatedRun": related_run_record,
         "projectStartPlan": start_plan,
         "projectBaseline": ({
             "baselineDigest": project_baseline.get("baselineDigest"),
@@ -588,6 +658,7 @@ def run_experience_fix(
             legacy_receipt_used = False
             host_write_status = "NOT_APPLICABLE"
             trusted_tool_results = []
+            local_observation = None
             tool_gate = {"schemaVersion": "1", "status": "NOT_APPLICABLE", "results": [], "passCount": 0, "failCount": 0, "notVerifiedCount": 0}
             prior_result: Mapping[str, Any] = {}
             if project is not None:
@@ -601,16 +672,23 @@ def run_experience_fix(
                 binding = prior_result.get("hostReceiptBinding")
                 if not isinstance(binding, Mapping):
                     raise ContractViolation("HOST_WRITE_RECEIPT_BINDING_MISSING", ["$: fix plan has no Host receipt binding"])
-                if not isinstance(host_write_receipt, Mapping):
+                if local_operation:
+                    if host_write_receipt is not None or host_patch_candidate is not None:
+                        raise ContractViolation("LOCAL_OPERATION_V3_MIXED", ["$: local observation cannot consume a Host receipt or Patch Candidate"])
+                    local_observation = observe_local_operation(
+                        run_dir, project, task_id=task_id, session_id=session_id,
+                    )
+                    host_write_status = "LOCAL_OPERATION_RECORD_ONLY"
+                elif not isinstance(host_write_receipt, Mapping):
                     raise ContractViolation("HOST_WRITE_RECEIPT_REQUIRED", ["$: After verification requires the Host write receipt for this run"])
-                if str(host_write_receipt.get("schemaVersion") or "") == "3":
+                elif str(host_write_receipt.get("schemaVersion") or "") == "3":
                     v3_binding = load_public_v3_apply_binding(run_dir)
                     trusted_v3_receipt = verify_persisted_host_write_receipt_v3(
                         project, host_write_receipt, binding=v3_binding, hmac_key=host_receipt_hmac_key,
                     )
                     require_host_write_receipt_v3(trusted_v3_receipt)
                     host_write_status = "VERIFIED_V3"
-                else:
+                elif not local_operation:
                     # Legacy receipts remain readable for migration/history and can
                     # support failure diagnosis, but they can never upgrade a 4.2.3
                     # repair result to VERIFIED.
@@ -662,7 +740,9 @@ def run_experience_fix(
                 "observedBeforeHealth": (before_report or {}).get("pageHealth"),
                 "observedAfterHealth": after_report.get("pageHealth"),
             }
-            if trusted_v3_receipt is not None:
+            if local_observation is not None:
+                verified_files = list(local_observation.get("observedChangedFiles") or [])
+            elif trusted_v3_receipt is not None:
                 verified_files = [str(row.get("canonicalPath")) for row in trusted_v3_receipt.to_dict().get("entries", []) if isinstance(row, Mapping)]
             elif trusted_host_receipt is not None:
                 verified_files = [row["path"] for row in trusted_host_receipt.payload.get("files", [])]
@@ -686,6 +766,13 @@ def run_experience_fix(
             comparison = {**comparison, "repairVerification": final_verification}
             write_phase_file(run_dir, "compare", "comparison.json", json.dumps(comparison, ensure_ascii=False, indent=2, sort_keys=True))
             record_phase_artifact(run_dir, "compare", comparison)
+            local_operation_record = None
+            if local_observation is not None:
+                local_operation_record = complete_local_operation_record(
+                    local_observation, condition_match=bool(condition_check["match"]),
+                    browser_comparison=gate, after_report=after_report, after_manifest=after_manifest,
+                    repair_verification=final_verification, run_dir=run_dir,
+                )
             tool_lines = [f"{row.get('tool')}: {row.get('status')}" for row in tool_gate.get("results", [])]
             verification_lines = [
                 f"Browser/Before-After: {gate['status']}",
@@ -696,12 +783,19 @@ def run_experience_fix(
                 f"Project drift: {drift_gate.get('status')}",
                 f"Overall repair verification: {final_verification['status']}",
             ]
+            if local_operation_record is not None:
+                verification_lines.extend([
+                    "Local operation record: RECORDED (file hashes and unified diff checked against the sealed run scope)",
+                    "Independent Host attestation: NOT_PROVIDED; V3 VERIFIED is unavailable for this local record.",
+                ])
             if final_verification["status"] == "VERIFIED":
                 next_action = "修复已通过当前证据链验证；如需继续，可直接描述下一个问题。"
             elif final_verification["status"] == "FAIL":
                 next_action = "先处理失败的类型检查/测试或 Browser 回归；可以选择“重试”当前验证、“缩小范围”后再试，或说“继续上次任务”，不要把当前结果当成已修复。"
             elif final_verification["status"] == "REVIEW_REQUIRED":
                 next_action = "Browser 结果可用，但补丁存在质量风险；先审查技术债信号，再决定是否接受。"
+            elif local_operation_record is not None and final_verification["status"] == "NOT_VERIFIED":
+                next_action = "本地修改记录与同条件 After 已保存；独立 Host 证明未提供，因此整体状态保持 NOT_VERIFIED。"
             else:
                 next_action = "当前证据不足以宣称修复完成；可以选择“重试”、 “缩小范围”或说“继续上次任务”补齐缺失证据后再验证。"
             repair_report = build_repair_report(
@@ -719,7 +813,7 @@ def run_experience_fix(
                     "projectTools": str(tool_gate.get("status") or "NOT_APPLICABLE"),
                     "patchQuality": str((patch_quality or {}).get("status") or "NOT_APPLICABLE"),
                     "projectDrift": str(drift_gate.get("status") or "NOT_VERIFIED"),
-                    "hostWrite": "HOST_WRITE_V3_VERIFIED" if trusted_v3_receipt is not None else "LEGACY_HISTORY_ONLY" if legacy_receipt_used else "NOT_APPLICABLE",
+                    "hostWrite": "HOST_WRITE_V3_VERIFIED" if trusted_v3_receipt is not None else "LEGACY_HISTORY_ONLY" if legacy_receipt_used else "LOCAL_OPERATION_RECORD_ONLY" if local_operation_record is not None else "NOT_APPLICABLE",
                 },
                 next_action=next_action,
             )
@@ -729,7 +823,15 @@ def run_experience_fix(
                       "repairVerification": final_verification, "baselineDrift": baseline_drift, "projectDriftGate": drift_gate, "patchQuality": patch_quality,
                       "riskTier": prior_risk_tier, "changeBudget": prior_change_budget, "changeBudgetGate": change_budget_gate,
                       "hostWriteReceipt": trusted_v3_receipt.to_dict() if trusted_v3_receipt is not None else trusted_host_receipt.to_dict() if trusted_host_receipt is not None else None,
-                      "hostWriteProtocol": "V3" if trusted_v3_receipt is not None else "LEGACY_HISTORY_ONLY" if legacy_receipt_used else "NONE",
+                      "hostWriteProtocol": "V3" if trusted_v3_receipt is not None else "LEGACY_HISTORY_ONLY" if legacy_receipt_used else "LOCAL_OPERATION_RECORD_V1" if local_operation_record is not None else "NONE",
+                      "localOperationRecord": local_operation_record,
+                      "localOperationAssessment": ({
+                          "scopeCompliance": local_operation_record["scopeCompliance"],
+                          "pageAfterStatus": str(gate.get("status") or "NOT_MEASURED"),
+                          "sameConditionAfter": bool(condition_check["match"]),
+                          "independentHostAttestation": "NOT_PROVIDED",
+                          "overallVerification": str(final_verification.get("status") or "NOT_VERIFIED"),
+                      } if local_operation_record is not None else None),
                       "projectToolEvidence": [item.to_dict() for item in (trusted_tool_results if project is not None else [])],
                       "projectToolGate": tool_gate,
                       "repairReport": repair_report,
@@ -744,7 +846,7 @@ def run_experience_fix(
                 evidence_report = json.loads(evidence_path.read_text(encoding="utf-8"))
             finding_ids: list[str] = []
             excluded_by_goal: list[dict[str, Any]] = []
-            for item in (evidence_report or {}).get("topFindings", []):
+            for item in (evidence_report or {}).get("findings", (evidence_report or {}).get("topFindings", [])):
                 if not isinstance(item, Mapping):
                     continue
                 decision = auto_fix_allowed(
@@ -766,7 +868,7 @@ def run_experience_fix(
                 {"findingId": fid or f"scope-{index}", "filesChanged": 1, "layoutScope": "component", "risk": "MEDIUM"}
                 for index, fid in enumerate(finding_ids or [None], start=1)
             ])
-            finding_rows = [item for item in (evidence_report or {}).get("topFindings", []) if isinstance(item, Mapping)]
+            finding_rows = [item for item in (evidence_report or {}).get("findings", (evidence_report or {}).get("topFindings", [])) if isinstance(item, Mapping)]
             systemic_scope = analyze_repair_scope(finding_rows)
             baseline_drift = compare_project_baseline(project_baseline, project, target_files=files) if isinstance(project_baseline, Mapping) else None
             patch_quality = evaluate_patch_quality(project, project_baseline, source_scope=files) if isinstance(project_baseline, Mapping) and list(files) else None
@@ -833,15 +935,24 @@ def run_experience_fix(
                     change_budget=plan.get("changeBudget") if isinstance(plan.get("changeBudget"), Mapping) else None,
                 )
                 persist_public_v3_apply_binding(run_dir, v3_apply_binding)
+            local_operation_prep = None
+            if local_operation:
+                local_operation_prep = prepare_local_operation(
+                    run_dir, project, task_id=task_id, session_id=session_id,
+                    plan=plan, receipt_binding=receipt_binding, scope_baseline=scope_baseline,
+                    host_apply_binding_v3=v3_apply_binding,
+                )
             bridge = bridge_request(
                 plan["hostBridgeAction"], task_id=task_id,
                 payload={
                     **receipt_binding,
                     "mode": "NARROW_PROJECT_LOCAL_UI_EDIT",
                     "runtimeWriteAuthority": False,
-                    "receiptContract": "host-write-receipt-v3.schema.json",
+                    "receiptContract": "local-operation-record-v1" if local_operation else "host-write-receipt-v3.schema.json",
                     "legacyReceiptPolicy": "HISTORY_ONLY_CANNOT_VERIFY",
-                    "patchCandidateRequiredBeforeApply": True,
+                    "patchCandidateRequiredBeforeApply": not local_operation,
+                    "localOperationEvidenceOnly": bool(local_operation),
+                    "independentHostAttestation": "NOT_PROVIDED" if local_operation else "REQUIRED_FOR_V3",
                     "hostApplyBindingV3": v3_apply_binding,
                 },
             )
@@ -878,6 +989,8 @@ def run_experience_fix(
                       "projectToolPlans": tool_plans, "verificationBudget": budget, "repairReport": repair_report,
                       "scopeBaseline": scope_baseline, "hostReceiptBinding": receipt_binding,
                       "hostApplyBindingV3": v3_apply_binding,
+                      "localOperationPrep": local_operation_prep,
+                      "hostWriteProtocol": "LOCAL_OPERATION_RECORD_V1" if local_operation else "V3_PENDING" if v3_apply_binding else "NONE",
                       "mutationVerificationPlan": serial_plan, "userConfirmationRequired": not scope_confirmed, "open": plan.get("open")}
 
     elif selected == "DEEP_REDESIGN":
@@ -937,13 +1050,17 @@ def run_experience_fix(
             evidence=evidence_for_context if isinstance(evidence_for_context, Mapping) else {},
             explicit_source_scope=context_scope,
         )
-    if selected == "FIX_AND_VERIFY" and after_url:
+    if selected == "FIX_AND_VERIFY" and after_url and result.get("localOperationRecord"):
+        execution.advance("HOST_APPLY", status="LOCAL_RECORD_ONLY", input_ref="local-operation-prep", output_ref="local-operation-record", evidence_refs=["localOperationRecord"], failure_class="DEGRADED_CONTINUE")
+    elif selected == "FIX_AND_VERIFY" and after_url:
         execution.advance("HOST_APPLY", status="PASS" if host_write_status == "VERIFIED_V3" else "DEGRADED", input_ref="host-apply-binding-v3", output_ref="host-write-receipt", evidence_refs=["hostWriteReceipt"] if result.get("hostWriteReceipt") else [], failure_class=None if host_write_status == "VERIFIED_V3" else "DEGRADED_CONTINUE")
     else:
         execution.advance("HOST_APPLY", status="NOT_APPLICABLE" if selected != "FIX_AND_VERIFY" else "AWAITING_HOST", input_ref="bounded-work-plan", output_ref=None, failure_class=None if selected != "FIX_AND_VERIFY" else "USER_ACTION_REQUIRED")
     browser_requested = selected in {"CHECK", "FIX_AND_VERIFY"}
     browser_payload = result.get("after") if isinstance(result.get("after"), Mapping) else result.get("before") if isinstance(result.get("before"), Mapping) else None
     browser_runtime = browser_payload.get("runtime") if isinstance(browser_payload, Mapping) and isinstance(browser_payload.get("runtime"), Mapping) else {}
+    if isinstance(browser_payload, Mapping) and browser_payload.get("visualReviewWork"):
+        result["visualReviewWork"] = browser_payload["visualReviewWork"]
     browser_attempted = bool(browser_requested and isinstance(browser_payload, Mapping) and ("runtime" in browser_payload or "preflight" in browser_payload))
     browser_executed = bool(browser_attempted and list(browser_runtime.get("records") or []))
     comparison_status = str((result.get("comparison") or {}).get("status") or "") if isinstance(result.get("comparison"), Mapping) else ""
@@ -978,7 +1095,7 @@ def run_experience_fix(
     checkpoint = create_checkpoint(
         run_dir, current_phase="final", task_goal=task_goal,
         active_capabilities=capability_routing["activeCapabilities"],
-        findings=list((result.get("before") or {}).get("topFindings", []) if isinstance(result.get("before"), Mapping) else []),
+        findings=list((result.get("before") or {}).get("findings", (result.get("before") or {}).get("topFindings", [])) if isinstance(result.get("before"), Mapping) else []),
         verified_writes=list((result.get("hostWriteReceipt") or {}).get("files", []) if isinstance(result.get("hostWriteReceipt"), Mapping) else []),
         claim_boundary="Evidence First; No Evidence, No PASS; Runtime cannot self-authorize writes.",
     )

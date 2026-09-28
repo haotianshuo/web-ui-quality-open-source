@@ -6,6 +6,9 @@ from typing import Any, Iterable, Mapping
 
 
 def build_repair_recipe(finding: Mapping[str, Any], *, confirmed: bool = False) -> dict[str, Any]:
+    # A caller selecting an id must not turn an unreviewed composition signal
+    # or an unexecuted operation into a confirmed product defect.
+    confirmed = confirmed and finding.get("evidenceClass") != "DIAGNOSTIC_CANDIDATE" and finding.get("verificationState", "VERIFIED") == "VERIFIED"
     finding_id = str(finding.get("id") or finding.get("findingId") or finding.get("ruleId") or finding.get("fingerprint") or "unknown")
     repair = str(finding.get("repair") or finding.get("recommendation") or "需要结合真实页面证据确定修复。")
     modern = str(finding.get("modern") or finding.get("modernOption") or "仅在支持环境中采用更现代的实现。")

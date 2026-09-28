@@ -4,9 +4,18 @@ This candidate starts from one exact audited source snapshot. It is not a
 reconstruction of the developer's multi-computer Git history and it does not
 invent commits for versions that were not preserved.
 
-The final distributed-file review is recorded in
-[FINAL_PUBLIC_SOURCE_MANIFEST.json](FINAL_PUBLIC_SOURCE_MANIFEST.json).
-For every file in that manifest, the engineering disposition is closed:
+The reviewed source paths are recorded in
+[FINAL_PUBLIC_SOURCE_MANIFEST.json](FINAL_PUBLIC_SOURCE_MANIFEST.json). The
+manifest lists 551 provenance rows. The current public source package has 25
+additional paths without provenance rows, and 34 listed rows have byte counts
+or hashes that do not match their current files. All 59 affected paths are
+unchanged by this candidate. This candidate updates the hashes for its 33
+changed non-self source paths only. The generated release manifest covers
+package composition and content hashes, not provenance. This is an incremental
+review, not a distribution-wide provenance closure.
+
+For every file listed in the source manifest, the engineering disposition is
+closed:
 
 - RIGHTS_BLOCKED = 0;
 - NOT_CONFIRMED_DISTRIBUTED_FILES = 0;

@@ -1,6 +1,6 @@
 ---
 name: audit-and-fix-web-ui
-description: Check, prepare and verify Host-applied repairs, deeply redesign, or explicitly audit real Web product experiences. Use run. Keep Before tamper-evident, never promote unsupported source text to syntax PASS, and keep all source writes in the Codex Host.
+description: "Inspect and improve real website and workbench UI: layout, typography, icon proportions, color roles, spacing, imagery, responsive composition and complete interactions. Use one natural-language run entry; ground repairs in real pages and project source, with Host-applied writes and honest verification."
 ---
 
 # Web UI Quality 4.3.1
@@ -10,6 +10,29 @@ description: Check, prepare and verify Host-applied repairs, deeply redesign, or
 > Current plugin/package: 4.3.1 · Current Trust Kernel: 4.2.3 · Kernel base: 4.0.0-rc.1 · Receipt protocol: 3.0 · Evidence schema: 3.0
 
 ## Default product entry
+
+The product outcome is a coherent, polished, usable real page—not a successful audit report. For UI work, visual finish and task behavior are independent acceptance requirements. Scope/evidence controls protect the work; they are not its main deliverable. A narrow repair may leave unrelated areas unreviewed, but must not excuse visible defects in the selected surface as “non-blocking” merely because a button still works.
+
+### Visual repair loop
+
+For appearance, UI quality, imagery or responsive-layout requests, read [visual-density-and-design-system.md](references/visual-density-and-design-system.md) before proposing changes. For creating/replacing imagery also read [design-intelligence-and-builder.md](references/design-intelligence-and-builder.md).
+
+1. Open the real target and inspect both the whole composition and the affected components. Bind the page/version/state to the source being changed; a preserved Before is not the latest delivery preview.
+2. Use rendered measurements to locate risks, then inspect screenshots to judge grouping, optical icon size/centering, palette roles, hierarchy, whitespace and asset suitability. A DOM box or contrast pass does not establish visual quality.
+3. Give each relevant candidate a concrete disposition: confirmed defect with evidence and owning source, intentional design with a reason, or unverified. Do not silently discard candidates outside the Top 3, or ask ordinary users to fill evidence JSON.
+4. Fix the owning layout/component/token/asset in the authorized scope. For shared styles, identify and check affected representative pages; do not independently patch each occurrence or overwrite established brand decisions.
+5. Reopen the same route/state at the applicable viewports. Review actual rendered results, including long labels and narrow widths. Continue targeted correction if confirmed visual defects remain; do not stop because tests, clicks or receipts pass.
+6. Report separately: the specific defect outcome, visual finish of the reviewed surface, interaction completeness, and unreviewed scope. Host visual review is not user aesthetic approval and must never be recorded as such.
+
+### Shared icon evidence and repair
+
+- Measure and report three distinct references: decorative surface center, icon element-box center, and visible graphic bounds. A centered DOM box does not establish that the rendered graphic is centered. Alpha bounds, geometry bounds, and pixel centroids remain measurements; judge optical balance from the normal-size screenshot and use magnification only to locate artifacts.
+- For a suspected cropped icon, bind the evidence to the exact resource actually used by that element, the CSS crop mechanism, computed size and position, selected crop/cell when measurable, and component selector. Do not label every PNG referenced from the same script as a sprite. An independently used PNG, brand mark, photograph, and content image remain counterexamples unless their own rendered use proves otherwise.
+- Give the Host the selector, exact resource URL/path, crop details, and confirmed shared source owner when source mapping proves it. If the source file or call site cannot be confirmed, name the missing mapping evidence and do not guess an owner.
+- Keep graphic scale, decorative backplate, and interactive hit area separate. Intentional transparent hit-area space and normal asymmetric icon geometry are not defects by themselves. A candidate or P2 label never makes a screenshot-confirmed defect optional; repair confirmed visible defects in the authorized scope.
+- Prefer a pinned, licensed set of standalone vector icons for generic function glyphs when the project lacks a suitable vector source. Keep valid brand marks and content imagery intact, preserve replaced assets for rollback, and do not use overflow, pseudo-elements, per-icon offsets, or sprite crops to conceal damaged artwork.
+
+For required photos, hero artwork, textured illustrations or generated bitmap assets, use the Host's available built-in image-generation tool by default. Do not substitute locally drawn SVG/CSS, geometric placeholders or a renamed raster export for requested generated imagery. Reuse suitable approved assets and established vector icon sets. If generation is unavailable, disclose that specific missing capability, retain existing assets, and never claim a generated asset was produced. The Runtime prepares evidence and guidance; the Host invokes generation and applies selected assets.
 
 Use one entry:
 
@@ -21,7 +44,7 @@ The Host resolves exactly one mode:
 
 | Mode | User meaning | Default boundary |
 | --- | --- | --- |
-| `CHECK` | 检查 | Read-only evidence; report only relevant findings, up to 3 |
+| `CHECK` | 检查 | Read-only; show Top 3, retain all relevant findings for review |
 | `FIX_AND_VERIFY` | 修复并验证 | Immutable Before, narrow Host-bound edit, matching After |
 | `DEEP_REDESIGN` | 深度重设计 | Product discovery, one recommended direction with optional alternatives, hard stop for decision |
 | `SPECIALIZED_AUDIT` | 专项验收 | Only the explicitly requested specialist scope |
@@ -33,6 +56,8 @@ The Host resolves exactly one mode:
 For local projects, establish a file-indexed Project Baseline before repair evidence is sealed. Treat target-file drift as `REBASE_REQUIRED`, toolchain/config drift as `REVALIDATION_REQUIRED`, and truncated/unindexed coverage as `BASELINE_INCOMPLETE`. Reuse the ExperienceRun Before manifest/HMAC/ledger; do not create a parallel trust store.
 
 For the normal `run` entry, use `--after-url` only to continue the latest matching `FIX_AND_VERIFY` run. Reuse the sealed session identity and require the exact `--host-write-receipt` bound to the persisted fix plan before local-project After verification.
+
+If the user explicitly authorizes a bounded local-observation flow, keep it distinct from V3: pass `--local-operation` and an explicit `--file` scope; use `--related-run` for a new repair run when the discovery record is immutable, then use `--continue-run <run-id> --local-operation-prewrite-check` immediately before Host editing and `--continue-run <run-id> --after-url ...` for the exact same-run After. The Runtime records before/after hashes, a real diff, and the same-condition After, but this record never enters the Host-receipt validators and the repair remains `NOT_VERIFIED` for independent Host attestation. A task requiring V3 must fail closed; do not silently select local observation. If the discovery run's first-discovery seal covers a fix plan that would need replacement, preserve it and start one related repair run from the unmodified source using `--related-run`; this continues the known finding and is not a new discovery.
 
 Unsupported production frameworks must return `FRAMEWORK_NOT_SUPPORTED` with no HTML fallback success. Persist relative project/artifact locations only.
 
@@ -161,7 +186,7 @@ Keep galleries usable without broken images or fabricated screenshots. Clearly s
 
 ## Completion
 
-A result is complete only when the user can tell what happened, whether source changed, whether the page was genuinely ready, which three issues matter most, what evidence supports them, which repair is recommended, what remains unverified, and the next action. Pretty reports, file count, page load, click success, and pixel difference are not outcome proof.
+A result is complete only when the requested repair is demonstrated on the real product. For visual work, confirmed alignment, icon, color-role, spacing, responsive or asset defects within the selected surface must be resolved or explicitly left unaccepted. Top 3 is presentation prioritization, not a cap on required repairs. Explain the result, changed scope, evidence and remaining limitations in plain language. Pretty reports, file count, page load, click success, and pixel difference are not outcome proof.
 
 
 ## Source Assurance
@@ -171,6 +196,12 @@ Only registered trusted parsers may produce syntax PASS. Python, JSON, TOML, bou
 ## Repair execution boundary
 
 Map each Finding to Route, Selector, Component, Source File and Source Range. If source ownership is not confirmed, return `SCOPE_NOT_CONFIRMED` with `risk = UNKNOWN`. Runtime must not call project write or rollback functions. Generate a Patch Candidate, stop for Host application, verify the Host hash receipt, and then run the bound After.
+
+For a `FIX_AND_VERIFY` task, complete the normal public `run` against the unmodified target first and review its sealed Before and repair plan before any Host write. If the plan lacks a confirmed source scope, let the Host map the reported evidence to the actual project source, then prepare a candidate against that recorded baseline. After the exact bound files are applied and receipted, continue the same run with its `--after-url` and Host receipt. Never start a post-edit run and present the edited project as its Before; if edits came first or the old run has no usable binding, preserve that history and begin a fresh isolated run from the unmodified source.
+
+The primary `run --file` parameter is an explicit Host-confirmed source scope and takes precedence over inferred scope. Do not hand-edit a saved fix plan to inject a path. For local observation, bind the After to an exact `--continue-run` ID; never use “latest matching” to select a local record's run. Local operation records provide T1 file-state consistency only, do not authenticate the writer, and cannot satisfy the V3 Host receipt requirement.
+
+When the user's request names a task outcome, preserve that outcome in the acceptance work even if the user's role is unknown. The rendered report's content-action inventory is a passive locator aid: it records visible controls, action markers, and whether a destination was declared, but it does not execute controls or prove their behavior. Use it to select the control relevant to the requested task, then inspect its visible result in the isolated project. A toast, pressed style, or click event alone is not task completion; verify the expected route or task state. Only activate actions whose effects are read-only or reversible and within the user's authorization. If effects are unknown or may mutate business state, leave the action unexecuted and report `NOT_VERIFIED` with the exact missing proof.
 
 ### Beta.3 product-evidence rules
 

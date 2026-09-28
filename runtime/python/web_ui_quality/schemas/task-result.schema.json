@@ -217,6 +217,118 @@
         }
       }
     },
+    "localOperation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "recordStatus",
+        "recordPath",
+        "contentDigest",
+        "approvedSourceScope",
+        "observedChangedFiles",
+        "scopeCompliance",
+        "sameConditionAfter",
+        "independentHostAttestation",
+        "claimBoundary"
+      ],
+      "properties": {
+        "recordType": {
+          "const": "WEB_UI_QUALITY_LOCAL_OPERATION_RECORD_V1"
+        },
+        "recordStatus": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recordPath": {
+          "const": "report/local-operation-record.json"
+        },
+        "contentDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "approvedSourceScope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "observedChangedFiles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "scopeCompliance": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_MEASURED"
+          ]
+        },
+        "sameConditionAfter": {
+          "type": "object",
+          "required": [
+            "browserComparisonStatus",
+            "browserStatus",
+            "conditionsMatch",
+            "repairVerificationStatus",
+            "viewports"
+          ],
+          "properties": {
+            "browserComparisonStatus": {
+              "type": "string",
+              "minLength": 1
+            },
+            "browserStatus": {
+              "type": "string",
+              "minLength": 1
+            },
+            "conditionsMatch": {
+              "type": "boolean"
+            },
+            "repairVerificationStatus": {
+              "type": "string",
+              "minLength": 1
+            },
+            "viewports": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "width",
+                  "height"
+                ],
+                "properties": {
+                  "width": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "height": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "independentHostAttestation": {
+          "const": "NOT_PROVIDED"
+        },
+        "claimBoundary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
     "claims": {
       "type": "array",
       "items": {

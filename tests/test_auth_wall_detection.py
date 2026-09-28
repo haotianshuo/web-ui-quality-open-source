@@ -72,6 +72,22 @@ def test_visible_login_form_is_an_auth_wall() -> None:
         pages.close()
 
 
+def test_signed_in_profile_with_login_device_and_sign_out_controls_is_not_an_auth_wall() -> None:
+    pages = _browser_page()
+    page = next(pages)
+    try:
+        page.set_content(
+            """
+            <main><h1>我的</h1><section><h2>账号与安全</h2>
+              <button>登录设备 查看当前登录设备</button><button>退出登录</button>
+            </section><section><h2>常用功能</h2><p>行政工作台、外派行程登记和消息中心。</p></section></main>
+            """
+        )
+        assert page.evaluate(AUTH_WALL_HINT_SCRIPT) is False
+    finally:
+        pages.close()
+
+
 def test_visible_oauth_login_wall_without_password_remains_an_auth_wall() -> None:
     pages = _browser_page()
     page = next(pages)

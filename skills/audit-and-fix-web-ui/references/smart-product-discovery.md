@@ -17,4 +17,4 @@ Keep four buckets:
 
 When role or task evidence is missing, say so. Do not generate placeholders such as “an unconfirmed user completes the current page’s primary task”.
 
-A redesign should generate two directions by default and a third only when it represents a materially distinct strategy. Cosmetic color, radius, shadow, or spacing changes do not constitute a separate direction.
+A redesign should recommend one grounded direction and add alternatives only for materially distinct, unresolved strategies. Ordinary visual repair does not require product discovery or a gallery. Cosmetic color, radius, shadow, or spacing changes do not constitute a separate direction.

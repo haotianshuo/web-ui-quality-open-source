@@ -10,9 +10,9 @@
 
 ## Preferred UI-first path
 
-Use `check` before source diagnosis for ordinary acceptance work. It captures mobile `390×844`, small-desktop `768×1024`, and desktop `1440×900`, then combines screenshot evidence, representative-render checks, runtime health, and an explicit or safe A1 journey with Outcome Proof. Use `quick-ui` only for screenshot-only compatibility work. Review screenshots manually before accepting its Top 3.
+Use the normal natural-language `run` entry for ordinary acceptance and repair. Its internal capture covers mobile `390×844`, tablet `768×1024`, and desktop `1440×900`, combining rendered measurements, runtime health and safe task evidence. `check` and `quick-ui` are compatibility helpers, not alternate workflows the user must select. Review the screenshots and all relevant candidates before deciding visual acceptance; Top 3 is only a presentation limit.
 
-After a fix, use `quick-ui` again on the same route and state. Use `browser-compare` or `audit-and-compare` when a formal same-condition Before/After artifact is required.
+After a fix, continue the same normal `run` with its bound Host receipt and `--after-url`, using the same route, state and device conditions. A fresh post-edit run records a new Before and cannot substitute for this continuation. View the resulting screenshots; automated geometry and task success do not establish visual finish.
 
 Do not treat page-load success as a complete critical journey. Add task-specific read-only or reversible journey evidence through the trusted Host. Payment, publication, deletion, account changes, uploads, external messages, and irreversible state changes are outside the default Browser adapter.
 

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "web-ui-quality"
 version = "4.3.1"
-description = "Trust control layer for AI-assisted Web changes with bounded scope, Host-gated writes, evidence-backed verification, and release-integrity checks."
+description = "Real-page UI quality and Host-guided repair for layout, icons, colors, spacing, imagery and interactions, with scoped evidence-backed verification."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
@@ -51,6 +51,12 @@ include = ["web_ui_quality*"]
 
 [tool.setuptools.package-data]
 web_ui_quality = ["schemas/*.json", "browser_runner.cjs", "public-compatibility-baseline.json"]
+
+[tool.setuptools.data-files]
+"share/web-ui-quality/skills/audit-and-fix-web-ui" = ["skills/audit-and-fix-web-ui/SKILL.md"]
+"share/web-ui-quality/skills/audit-and-fix-web-ui/agents" = ["skills/audit-and-fix-web-ui/agents/*.yaml"]
+"share/web-ui-quality/skills/audit-and-fix-web-ui/references" = ["skills/audit-and-fix-web-ui/references/*.md"]
+"share/web-ui-quality/skills/audit-and-fix-web-ui/scripts" = ["skills/audit-and-fix-web-ui/scripts/*.py"]
 
 [tool.web-ui-quality]
 runtime-path = "runtime/python"

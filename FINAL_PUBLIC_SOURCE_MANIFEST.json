@@ -2,7 +2,7 @@
   "NOT_CONFIRMED_DISTRIBUTED_FILES": 0,
   "REMOVE_FROM_PUBLIC_RELEASE": 0,
   "RIGHTS_BLOCKED": 0,
-  "auditedAt": "2026-09-17",
+  "auditedAt": "2026-09-29",
   "candidate": {
     "candidateOnly": false,
     "product": "web-ui-quality",
@@ -12,17 +12,17 @@
     "version": "4.3.1"
   },
   "engineeringClosure": {
-    "claimBoundary": "Engineering classification based on preserved WUQ records, exact candidate digests, content comparison, and manual review. It is not a statutory copyright opinion, contributor assignment, patent clearance, or non-infringement guarantee.",
+    "claimBoundary": "The current batch source classifications apply to its 33 changed non-self paths. The source manifest omits 25 other package paths and has 34 listed rows whose bytes/hashes no longer match current files; unchanged baseline content is not cleared by this batch. This is not a whole-package provenance closure, statutory copyright opinion, contributor assignment, patent clearance, or non-infringement guarantee.",
     "copyrightDisplayName": null,
     "copyrightDisplayNameStatus": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-    "status": "CLOSED_FOR_DISTRIBUTED_FILES",
-    "thirdPartyProvenanceStatus": "CLOSED_FOR_DISTRIBUTED_FILES"
+    "status": "CURRENT_BATCH_ONLY",
+    "thirdPartyProvenanceStatus": "NO_THIRD_PARTY_CONTENT_ADDED_IN_CURRENT_BATCH"
   },
-  "fileCount": 545,
+  "fileCount": 551,
   "files": [
     {
-      "bytes": 3864,
-      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "bytes": 4492,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -30,7 +30,7 @@
       "path": ".codex-plugin/plugin.json",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "f340c6f1e115ca8f03f6cac127bd41dc439adcf167e6a726376a5e52459a853c",
+      "sha256": "cdf115ac630f17012cb2f80e6b5554ff82af4ca709911d7c2c160c915fbdd4c1",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -157,8 +157,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1562,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 1941,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -166,7 +166,7 @@
       "path": "ARCHITECTURE.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "1a764dc65eb2276d6d6b7769c3d0af789cf278d1b4ea715afda6535932832d18",
+      "sha256": "d0ad71989962d8144f0def27d7555c25b95340ee7157ccda0189a03de9fb1f04",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -361,8 +361,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3034,
-      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "bytes": 3695,
+      "classificationReason": "Project-owned Apache-2.0 public documentation updated to state the reviewed source-provenance coverage boundary; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -370,7 +370,7 @@
       "path": "PUBLICATION.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "1ca16efaa68198a98a685ed89c6be7d120923cc396beba4ea4b0ceb8184d59e8",
+      "sha256": "3a16f9483b44e58526a6fe615ae294e01f8eb116fa96834268aa620f3131b4df",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -378,8 +378,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 8618,
-      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "bytes": 8988,
+      "classificationReason": "Project-owned Apache-2.0 public documentation updated to state the reviewed source-provenance coverage boundary; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -387,7 +387,7 @@
       "path": "README.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "cd0a99abef6108ade97f8259ab9611b86c39d71d27e2badd6ce762096e01da45",
+      "sha256": "4bcf914ee00287fe0590fb1094f0d712b9a3d100f4b8b0c8f84ede9aa39b0ca2",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -446,8 +446,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2439,
-      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "bytes": 2968,
+      "classificationReason": "Project-owned Apache-2.0 public documentation updated to state the reviewed source-provenance coverage boundary; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -455,7 +455,7 @@
       "path": "SOURCE_PROVENANCE.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "b92240ae1fbc1ad4f1a803895b96d1c674ac7892c042aff5f924c49604b3a611",
+      "sha256": "a58d119b1ff392be0e7d22b53152b3980367c29d243336cacbcd73c2fd03e55c",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -820,8 +820,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2216,
-      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "bytes": 2673,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -829,7 +829,7 @@
       "path": "pyproject.toml",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "38f443455fda41862517ed709198017cf643a72016d7acf1c6ea74dc87859ea4",
+      "sha256": "90d09bb67dde9e3383c309cd627340c6bc1d36da93f9196d21402e6f15a2030c",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -888,8 +888,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 128903,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 133343,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -897,7 +897,7 @@
       "path": "runtime/python/web_ui_quality/__main__.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "741873381e7f8695be55099b9710d479a746be52a09fafc9d0627b02acb872d9",
+      "sha256": "df0c39702227e37649cf3d77e13b449bdbbfce8e8fa00c6c8a05328082488951",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -1000,6 +1000,23 @@
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
       "sha256": "c6343c76f50f8635bc13b5a4adede9b1d6f81f573d21274925a20e24f00388ba",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 7624,
+      "classificationReason": "Project-owned Apache-2.0 source updated to avoid false auth-wall matches; no third-party expressive content added.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "runtime/python/web_ui_quality/auth_detection.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "a916ac5228c4fdf6f51fc5aa66589f087f3003b92664982cb6544276fdb4a560",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -1653,8 +1670,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 4988,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 5569,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -1662,7 +1679,7 @@
       "path": "runtime/python/web_ui_quality/evidence_graph.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "1ea84f81a2d62b67015cf6dcd98d64a1f1f7c04ac92358794551da924dd907ca",
+      "sha256": "6d1fa262aa3c42fcd5907800fc51ae051e3a7d4381413ab7304f47004676bcd7",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -1823,8 +1840,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 61591,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 70603,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -1832,7 +1849,7 @@
       "path": "runtime/python/web_ui_quality/experience_fix.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "90593b1d1288ac4335b83c3b33fb6833af1903a0b062ee969868d9daacc8384c",
+      "sha256": "fcf36e0d49a901fd8c3130e5c2d51177fbd6bd9b71eae59877440c0a35783fb0",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -2044,8 +2061,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 21060,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 21058,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -2053,7 +2070,7 @@
       "path": "runtime/python/web_ui_quality/fix_workflow.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "a644e31b9b5f0fdee93e3fe87d6c3c5e81527c6f0acbd11a2dfd678a00b12d9e",
+      "sha256": "6df7563c55bbb0ce1c1b29b73bb6a62312487d5d4e5a6450d6399a7c374619b0",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -2180,6 +2197,23 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 27308,
+      "classificationReason": "New project-owned Apache-2.0 local observation workflow; no third-party expressive content or independent Host attestation is included.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "runtime/python/web_ui_quality/local_operation_record.py",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "d15696fe254818509d3182842ed9f439481a77b48458f1fd7cae669d6d9ed751",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 25707,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -2248,8 +2282,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 6367,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 6595,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -2257,7 +2291,7 @@
       "path": "runtime/python/web_ui_quality/outcome_verification.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "23e1df2d9b89966ac00763274cd886a74bc9a5c3872f4a6b5c3d8a3576bd673a",
+      "sha256": "d8c48716af11cf139cf1634f6eac36be70625d8c937d0cfa0d01d0c893afa5c9",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -2843,8 +2877,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 24914,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 27663,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -2852,7 +2886,7 @@
       "path": "runtime/python/web_ui_quality/quick_ui.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "dd3de4bf0507b8773defbf7d54234b710a2261321e9b10852e1ae64aaf0bab96",
+      "sha256": "5148d4edea8a1afc2d7b5cdd58c2c8e6b5e3302749cdf464184e403548b16317",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -2894,8 +2928,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 29602,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 78277,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -2903,7 +2937,7 @@
       "path": "runtime/python/web_ui_quality/rendered_quality.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "2364a7229dcc9cb530cdb4c7585c397cd83b4777f5cdd74f6bfcac57166f6fae",
+      "sha256": "98e5ecd7a9747ad1e064fe9a4990a8e587185ffb995b9ac34f44480795869bde",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -2911,8 +2945,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2521,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 2816,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -2920,7 +2954,7 @@
       "path": "runtime/python/web_ui_quality/repair_recipe.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "60606f9f5e5a924a0fc6ab300f7fe0a2ec69c3b2cdb5ec65be9659b7511c12da",
+      "sha256": "7c9888ee6810ac8c802f311a708c4ea017190531038bba702881fedbd3b38d04",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -4509,8 +4543,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 8151,
-      "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
+      "bytes": 11079,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -4518,7 +4552,7 @@
       "path": "runtime/python/web_ui_quality/schemas/task-result.schema.json",
       "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "c9cbb3d9d2e880fa5b0a63f9c9e8a3b33e36d9a41b53b82b6e5f896457eb5a18",
+      "sha256": "7babe69ef032607a7603192f4e8a3b4a56392242742698464619a722f4da52bc",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -4747,8 +4781,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 44494,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 51189,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -4756,7 +4790,7 @@
       "path": "runtime/python/web_ui_quality/smart_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "774feaa5a3b2d390cce59da19d7a9218f73995ecb5edb5e4ad4402602ec2d235",
+      "sha256": "05430f1e3db90a0d1c69e0c67852f60451d7e7ba85d12f779c1211c479969460",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -4866,8 +4900,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 19041,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 21389,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -4875,7 +4909,7 @@
       "path": "runtime/python/web_ui_quality/task_result.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "3b1db9255195cb3e2f6b1d8410248e0c1d224ccd9c805b6a763e0ad8d437b654",
+      "sha256": "cf6dd292188c2de135280a4658a96b410cb89f6521cac92990cd310b451bb485",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -5070,8 +5104,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3851,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 8927,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -5079,7 +5113,7 @@
       "path": "runtime/python/web_ui_quality/visual_review.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "96554c2dfaf9d3e934078c8e084918ca784962f6feb4508ef413ca071f16c333",
+      "sha256": "ee4344019f5561379aa48158ac8c2620f283aba2ecdeca8bef60aa7b76192788",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -6498,8 +6532,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 8151,
-      "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
+      "bytes": 11079,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -6507,7 +6541,7 @@
       "path": "schemas/task-result.schema.json",
       "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "c9cbb3d9d2e880fa5b0a63f9c9e8a3b33e36d9a41b53b82b6e5f896457eb5a18",
+      "sha256": "7babe69ef032607a7603192f4e8a3b4a56392242742698464619a722f4da52bc",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7773,8 +7807,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 13766,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 21389,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7782,7 +7816,7 @@
       "path": "skills/audit-and-fix-web-ui/SKILL.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "29ca8a765c2b5440dc4e161c090b0ee21c4d86dc37efd9b57efb71b7ba4618da",
+      "sha256": "855625da484a67018fa48c0752900b28e252692a2811f2cd9a28c6813964c0cf",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7790,8 +7824,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 519,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 458,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7799,7 +7833,7 @@
       "path": "skills/audit-and-fix-web-ui/agents/openai.yaml",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "ccd5215cfd5a0575b37acb51d3a226fca2e0d8b637df38bc5926c75d364750a6",
+      "sha256": "ac090bbc0ba97fb4a916979f785dcd9f98f2b4a323475e1b88752b6d9f5cca44",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7824,8 +7858,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2369,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 2588,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7833,7 +7867,7 @@
       "path": "skills/audit-and-fix-web-ui/references/browser-and-verification.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "cb8e53ab40273b1299c95cc43e58a86a1d22d1f8b21af65303515da867945aa3",
+      "sha256": "35dade9d06ac17e860b20f55a9ec5043c5cb0651c0eb8bdb2a7226acbf256ddf",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7858,8 +7892,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1106,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 2820,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7867,7 +7901,7 @@
       "path": "skills/audit-and-fix-web-ui/references/design-intelligence-and-builder.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "8f69012ca44bb044692dd9ed58a7d6c6147f1c23aec837c8b0b3b0d8e6cfe069",
+      "sha256": "b679028bc31f25f874f354a59af9480e3c450b1d9c457be3dff6e343aaae3d96",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7926,8 +7960,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1145,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 1192,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7935,7 +7969,7 @@
       "path": "skills/audit-and-fix-web-ui/references/scope-and-routing.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "009c0d0ecd4f20bda22a7366afc5245884bf6cef82365e5ff3e0500d15a2f80f",
+      "sha256": "8e166b7e3c1818cf49c8651308de05a3a2c862382cdaf9556aa7cad158bfb102",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7943,8 +7977,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 863,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 939,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7952,7 +7986,7 @@
       "path": "skills/audit-and-fix-web-ui/references/smart-product-discovery.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "52bafd2fb63391aa84c6cc6ccc6172597bd68206690358710bf111c9fe122801",
+      "sha256": "95f2efebbf836dff1f97d5ceda5dde5126d8eedc3ff94cf7aa8c97241dd3f191",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7960,8 +7994,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3026,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 5256,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7969,7 +8003,7 @@
       "path": "skills/audit-and-fix-web-ui/references/visual-density-and-design-system.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "bfe8ad9c9b6db4f804afd06b7cb3e7ec95c245c2090e97fd0cc724168e8882ed",
+      "sha256": "73ff70f6d94c0ce146e8720afd3cd3586a14e4fd93043a314ee723253780303b",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -8589,6 +8623,23 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 4199,
+      "classificationReason": "Project-owned Apache-2.0 regression test for ordinary signed-in page text; no third-party expressive content added.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_auth_wall_detection.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "205a74862e1d22e0405713b7f8a0b456cf4cbe000ebcf1448a0247a1ba25857a",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 10909,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -9031,6 +9082,23 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 14893,
+      "classificationReason": "New project-owned Apache-2.0 regression tests for local observation limits and run binding; no third-party expressive content added.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_local_operation_record.py",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "3994777556168f22ed72e3afd47d6c890b6f21e230431e130f7e932e6d2b5f74",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 50955,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -9167,8 +9235,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 5285,
-      "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
+      "bytes": 5735,
+      "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -9176,7 +9244,7 @@
       "path": "tests/test_rendered_quality.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "13ead9ae35c85aee8c6056769456052c873f02478786351f369ccb4a5fc32866",
+      "sha256": "8977dab33e12eae64de27c9061aaded492c156de1413088adfcd8a24108fdfbf",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -9235,6 +9303,23 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 3576,
+      "classificationReason": "New project-owned regression test for the public passive task-action inventory; no third-party content retained.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_task_action_inventory.py",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "0ed14faae0aa6f9e1ffdf77d2da15792acd0a1b044926b70b4e5d6f2b5e56a93",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 6572,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -9262,6 +9347,23 @@
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
       "sha256": "e9b2e7c9ae98d909882c78cece7db3d68c2df15f746286dcc8c87beaf2736d3e",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 29414,
+      "classificationReason": "New project-owned Apache-2.0 rendered counterexample tests; fixtures are generated in test code and include no copied assets.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_visual_product_quality.py",
+      "provenance": "REWRITE_INDEPENDENTLY",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "0b30887b0ed9b6aed7db8203a751635bdba99a1f2e6ff8a4de3f8e7a865d24e3",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -9304,7 +9406,7 @@
         "provenance": "GENERATED_FROM_WUQ_CONFIRMED"
       }
     ],
-    "rowsCover": "All current public repository files except the three generated manifest files below."
+    "rowsCover": "The source table has 551 rows; the source package has 577 paths including the self-referential manifest. 25 paths have no provenance row and 34 listed rows have stale current bytes/hashes. The 33 non-self source files changed by this candidate have matching rows. Generated release manifests separately cover package composition and content hashes, not provenance."
   },
   "publicBoundary": {
     "excludedDisposition": "REMOVE_FROM_PUBLIC_RELEASE",
@@ -9379,17 +9481,17 @@
     "normalizedMatchesDisposition": "MANUALLY_REVIEWED_GENERATED_WUQ_EVIDENCE_LINES_ONLY",
     "savedExternalChallengeFileCount": 188,
     "savedExternalProjectFileCount": 1531,
-    "thirdPartyExpressiveContentFoundInDistributedCandidate": false
+    "scope": "Content/source review and refreshed digests cover the 33 non-self files changed by this candidate. 25 package paths are unlisted and 34 listed hashes are stale on unchanged baseline files.",
+    "thirdPartyExpressiveContentFoundInCurrentChanges": false
   },
   "statusCounts": {
     "GENERATED_FROM_WUQ_CONFIRMED": 184,
-    "REWRITE_INDEPENDENTLY": 22,
+    "REWRITE_INDEPENDENTLY": 26,
     "THIRD_PARTY_APACHE_COMPATIBLE": 1,
-    "WUQ_ORIGINAL_CONFIRMED": 338
+    "WUQ_ORIGINAL_CONFIRMED": 340
   },
-  "title": "Final public source manifest for the Web UI Quality 4.3.1 release",
+  "title": "Reviewed public source provenance for the Web UI Quality 4.3.1 candidate",
   "validationContract": {
-    "allDistributedFilesHaveAllowedProvenance": true,
     "allowedProvenance": [
       "WUQ_ORIGINAL_CONFIRMED",
       "GENERATED_FROM_WUQ_CONFIRMED",
@@ -9397,6 +9499,21 @@
       "THIRD_PARTY_NOTICE_REQUIRED",
       "REWRITE_INDEPENDENTLY"
     ],
-    "thirdPartyLicenseRule": "The root Apache-2.0 license does not relicense third-party content; any future copied content keeps its own license and notice."
+    "thirdPartyLicenseRule": "The root Apache-2.0 license does not relicense third-party content; any future copied content keeps its own license and notice.",
+    "scope": "Allowed provenance labels apply to manifest rows; current content/hash identity is refreshed for this candidate’s changed files. 34 unchanged row hashes are stale and 25 package paths are absent from the table.",
+    "allCurrentPackageFilesHaveProvenance": false,
+    "allManifestRowsUseAllowedProvenanceLabels": true
+  },
+  "counterScope": "The root counters describe source rows only. In the current package tree, 25 paths have no provenance row and 34 listed rows have stale byte/hash values; these counts do not establish whole-package provenance closure.",
+  "publicPackageScope": {
+    "currentSourceFileCount": 577,
+    "listedProvenanceFileCount": 551,
+    "unlistedSourceFileCount": 25,
+    "listedRowsWithStaleCurrentBytesOrHash": 34,
+    "candidateChangedSourceRowsWithCurrentBytesAndHash": 33,
+    "manifestSelfReferenceOmitted": true,
+    "unlistedFilesChangedInThisCandidate": 0,
+    "staleListedFilesChangedInThisCandidate": 0,
+    "claimBoundary": "The 25 unlisted paths and 34 stale listed rows are unchanged from the verified main baseline. This candidate refreshes byte counts and hashes for its 33 changed non-self source rows only. The generated release manifest covers package composition and content hashes, not provenance. This is an incremental source review, not a distribution-wide provenance closure."
   }
 }

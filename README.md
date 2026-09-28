@@ -1,10 +1,17 @@
 # Web UI Quality
 
-Verification and trust for AI-assisted Web changes.
+Visual finish and usable interactions for AI-assisted Web projects.
 
-Web UI Quality helps you check an AI-generated Web change before calling it
-done: what the AI was allowed to change, what actually changed, what was
-verified, and what is still unknown.
+Web UI Quality helps the Host AI inspect and improve real websites and
+workbenches: layout, typography, icon proportions, color roles, spacing,
+imagery, responsive composition and complete interactions. Rendered checks
+locate risks; screenshot-based design judgement guides scoped source and
+asset repairs, followed by real-page verification.
+
+For requested photos or rich bitmap illustrations, the Host should use its
+available built-in image-generation capability, not quietly substitute local
+SVG placeholders. Suitable approved assets and established vector icon sets
+remain reusable. Automated tests and successful clicks are not visual acceptance.
 
 [![Release](https://img.shields.io/badge/status-Normal%20OSS%20Release-166B4F)](https://github.com/haotianshuo/web-ui-quality-open-source/releases)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
@@ -23,7 +30,7 @@ python -m pip install -e ".[browser]"
 web-ui-quality doctor
 ~~~
 
-The `[browser]` extra installs the Playwright driver. WUQ then uses an
+The `[browser]` extra installs the Playwright driver. web-ui-quality then uses an
 installed Chrome, Edge, or Chromium executable when one is available. If
 `doctor` reports `PYTHON_BROWSER_EXECUTABLE_MISSING`, install a browser binary
 with `python -m playwright install chromium` (or install Chrome/Edge) and run
@@ -160,7 +167,7 @@ scope checks, Browser requirements, or project-tool evidence.
 - `tests/public/` — tests intended to run from a clean checkout;
 - `PUBLICATION.md` — public/private source boundary;
 - `DEPENDENCY_LICENSE_REVIEW.md` — resolved dependency license decisions;
-- `FINAL_PUBLIC_SOURCE_MANIFEST.json` — file-level source and license closure.
+- `FINAL_PUBLIC_SOURCE_MANIFEST.json` — incremental source provenance rows and known coverage gaps.
 
 Private recovery records, chat history, browser storage, `evolution/`,
 external worktrees, commercial templates, and commercial demo material are not

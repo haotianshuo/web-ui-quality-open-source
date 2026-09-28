@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from web_ui_quality.rendered_quality import _summarize_keyboard_audit
+from web_ui_quality.rendered_quality import _RENDERED_QUALITY_JS, _summarize_keyboard_audit
 
 
 def _baseline(*, enabled: int = 2, focusable: int = 2, positive: int = 0) -> dict:
@@ -135,3 +135,9 @@ def test_keyboard_audit_keeps_short_traversal_unverified() -> None:
     assert result["status"] == "PASS_WITH_WARNINGS"
     assert result["reasonCode"] == "KEYBOARD_COVERAGE_NOT_MEASURED"
     assert result["coverage"]["status"] == "NOT_MEASURED"
+
+
+def test_clipped_content_excludes_only_the_explicit_visually_hidden_helper() -> None:
+    assert "const intentionallyVisuallyHidden = (el) => el.classList.contains('visually-hidden');" in _RENDERED_QUALITY_JS
+    assert "!intentionallyVisuallyHidden(el) && (s.overflowX==='hidden'" in _RENDERED_QUALITY_JS
+    assert "el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1" in _RENDERED_QUALITY_JS

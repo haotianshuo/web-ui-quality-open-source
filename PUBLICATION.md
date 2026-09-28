@@ -9,9 +9,14 @@ normal OSS release channel. Release archives are published on the
 - license for the release: Apache-2.0;
 - PyPI/npm: not published.
 
-The engineering review is closed for the distributed files in
-[FINAL_PUBLIC_SOURCE_MANIFEST.json](FINAL_PUBLIC_SOURCE_MANIFEST.json):
-`RIGHTS_BLOCKED = 0` and `NOT_CONFIRMED_DISTRIBUTED_FILES = 0`.
+The source manifest records 551 provenance rows. The current package tree has
+25 source paths without provenance rows, and 34 listed rows have byte counts or
+hashes that do not match current files. All 59 affected paths are unchanged
+from the verified `main` baseline and outside this candidate's source review.
+This candidate refreshes hashes for its 33 changed non-self source paths. The
+manifest counters do not describe the whole package. A generated release
+manifest covers package contents and hashes, not source provenance. Complete
+provenance reconciliation remains necessary before a subsequent source release.
 
 ## Included
 
@@ -47,8 +52,10 @@ license and required notice; the root license does not relicense it.
 
 ## Provenance and boundary rules
 
-Every distributed file is classified in the final manifest as an allowed
-engineering disposition. External issue and pull-request pages, commit
+Every file listed in the source manifest has an allowed provenance label.
+The candidate's changed files have current byte/hash rows; 34 unchanged rows
+remain stale and 25 source paths remain unlisted. See `publicPackageScope` for
+the boundary. External issue and pull-request pages, commit
 identifiers, URLs, and behavior descriptions are research evidence only. They
 are not copied source and are not automatically dependencies or attributions.
 
