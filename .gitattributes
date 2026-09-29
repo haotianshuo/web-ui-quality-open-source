@@ -1,0 +1,47 @@
+# Keep distributed source byte hashes stable across Windows checkouts.
+* text=auto
+*.cfg text eol=lf
+*.cjs text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.in text eol=lf
+*.ini text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.ps1 text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.svg text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+LICENSE text eol=lf
+
+# Preserve committed CRLF or mixed-EOL source blobs byte-for-byte.
+runtime/python/web_ui_quality/component_registry.py -text !eol
+runtime/python/web_ui_quality/experience_core.py -text !eol
+runtime/python/web_ui_quality/experience_engine.py -text !eol
+runtime/python/web_ui_quality/experience_patterns.py -text !eol
+runtime/python/web_ui_quality/modernization_preview.py -text !eol
+runtime/python/web_ui_quality/page_understanding.py -text !eol
+runtime/python/web_ui_quality/schemas/experience-proof.schema.json -text !eol
+runtime/python/web_ui_quality/screenshot_experience.py -text !eol
+runtime/python/web_ui_quality/screenshot_input.py -text !eol
+runtime/python/web_ui_quality/visual_intelligence.py -text !eol
+schemas/experience-proof.schema.json -text !eol
+scripts/real_project_integration.py -text !eol
+scripts/security_and_evidence_regression.py -text !eol
+runtime/python/web_ui_quality/layout_intelligence.py -text !eol
+runtime/python/web_ui_quality/responsive_experience.py -text !eol
+runtime/python/web_ui_quality/safe_edit.py -text !eol
+runtime/python/web_ui_quality/schemas/experience-diagnosis.schema.json -text !eol
+schemas/experience-diagnosis.schema.json -text !eol
+scripts/browser_safety_regression.py -text !eol
+scripts/build_v21_examples.py -text !eol
+scripts/trust_integrity_attack_regression.py -text !eol
+scripts/v23_acceptance.py -text !eol
+setup.cfg -text !eol
+tests/test_experience_run_integrity.py -text !eol

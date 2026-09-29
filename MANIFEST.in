@@ -1,4 +1,4 @@
-include README.md LICENSE NOTICE.md THIRD_PARTY_NOTICES.md DEPENDENCY_LICENSE_REVIEW.md CHANGELOG.md SECURITY.md SECURITY_RESPONSE_POLICY.md PUBLICATION.md SOURCE_PROVENANCE.md FINAL_PUBLIC_SOURCE_MANIFEST.json CONTRIBUTING.md CODE_OF_CONDUCT.md examples/README.md pytest.ini pyproject.toml setup.cfg run_tests.py .gitignore .github/workflows/ci.yml .github/PULL_REQUEST_TEMPLATE.md
+include README.md LICENSE NOTICE.md THIRD_PARTY_NOTICES.md DEPENDENCY_LICENSE_REVIEW.md CHANGELOG.md SECURITY.md SECURITY_RESPONSE_POLICY.md PUBLICATION.md SOURCE_PROVENANCE.md FINAL_PUBLIC_SOURCE_MANIFEST.json CONTRIBUTING.md CODE_OF_CONDUCT.md examples/README.md pytest.ini pyproject.toml setup.cfg run_tests.py .gitignore .gitattributes .github/workflows/ci.yml .github/PULL_REQUEST_TEMPLATE.md
 recursive-include .github/ISSUE_TEMPLATE *.yml
 recursive-include .codex-plugin *.json
 recursive-include assets *.svg

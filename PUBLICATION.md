@@ -8,15 +8,18 @@ GitHub OSS channel.
 - license: Apache-2.0 for project-owned material only;
 - PyPI/npm: not published.
 
-The source manifest covers every file selected by the release packager. Its 576
-non-self rows match the package paths, current byte counts, hashes, source
+The source manifest covers every file selected by the release packager: 577
+non-self rows for 578 package inputs, including the manifest itself. The rows
+match package paths, committed byte counts and hashes, source
 labels, and required attribution fields. The manifest itself is included in
 the package but cannot contain a self-referential row. The 25 paths omitted by
 the previous manifest were traced to their first-introduction commits in the
 Web UI Quality repository and reviewed against preserved external project
 snapshots. The 32 stale rows were compared with the previous main baseline;
 their text matched after line-ending normalization, and their current byte
-counts and hashes are now recorded.
+counts and hashes are now recorded. `.gitattributes` keeps distributed text
+at LF in Windows checkouts and preserves 24 committed CRLF or mixed-EOL files
+byte-for-byte.
 
 `scripts/release.py validate` keeps technical validation separate from formal
 source eligibility. The `package` command refuses to write release archives if
