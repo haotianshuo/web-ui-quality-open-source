@@ -37,7 +37,7 @@ ROOT_FILES = {
     "GUIDED_REPAIR_QUICKSTART.md", "AGENT_BENCHMARK_PROTOCOL.md",
     "ADAPTIVE_TRUST_KERNEL_RFC.md", "PRODUCT_MEASUREMENT_SPEC.md",
     "FINAL_PUBLIC_SOURCE_MANIFEST.json",
-    ".gitignore",
+    ".gitignore", ".gitattributes",
 }
 # The public snapshot deliberately excludes the private evolution ledger and
 # external challenge evidence. Public packaging must use this same boundary.
