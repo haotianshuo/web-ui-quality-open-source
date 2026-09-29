@@ -184,7 +184,7 @@ def test_preflight_binds_commercial_files_to_candidate_bytes(tmp_path) -> None:
 def test_preflight_accepts_exact_commercial_files_from_candidate(tmp_path, monkeypatch) -> None:
     # This fixture intentionally exercises the historical 4.3.0 commercial
     # stable identity.  Keep it independent from the current OSS candidate's
-    # package version so a normal 4.3.1 release cannot silently rewrite the
+    # package version so a normal OSS release cannot silently rewrite the
     # commercial gate's historical contract.
     monkeypatch.setattr(commercial_preflight, "PACKAGE_VERSION", "4.3.0")
     package, candidate = _write_complete_fixture(tmp_path)

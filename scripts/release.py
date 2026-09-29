@@ -48,6 +48,13 @@ EXCLUDED_PARTS = {
 }
 HISTORICAL_HEADING = re.compile(r"(?im)^#{1,3}\s+\d+\.\d+\.\d+[^\n]*\bRC\d*\b")
 STALE_PACKAGE_VERSIONS = {".".join(parts) for parts in (("3", "6", "0"), ("3", "6", "1"), ("3", "6", "2"), ("3", "7", "0"), ("3", "7", "1"), ("3", "7", "2"), ("3", "7", "3"))}
+ALLOWED_SOURCE_PROVENANCE = frozenset({
+    "WUQ_ORIGINAL_CONFIRMED",
+    "GENERATED_FROM_WUQ_CONFIRMED",
+    "THIRD_PARTY_APACHE_COMPATIBLE",
+    "THIRD_PARTY_NOTICE_REQUIRED",
+    "REWRITE_INDEPENDENTLY",
+})
 DEFAULT_GATE_TIMEOUT_SECONDS = 180
 # release_gate.py owns a 900-second worker deadline. Allow that worker to
 # report its own result, plus a bounded minute for parent/process cleanup.
@@ -259,6 +266,178 @@ def _validate_python() -> int:
     return count
 
 
+def _source_provenance_conclusion() -> dict[str, object]:
+    """Read the source manifest without turning unknown or partial evidence into closure."""
+    manifest_path = ROOT / "FINAL_PUBLIC_SOURCE_MANIFEST.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {
+            "copyrightProvenance": "UNKNOWN",
+            "formalReleaseEligible": False,
+            "releaseBlockers": ["FINAL_PUBLIC_SOURCE_MANIFEST.json is missing."],
+        }
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        return {
+            "copyrightProvenance": "UNKNOWN",
+            "formalReleaseEligible": False,
+            "releaseBlockers": [f"FINAL_PUBLIC_SOURCE_MANIFEST.json cannot be read: {error.__class__.__name__}."],
+        }
+
+    if not isinstance(manifest, dict):
+        return {
+            "copyrightProvenance": "UNKNOWN",
+            "formalReleaseEligible": False,
+            "releaseBlockers": ["The source manifest root must be a JSON object."],
+        }
+
+    closure = manifest.get("engineeringClosure")
+    raw_status = closure.get("status") if isinstance(closure, dict) else None
+    complete_status = "CLOSED_FOR_DISTRIBUTED_FILES"
+    partial_status = "CURRENT_BATCH_ONLY"
+    if not isinstance(raw_status, str) or not raw_status.strip():
+        status = "UNKNOWN"
+        blockers = ["engineeringClosure.status is missing or invalid in the source manifest."]
+    elif raw_status not in {complete_status, partial_status}:
+        status = "UNKNOWN"
+        blockers = [f"engineeringClosure.status has an unrecognized value: {raw_status}."]
+    else:
+        status = raw_status
+        blockers = []
+
+    result: dict[str, object] = {
+        "copyrightProvenance": status,
+        "formalReleaseEligible": False,
+        "releaseBlockers": blockers,
+    }
+    if status == "UNKNOWN":
+        return result
+
+    if status == partial_status:
+        blockers.append("Engineering source provenance covers the current batch only; it is not closed for the full distribution.")
+
+    scope = manifest.get("publicPackageScope")
+    if not isinstance(scope, dict):
+        blockers.append("publicPackageScope is missing or invalid in the source manifest.")
+        return result
+
+    def count_field(source: dict[str, object], name: str, label: str) -> int | None:
+        value = source.get(name)
+        if type(value) is not int or value < 0:
+            blockers.append(f"{label}.{name} is missing or invalid.")
+            return None
+        return value
+
+    unlisted = count_field(scope, "unlistedSourceFileCount", "publicPackageScope")
+    stale = count_field(scope, "listedRowsWithStaleCurrentBytesOrHash", "publicPackageScope")
+    if unlisted is not None and unlisted:
+        blockers.append(f"The source manifest reports {unlisted} public source path(s) without provenance rows.")
+    if stale is not None and stale:
+        blockers.append(f"The source manifest reports {stale} provenance row(s) with stale byte counts or hashes.")
+
+    if status == partial_status:
+        return result
+
+    if closure.get("thirdPartyProvenanceStatus") != complete_status:
+        blockers.append("thirdPartyProvenanceStatus is not closed for distributed files.")
+    for name in ("RIGHTS_BLOCKED", "NOT_CONFIRMED_DISTRIBUTED_FILES", "REMOVE_FROM_PUBLIC_RELEASE"):
+        value = count_field(manifest, name, "source manifest")
+        if value is not None and value:
+            blockers.append(f"The source manifest reports {name}={value}.")
+
+    current_count = count_field(scope, "currentSourceFileCount", "publicPackageScope")
+    listed_count = count_field(scope, "listedProvenanceFileCount", "publicPackageScope")
+    file_count = count_field(manifest, "fileCount", "source manifest")
+    if scope.get("manifestSelfReferenceOmitted") is not True:
+        blockers.append("manifestSelfReferenceOmitted must be true.")
+    validation_contract = manifest.get("validationContract")
+    if not isinstance(validation_contract, dict) or validation_contract.get("allCurrentPackageFilesHaveProvenance") is not True:
+        blockers.append("validationContract does not confirm provenance coverage for all current package files.")
+    if not isinstance(validation_contract, dict) or validation_contract.get("allManifestRowsUseAllowedProvenanceLabels") is not True:
+        blockers.append("validationContract does not confirm allowed provenance labels for all manifest rows.")
+    declared_provenance = validation_contract.get("allowedProvenance") if isinstance(validation_contract, dict) else None
+    if (
+        not isinstance(declared_provenance, list)
+        or any(not isinstance(label, str) for label in declared_provenance)
+        or len(declared_provenance) != len(ALLOWED_SOURCE_PROVENANCE)
+        or set(declared_provenance) != ALLOWED_SOURCE_PROVENANCE
+    ):
+        blockers.append("validationContract.allowedProvenance does not match the recognized source labels.")
+
+    rows = manifest.get("files")
+    if not isinstance(rows, list):
+        blockers.append("The source manifest files field is missing or invalid.")
+        return result
+    if listed_count is not None and listed_count != len(rows):
+        blockers.append("listedProvenanceFileCount does not match the source manifest rows.")
+    if file_count is not None and file_count != len(rows):
+        blockers.append("fileCount does not match the source manifest rows.")
+    if blockers:
+        return result
+
+    try:
+        package_files = {
+            path.relative_to(ROOT).as_posix(): path
+            for path in _files()
+        }
+    except (OSError, ValueError) as error:
+        blockers.append(f"Current package files cannot be enumerated: {error.__class__.__name__}.")
+        return result
+
+    source_paths = set(package_files) - {"FINAL_PUBLIC_SOURCE_MANIFEST.json"}
+    if current_count is not None and current_count != len(package_files):
+        blockers.append("currentSourceFileCount does not match the current package file set.")
+
+    row_paths: set[str] = set()
+    stale_rows = 0
+    for row in rows:
+        if not isinstance(row, dict):
+            blockers.append("A source manifest row is not a JSON object.")
+            continue
+        relative = row.get("path")
+        if not isinstance(relative, str) or not relative or "\\" in relative or any(part in {"", ".", ".."} for part in relative.split("/")):
+            blockers.append("A source manifest row has an invalid relative path.")
+            continue
+        if relative == "FINAL_PUBLIC_SOURCE_MANIFEST.json":
+            blockers.append("The source manifest must not claim a self-referential file row.")
+            continue
+        if relative in row_paths:
+            blockers.append(f"The source manifest contains a duplicate row for {relative}.")
+            continue
+        row_paths.add(relative)
+        provenance = row.get("provenance")
+        if not isinstance(provenance, str) or provenance not in ALLOWED_SOURCE_PROVENANCE:
+            blockers.append(f"The source manifest row for {relative} has a missing or unrecognized provenance label.")
+        for field in ("license", "classificationReason", "copyrightBasis", "noticeRequirement", "redistributionDecision", "thirdPartyContentDisposition"):
+            value = row.get(field)
+            if not isinstance(value, str) or not value.strip():
+                blockers.append(f"The source manifest row for {relative} is missing {field}.")
+        if not isinstance(row.get("sourceComparison"), dict) or not row["sourceComparison"]:
+            blockers.append(f"The source manifest row for {relative} is missing sourceComparison evidence.")
+        path = package_files.get(relative)
+        if path is None:
+            blockers.append(f"The source manifest row does not match a current package file: {relative}.")
+            continue
+        data = path.read_bytes()
+        digest = row.get("sha256")
+        byte_count = row.get("bytes")
+        if type(byte_count) is not int or byte_count != len(data) or not isinstance(digest, str) or digest != hashlib.sha256(data).hexdigest():
+            stale_rows += 1
+    unlisted_paths = source_paths - row_paths
+    if unlisted_paths:
+        blockers.append(f"{len(unlisted_paths)} current package source path(s) are missing from the source manifest.")
+    if stale_rows:
+        blockers.append(f"{stale_rows} source manifest row(s) do not match current bytes or hashes.")
+    if unlisted is not None and unlisted != len(unlisted_paths):
+        blockers.append("unlistedSourceFileCount does not match the current package file set.")
+    if stale is not None and stale != stale_rows:
+        blockers.append("listedRowsWithStaleCurrentBytesOrHash does not match current file contents.")
+
+    if not blockers:
+        result["formalReleaseEligible"] = True
+    return result
+
+
 def _run(
     command: list[str],
     env: dict[str, str] | None = None,
@@ -389,9 +568,10 @@ def validate() -> dict[str, object]:
     audit = _audit_entries(_entries())
     return {
         "status": "PASS",
+        "statusScope": "TECHNICAL_CHECKS_ONLY",
         "commercialGA": "NOT_ESTABLISHED",
         "openSourceLicense": "Apache-2.0",
-        "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
+        **_source_provenance_conclusion(),
         "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
         "publicationStatus": PUBLICATION_STATUS,
         "promotionStatus": "GA_NOT_ESTABLISHED",
@@ -410,8 +590,16 @@ def validate() -> dict[str, object]:
     }
 
 
+class ReleasePackageBlocked(Exception):
+    def __init__(self, validation: dict[str, object]):
+        super().__init__("formal release packaging is blocked by source provenance")
+        self.validation = validation
+
+
 def package() -> tuple[Path, Path, Path]:
     validation = validate()
+    if validation["formalReleaseEligible"] is not True:
+        raise ReleasePackageBlocked(validation)
     entries = _entries()
     tar_data = _tar_bytes(entries)
     zip_data = _zip_bytes(entries)
@@ -430,7 +618,7 @@ def package() -> tuple[Path, Path, Path]:
         zip_path.name: hashlib.sha256(zip_data).hexdigest(),
     }
     digest_path.write_text("".join(f"{digest}  {name}\n" for name, digest in sorted(digests.items())), encoding="utf-8")
-    report = {**validation, "artifacts": digests, "reproducible": True}
+    report = {**validation, "packageStatus": "PASS", "artifacts": digests, "reproducible": True}
     (dist / f"{stem}.build.json").write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return tar_path, zip_path, digest_path
 
@@ -445,19 +633,21 @@ def main() -> int:
     if args.command == "validate":
         print(json.dumps(validate(), ensure_ascii=False, indent=2, sort_keys=True))
     else:
-        tar_path, zip_path, digest_path = package()
+        try:
+            tar_path, zip_path, digest_path = package()
+        except ReleasePackageBlocked as error:
+            print(json.dumps({
+                **error.validation,
+                "status": "BLOCKED",
+                "statusScope": "FORMAL_PACKAGE_ELIGIBILITY",
+                "technicalValidation": "PASS",
+                "packageStatus": "BLOCKED",
+            }, ensure_ascii=False, indent=2, sort_keys=True))
+            return 2
+        build_report_path = tar_path.parent / f"{PRODUCT_NAME}-{PACKAGE_VERSION}.build.json"
+        report = json.loads(build_report_path.read_text(encoding="utf-8"))
         print(json.dumps({
-            "status": "PASS",
-            "commercialGA": "NOT_ESTABLISHED",
-            "openSourceLicense": "Apache-2.0",
-            "copyrightProvenance": "ENGINEERING_PROVENANCE_CLOSED",
-            "copyrightDisplayNameDecision": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-            "publicationStatus": PUBLICATION_STATUS,
-            "promotionStatus": "GA_NOT_ESTABLISHED",
-            "sourceProvenanceManifest": "FINAL_PUBLIC_SOURCE_MANIFEST.json",
-            "version": PACKAGE_VERSION,
-            "packageStage": PACKAGE_STAGE,
-            "stage": RELEASE_STAGE,
+            **report,
             "tar": str(tar_path),
             "zip": str(zip_path),
             "sha256": str(digest_path),

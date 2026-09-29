@@ -64,6 +64,7 @@ AUTH_WALL_HINT_SCRIPT = r"""
 () => {
 """ + DOM_VISIBILITY_HELPER + r"""
   const authWords = /登录|登陆|sign\s*in|log\s*in|login|验证码|verification code|authentication required|unauthorized/i;
+  const authGateHeading = /^(?:(?:用户|账号|账户)?(?:登录|登陆)(?:页面|界面|入口)?|sign\s*in|log\s*in|login(?:\s+required)?|authentication required|unauthorized)$|^(?:please\s+)?(?:sign\s*in|log\s*in|login|authenticate)(?:\s+to\s+continue)?$|(?:请先|请|需要).{0,12}(?:登录|登陆|验证身份)|(?:登录|登陆|验证身份).{0,12}(?:继续|后继续)/i;
   const accountSettingsWords = /current password|new password|confirm(?:ation)? password|change password|set password|account|profile|security|save|update/i;
   const credentialInput = (element) => element.matches(
     'input[type="password"], input[type="email"], input[autocomplete="username"], input[autocomplete="email"], input[name*="user" i], input[id*="user" i], input[name*="email" i], input[id*="email" i]'
@@ -118,7 +119,7 @@ AUTH_WALL_HINT_SCRIPT = r"""
         .filter(visibleElement)
         .map((element) => controlName(element))
         .join(' ');
-      const hasAuthHeading = authWords.test(headingText) || /sign\s+in\s+to\s+continue|login\s+required|authentication required|unauthorized/i.test(surfaceText);
+      const hasAuthHeading = authGateHeading.test(headingText) || /sign\s+in\s+to\s+continue|login\s+required|authentication required|unauthorized/i.test(surfaceText);
       const hasCredential = visibleCredential(surface);
       const hasPassword = visiblePassword(surface);
       const hasAuthAction = visibleAuthAction(surface);

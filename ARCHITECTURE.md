@@ -1,21 +1,24 @@
-> Package: **4.3.1** · Package Stage: **4.3.1-open-source** · Trust Kernel: **4.2.3** · Kernel Base Lineage: **4.0.0-rc.1** · Receipt Protocol: **3.0** · Evidence Schema: **3.0**
+> Package: **4.4.0** · Package Stage: **4.4.0-open-source** · Trust Kernel: **4.2.3** · Kernel Base Lineage: **4.0.0-rc.1** · Receipt Protocol: **3.0** · Evidence Schema: **3.0**
 
 # Architecture
 
-Web UI Quality is a control and evidence layer around an AI-assisted Web
-change. The Host model understands the request and proposes implementation
-ideas. Web UI Quality keeps the scope, authority, evidence, verification, and
-claim boundary explicit.
+Web UI Quality helps the Host AI improve the visual finish and usability of
+real websites and workbenches: layout, typography, icons, color roles, spacing,
+imagery, responsive composition and complete interactions. The Host reasons
+about observed pages and applies authorized source/asset changes. Runtime
+measurements locate risks; qualitative review judges the actual composition.
+Scope and evidence controls protect this loop rather than replace its outcome.
 
 ## Main flow
 
 ```text
 user goal
-  -> protected scope and baseline
-  -> diagnosis and patch candidate
+  -> real page, project design context and protected baseline
+  -> rendered risks and screenshot-based design judgement
+  -> owning component / token / asset and repair candidate
   -> Host authorization and write receipt
-  -> project-tool / Browser / drift / patch-quality checks
-  -> bounded TaskResult
+  -> same-condition page, interaction and visual-finish review
+  -> bounded TaskResult with separate defect and page-quality conclusions
 ```
 
 The Runtime produces a candidate change; it does not silently grant itself

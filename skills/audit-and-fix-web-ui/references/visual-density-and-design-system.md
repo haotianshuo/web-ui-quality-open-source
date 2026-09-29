@@ -16,6 +16,19 @@ Map tokens by semantic meaning first, then nearby value. Do not batch-replace to
 
 ## Review
 
+Judge the requested surface against these concrete questions, not a universal beauty score:
+
+- **Composition and alignment:** do headings, labels, metrics and actions share intentional baselines? Does available width fit real content without orphaned short labels or shrinking everything?
+- **Icons:** distinguish the hit target, decorated backing surface, icon box and visible ink. Check optical size/centering, sprite-cell padding, image transparency and consistency with adjacent text. Enlarging every touch target's glyph is not a general fix.
+- **Color:** separate brand, action, status, surface and text roles. Check dominant color balance, surface separation, muted-text legibility and state meaning against the existing product. Contrast compliance alone does not prove a harmonious palette; arbitrary color counts do not prove a defect.
+- **Space and grouping:** distinguish space within a component, between repeated components and between sections. Adjacent rounded cards with almost no gap may visually merge; a deliberate flat divided list is a valid different composition. Avoid solving every grouping problem with extra borders and shadows.
+- **Images:** assess task fit, style, crop, resolution, aspect ratio and visible quality. File extension, alpha occupancy and image-generation provenance do not by themselves establish good imagery.
+- **Responsive finish:** choose a useful arrangement at each width. Verify real long content, not only overflow=0. Short labels need not always be single-line, but unintended fragmentary wrapping is not accepted as a finished composition.
+
+For each confirmed defect record the owning shared style/component/asset, the intended change and how the After will demonstrate it. Recheck affected pages when that owner is shared. Preserve deliberate differences between page types.
+
+Heuristic P2/P3 is a discovery priority, not permission to ignore a confirmed visual defect. Review it against the actual request. “It still clicks” is not a visual acceptance reason. Use the existing visual-review contract for explicit Host/human judgement; do not synthesize scores or claim approval without viewing the relevant images. Missing image viewing remains unreviewed.
+
 Check hierarchy, reading order, primary-action dominance, grid and alignment, spacing rhythm, density, typography, long content, color roles, contrast risk, borders, separators, icons, states, responsive composition, touch reach, keyboard focus, reduced motion, and media behavior.
 
 Adapt composition for mobile, desktop, and intermediate widths instead of shrinking desktop geometry. Keep dense enterprise surfaces compact but breathable; do not turn operational UI into decorative card walls. Button counts, color counts, and motion durations are heuristics, not universal pass thresholds.

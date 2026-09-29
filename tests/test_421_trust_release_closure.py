@@ -76,8 +76,26 @@ def _resign_receipt(value, *, key: bytes):
     return updated
 
 
+def _use_current_release_manifest(monkeypatch, tmp_path: Path) -> None:
+    """Give V3 tests a current isolated package identity without rewriting history."""
+    from web_ui_quality import v3_mainline
+
+    release_root = tmp_path / "release-root"
+    module_path = release_root / "runtime" / "python" / "web_ui_quality" / "v3_mainline.py"
+    module_path.parent.mkdir(parents=True, exist_ok=True)
+    (release_root / "RELEASE-MANIFEST.json").write_text(
+        json.dumps({
+            "packageVersion": PACKAGE_VERSION,
+            "packageTreeDigest": hashlib.sha256(b"isolated current package tree").hexdigest(),
+        }),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(v3_mainline, "__file__", str(module_path))
+
+
 def _prepare_public_v3(monkeypatch, tmp_path: Path):
     monkeypatch.setattr("web_ui_quality.experience_fix.run_smart_acceptance", _fake_acceptance)
+    _use_current_release_manifest(monkeypatch, tmp_path)
     project = tmp_path / "project"; project.mkdir()
     source = project / "index.tsx"; source.write_text("export const App=()=> <main>before</main>\n", encoding="utf-8")
     artifacts = tmp_path / "artifacts"
@@ -106,6 +124,7 @@ def _prepare_public_v3(monkeypatch, tmp_path: Path):
 
 def test_public_repair_mainline_can_verify_only_with_v3(monkeypatch, tmp_path: Path):
     monkeypatch.setattr("web_ui_quality.experience_fix.run_smart_acceptance", _fake_acceptance)
+    _use_current_release_manifest(monkeypatch, tmp_path)
     project = tmp_path / "project"; project.mkdir()
     source = project / "index.tsx"; source.write_text("export const App=()=> <main>before</main>\n", encoding="utf-8")
     artifacts = tmp_path / "artifacts"

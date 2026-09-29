@@ -1,7 +1,7 @@
 interface:
   display_name: "Web UI Quality"
-  short_description: "Check, repair and verify, or deeply redesign real Web products"
-  default_prompt: "使用 experience-fix 作为默认入口。由当前请求解析检查、修复并验证、深度重设计或专项验收；封存不可覆盖的 Before，优先判断页面健康，只有相同条件下的 After 才形成改善结论。明确修复请求由 Host 绑定窄范围权限，不重复询问相同确认。"
+  short_description: "Improve real Web UI layout, visual finish and interactions"
+  default_prompt: "使用 $audit-and-fix-web-ui，通过 run 检查并改好真实页面的布局、图标、配色、空间、图片和交互；需要生成图片时使用可用的内置生图能力，修改后实际查看页面复验，不以测试通过代替视觉完成度。"
 
 policy:
   allow_implicit_invocation: true

@@ -15,6 +15,7 @@ from .release_info import PACKAGE_VERSION
 from .repair_recipe import build_repair_recipes
 from .condition_registry import STANDARD_VIEWPORTS
 from .browser_locator import resolve_browser_executable
+from .visual_review import build_visual_review_work
 
 
 QUICK_UI_VIEWPORTS: tuple[tuple[int, int], ...] = STANDARD_VIEWPORTS
@@ -35,6 +36,14 @@ _RECOMMENDATIONS = {
     "RENDER-INCONSISTENT-CONTROL-HEIGHT": "让同一工具栏或表单行中的输入框、按钮和选择器使用同一尺寸令牌。",
     "RENDER-ICON-TEXT-IMBALANCE": "统一图标盒尺寸并与标签字号、间距建立稳定比例。",
     "RENDER-MULTIPLE-PRIMARY-ACTIONS": "每个视图保留一个最强主操作，其余降为次级或文字操作。",
+    "RENDER-TEXT-FRAGMENTATION": "先调整窄屏网格轨道、组件布局与文字可用宽度，避免靠缩小字号掩盖逐字换行。",
+    "RENDER-SHORT-LABEL-WRAP": "结合截图确认短标题是否被图标或箭头挤断；优先调整同组组件的网格、断点或图文排列，不强制所有文字单行。",
+    "RENDER-ICON-SURFACE-UNDERFILL": "分别检查点击区域、装饰底板和图形可见内容；保持足够点击区域，调整底板与图形比例，检查资源内部留白。",
+    "RENDER-ICON-BOX-MISALIGNMENT": "检查图标包装层的对齐、行高、内边距和资源内部留白；盒子居中后仍须看截图确认视觉居中。",
+    "RENDER-SPARSE-REPEATED-COMPONENT": "检查同组卡片是否因固定高度、过大内边距或重复包装而空散；按任务改为紧凑卡片或列表，保留必要留白。",
+    "RENDER-ADJOINING-ROUNDED-CARDS": "结合截图确认卡片是否粘连；在共享列表容器统一间距，或改成有清晰分组的连续列表，不给每项堆边框和阴影。",
+    "RENDER-REPEATED-ROW-ALIGNMENT": "检查报告中定位到的同组行、文本 Range 起点和尾部操作偏差；在共享行组件统一宽度、内容列和尾部轨道，并按文字方向对齐同角色文本，保留合理居中与层级缩进。",
+    "RENDER-BROKEN-IMAGE": "检查资源路径与加载失败原因，恢复真实资源；不要用占位图掩盖丢失的产品图片。",
     "UI-FIXED-OCCLUSION": "修正 fixed/sticky 层的占位、z-index 与底部安全区，保证目标始终可点。",
     "UI-ELEMENT-OVERLAP": "定位冲突的定位上下文、网格轨道或负间距，并在当前断点重新排布。",
     "UI-DIALOG-FIT": "给弹窗设置视口内最大尺寸、内部滚动和移动端边距。",
@@ -68,12 +77,12 @@ def _viewport_label(record: Mapping[str, Any]) -> str:
     return f"{int(viewport.get('width') or 0)}x{int(viewport.get('height') or 0)}"
 
 
-def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int = 3) -> list[dict[str, Any]]:
-    """Merge repeated rendered/geometry evidence and return only the visible Top N."""
+def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int | None = 3) -> list[dict[str, Any]]:
+    """Merge observations; None retains the complete repair/review work list."""
 
     aggregated: dict[str, dict[str, Any]] = {}
 
-    def add(rule_id: str, severity: str, title: str, record: Mapping[str, Any], samples: Sequence[Any]) -> None:
+    def add(rule_id: str, severity: str, title: str, record: Mapping[str, Any], samples: Sequence[Any], *, evidence_class: str = "", claim_boundary: str = "") -> None:
         viewport = _viewport_label(record)
         # Rule ids that say "the evidence cannot tell us" rather than "the page is broken".
         # Page-health boundary findings describe the observation conditions, not a
@@ -97,6 +106,14 @@ def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int 
             },
         )
         issue["count"] += max(1, len(samples))
+        if evidence_class:
+            issue["evidenceClass"] = evidence_class
+        if claim_boundary:
+            issue["claimBoundary"] = claim_boundary
+        if evidence_class == "DIAGNOSTIC_CANDIDATE":
+            issue["userLabel"] = "需要结合截图判断"
+            issue["confidence"] = "medium"
+            issue["userImpact"] = "可能影响页面的协调、层级或完成度；需结合实际内容和截图决定是否修复。"
         if viewport not in issue["viewports"]:
             issue["viewports"].append(viewport)
         for sample in samples[:3]:
@@ -146,6 +163,8 @@ def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int 
                 str(finding.get("title") or "真实渲染存在 UI 异常"),
                 record,
                 list(finding.get("samples") or [{}]),
+                evidence_class=str(finding.get("evidenceClass") or ""),
+                claim_boundary=str(finding.get("claimBoundary") or ""),
             )
 
         rows = (record.get("experienceGeometry") or {}).get("viewports") or []
@@ -196,7 +215,7 @@ def summarize_top_ui_issues(records: Sequence[Mapping[str, Any]], *, limit: int 
             str(issue["id"]),
         )
     )
-    return issues[: max(0, int(limit))]
+    return issues if limit is None else issues[: max(0, int(limit))]
 
 
 def _render_html(report: Mapping[str, Any]) -> str:
@@ -324,7 +343,8 @@ def run_quick_ui(
         if classified:
             record["failureClassification"] = classified
 
-    top_issues = summarize_top_ui_issues(records, limit=3)
+    all_issues = summarize_top_ui_issues(records, limit=None)
+    top_issues = all_issues[:3]
     page_health_rows = [item.get("pageHealth") for item in records if item.get("pageHealth")]
     health_priority = {"RUNTIME_BROKEN": 0, "AUTH_REQUIRED": 1, "RESTRICTED_RENDER": 2, "DATA_NOT_READY": 3, "TASK_FAILED": 4, "NOT_VERIFIED": 5, "SIMULATED_PREVIEW": 5, "VISUAL_FINDINGS": 6, "PASS": 7, "REAL_PAGE_READY": 7}
     page_health = min(page_health_rows, key=lambda row: health_priority.get(str(row.get("pageStatus")), 99)) if page_health_rows else {"pageStatus": "NOT_VERIFIED", "browserExecuted": False, "visualCanOverride": False}
@@ -341,7 +361,9 @@ def run_quick_ui(
         "viewportNormalization": _viewport_summary(records),
         "pageHealth": page_health,
         "topIssues": top_issues,
-        "repairRecipes": build_repair_recipes(top_issues, confirmed_ids=[str(item.get("id")) for item in top_issues]),
+        "allIssues": all_issues,
+        "repairRecipes": build_repair_recipes(all_issues, confirmed_ids=[str(item.get("id")) for item in all_issues if item.get("evidenceClass") != "DIAGNOSTIC_CANDIDATE" and item.get("userLabel") != "暂时无法确认"]),
+        "visualReviewWork": build_visual_review_work(records, all_issues),
         "records": records,
         "scope": "three-viewport viewport-and-full-page screenshot UI geometry, component proportion, responsive composition, runtime health, and representative-render checks",
         "notRunByDefault": ["product discovery", "3 redesign candidates", "security audit", "axe", "Lighthouse", "outcome measurement"],
@@ -356,7 +378,7 @@ def run_quick_ui(
     summary_lines = ["# 页面体验检查", "", f"- 状态：{status_label(status)}", f"- 页面：{target.split('?', 1)[0]}", "", "## 最重要的问题"]
     for issue in top_issues:
         summary_lines.append(f"- **{issue.get('userLabel')}：{issue.get('title')}** — {issue.get('recommendation')}")
-    summary_lines.extend(["", "## 当前边界", "", "- 未默认执行产品发现、多方案重设计、安全专项、Lighthouse 或用户结果测量。", "- 技术证据位于 `evidence/`，截图位于 `screenshots/`。"])
+    summary_lines.extend(["", "## 视觉完成度", "", "- 以上仅展示前三项；完整修复线索保留在 allIssues 和 repairRecipes。", "- Host 须读取 visualReviewWork，实际查看截图并处理构图、图标、配色、留白与图片质量；指标通过不代表页面已成熟。", "", "## 当前边界", "", "- 未默认执行产品发现、多方案重设计、安全专项、Lighthouse 或用户结果测量。", "- 技术证据位于 `evidence/`，截图位于 `screenshots/`。"])
     (output / "summary.md").write_text("\n".join(summary_lines) + "\n", encoding="utf-8")
     report["open"] = "index.html"
     report["summary"] = "summary.md"

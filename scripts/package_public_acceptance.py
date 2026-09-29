@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package-level public acceptance for Web UI Quality 4.3.1 with Trust Kernel 4.2.3."""
+"""Package-level public acceptance for Web UI Quality 4.4.0 with Trust Kernel 4.2.3."""
 from __future__ import annotations
 import json,re,subprocess,sys
 from pathlib import Path

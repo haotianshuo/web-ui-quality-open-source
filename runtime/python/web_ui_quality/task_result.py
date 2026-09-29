@@ -179,13 +179,14 @@ def _verification(result: Mapping[str, Any], report: Mapping[str, Any]) -> dict[
     summary = dict(_mapping(report.get("verificationSummary")))
     if not summary:
         drift = _mapping(result.get("projectDriftGate"))
+        local_record = _mapping(result.get("localOperationRecord"))
         summary = {
             "overall": _raw_status(result),
             "browser": _browser_surface_status(result),
             "projectTools": str(_mapping(result.get("projectToolGate")).get("status") or "NOT_APPLICABLE"),
             "patchQuality": str(_mapping(result.get("patchQuality")).get("status") or "NOT_APPLICABLE"),
             "projectDrift": str(drift.get("status") or "NOT_APPLICABLE"),
-            "hostWrite": "HOST_WRITE_VERIFIED" if isinstance(result.get("hostWriteReceipt"), Mapping) else "NOT_APPLICABLE",
+            "hostWrite": "LOCAL_OPERATION_RECORD_ONLY" if local_record.get("recordType") == "WEB_UI_QUALITY_LOCAL_OPERATION_RECORD_V1" else "HOST_WRITE_VERIFIED" if isinstance(result.get("hostWriteReceipt"), Mapping) else "NOT_APPLICABLE",
         }
     return {
         "overall": str(summary.get("overall") or _raw_status(result)),
@@ -233,6 +234,21 @@ def build_task_result(result: Mapping[str, Any], *, request: str | None = None) 
         changes = []
     uncertainties = _strings(answers.get("remainingRiskOrUnknown"))
     verification = _verification(result, report)
+    local_record = _mapping(result.get("localOperationRecord"))
+    local_operation_summary = None
+    if local_record.get("recordType") == "WEB_UI_QUALITY_LOCAL_OPERATION_RECORD_V1":
+        local_operation_summary = {
+            "recordType": str(local_record.get("recordType")),
+            "recordStatus": str(local_record.get("recordStatus") or "NOT_MEASURED"),
+            "recordPath": "report/local-operation-record.json",
+            "contentDigest": str(local_record.get("contentDigest") or ""),
+            "approvedSourceScope": _strings(local_record.get("approvedSourceScope")),
+            "observedChangedFiles": _strings(local_record.get("observedChangedFiles")),
+            "scopeCompliance": str(local_record.get("scopeCompliance") or "NOT_MEASURED"),
+            "sameConditionAfter": _mapping(local_record.get("sameConditionAfter")),
+            "independentHostAttestation": "NOT_PROVIDED",
+            "claimBoundary": str(local_record.get("claimBoundary") or "Local observations do not provide independent Host attestation."),
+        }
     repair_verification = _mapping(result.get("repairVerification"))
     uncertainties += _strings(repair_verification.get("blockers"))
     uncertainties += _strings(repair_verification.get("warnings"))
@@ -241,11 +257,15 @@ def build_task_result(result: Mapping[str, Any], *, request: str | None = None) 
     evidence_graph = _mapping(result.get("evidenceGraph"))
     if evidence_graph.get("requiredMissing"):
         uncertainties.append("EVIDENCE_GRAPH_INCOMPLETE:" + ",".join(_strings(evidence_graph.get("requiredMissing"))))
+    visual_work = _mapping(result.get("visualReviewWork"))
+    visual_pending = bool(visual_work) and _mapping(visual_work.get("review")).get("status", "NOT_REVIEWED") != "APPROVED"
+    if visual_pending:
+        uncertainties.append("页面视觉完成度尚未确认：Host 仍须查看截图，处理图标、对齐、配色、留白和图片质量；技术验证不替代视觉验收。")
 
     claims: list[dict[str, Any]] = []
     if outcome == "VERIFIED":
         claims.append({
-            "claim": "Requested repair is verified within the declared coverage.",
+            "claim": "Recorded repair checks are verified within the declared coverage; overall visual finish has not been accepted." if visual_pending else "Requested repair is verified within the declared coverage.",
             "status": "VERIFIED",
             "evidenceRefs": ["verification", "evidenceGraph:repair-verification"],
         })
@@ -260,6 +280,12 @@ def build_task_result(result: Mapping[str, Any], *, request: str | None = None) 
             "claim": "No broader success claim is made beyond the recorded outcome and coverage.",
             "status": "NOT_VERIFIED" if outcome in {"NOT_VERIFIED", "REVIEW_REQUIRED"} else "OBSERVED",
             "evidenceRefs": [],
+        })
+    if local_operation_summary is not None:
+        claims.append({
+            "claim": "A local file-change observation and same-condition After are recorded; independent Host attestation was not provided.",
+            "status": "OBSERVED",
+            "evidenceRefs": ["local-operation-record", "after", "comparison"],
         })
 
     execution_id = str(result.get("runId") or _mapping(report.get("taskState")).get("runId") or "unknown-execution")
@@ -283,6 +309,8 @@ def build_task_result(result: Mapping[str, Any], *, request: str | None = None) 
         next_action = "可以基于已记录 Finding 继续修复；若问题依赖真实页面状态，请先补充可访问 URL。"
     else:
         next_action = "审查验证范围和剩余未知项后决定下一步。"
+    if visual_pending:
+        next_action += " Host 请继续完成 visualReviewWork 的截图判断与必要修复；不要让用户填写内部评审表。"
 
     revert_plan = _mapping(result.get("revertPlan"))
     review = {
@@ -309,6 +337,7 @@ def build_task_result(result: Mapping[str, Any], *, request: str | None = None) 
         "hypotheses": _hypotheses(result, report),
         "changes": changes,
         "verification": verification,
+        "localOperation": local_operation_summary,
         "claims": claims,
         "uncertainties": list(dict.fromkeys(uncertainties)),
         "nextAction": next_action,

@@ -9,6 +9,7 @@ from __future__ import annotations
 import contextlib
 import functools
 import json
+import re
 import threading
 from datetime import datetime, timezone
 from html import escape
@@ -22,6 +23,7 @@ from .task_goal import bind_findings_to_goal
 from .business_context import build_context_v2
 from .contracts import ContractViolation, digest_json, load_json
 from .error_classifier import classify_record
+from .evidence_redaction import redact_text
 from .user_language import status_label
 from .journey import JourneyPolicy, execute_journey, validate_journey
 from .playwright_adapter import _context_options, _normalize_viewports, _origin, _safe_url, playwright_capability
@@ -37,6 +39,70 @@ from .browser_locator import resolve_browser_executable
 
 _DEFAULT_VIEWPORTS: tuple[tuple[int, int], ...] = STANDARD_VIEWPORTS
 _CRITICAL_RESOURCE_TYPES = {"document", "script", "stylesheet", "xhr", "fetch", "font"}
+_ACTION_INVENTORY_BOUNDARY = (
+    "This is a passive inventory of visible controls inside content cards or list rows. "
+    "A declared destination does not prove the action works; controls are not activated by this inventory."
+)
+
+
+def summarize_task_action_inventory(
+    quick_report: Mapping[str, Any] | None,
+    *,
+    requested_outcome: str | None = None,
+) -> dict[str, Any]:
+    """Expose visible content actions for Host task verification without clicking them."""
+
+    records = (quick_report or {}).get("records") or []
+    grouped: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for record in records:
+        if not isinstance(record, Mapping):
+            continue
+        viewport = record.get("label") or record.get("viewport") or "unknown"
+        raw = ((record.get("renderedQuality") or {}).get("raw") or {}).get("taskActionCandidates") or []
+        per_viewport: dict[tuple[Any, ...], int] = {}
+        for item in raw:
+            if not isinstance(item, Mapping):
+                continue
+            label = redact_text(str(item.get("label") or "").strip())[:80]
+            if not label:
+                continue
+            action = re.sub(r"[^A-Za-z0-9_-]", "", str(item.get("dataAction") or ""))[:50] or None
+            destination_kind = str(item.get("destinationKind") or "none")
+            if destination_kind not in {"href", "data-target", "none"}:
+                destination_kind = "unknown"
+            key = (
+                str(item.get("controlKind") or "control"), label, action, destination_kind,
+                item.get("sameOriginTarget") if destination_kind == "href" else None,
+                str(item.get("containerKind") or "content"),
+            )
+            per_viewport[key] = per_viewport.get(key, 0) + 1
+            candidate = grouped.setdefault(key, {
+                "controlKind": key[0], "label": label, "dataAction": action,
+                "destinationKind": destination_kind,
+                "destinationDeclared": destination_kind != "none",
+                "sameOriginTarget": key[4], "containerKind": key[5],
+                "executionStatus": "NOT_EXECUTED", "viewports": [],
+                "_countsByViewport": {},
+            })
+            viewport_name = str(viewport)
+            if viewport_name not in candidate["viewports"]:
+                candidate["viewports"].append(viewport_name)
+        for key, count in per_viewport.items():
+            grouped[key]["_countsByViewport"][str(viewport)] = count
+
+    candidates = []
+    for candidate in grouped.values():
+        counts = candidate.pop("_countsByViewport")
+        candidate["count"] = max(counts.values(), default=0)
+        candidates.append(candidate)
+    candidates = candidates[:12]
+    return {
+        "status": "CANDIDATES_RECORDED" if candidates else "NO_VISIBLE_CONTEXTUAL_ACTIONS",
+        "requestedOutcome": redact_text(requested_outcome or "")[:320] or None,
+        "executionStatus": "NOT_EXECUTED",
+        "candidates": candidates,
+        "claimBoundary": _ACTION_INVENTORY_BOUNDARY,
+    }
 
 
 class _QuietHandler(SimpleHTTPRequestHandler):
@@ -359,11 +425,12 @@ def _finding_candidates(
     target = (url or "project").split("?", 1)[0]
     route = urlsplit(url).path if url else "/"
     candidates: list[dict[str, Any]] = []
-    for item in (quick_report or {}).get("topIssues", []):
+    for item in (quick_report or {}).get("allIssues", (quick_report or {}).get("topIssues", [])):
         issue_id = str(item.get("id") or "VISUAL")
         result_label = str(item.get("userLabel") or "用起来别扭")
         page_health_observation = issue_id.startswith("PAGE-")
         runtime_boundary = issue_id in _PAGE_HEALTH_BOUNDARY_FINDING_IDS or result_label == "暂时无法确认"
+        review_candidate = item.get("evidenceClass") == "DIAGNOSTIC_CANDIDATE"
         blocking = not runtime_boundary and (result_label == "现在会出错" or issue_id in {"UI-FIXED-OCCLUSION", "UI-ELEMENT-OVERLAP", "UI-DIALOG-FIT", "UI-NAV-OVERFLOW", "UI-HTTP-FAILURE", "HTTP_SERVER_ERROR"})
         candidates.append({
             "targetIdentity": target, "routeTemplate": route or "/",
@@ -377,11 +444,11 @@ def _finding_candidates(
             "evidenceKinds": ["runtime"] if page_health_observation or runtime_boundary else ["geometry", "screenshot"],
             "evidenceRefs": [str(record.get("screenshotRef")) for record in (quick_report or {}).get("records", []) if f"{(record.get('viewport') or {}).get('width')}x{(record.get('viewport') or {}).get('height')}" in set(item.get("viewports") or []) and record.get("screenshotRef")] or [f"quick-ui-report.json#{issue_id}"],
             "ruleId": issue_id, "ruleVersion": "2.3-p0a",
-            "verificationState": "NOT_VERIFIED" if runtime_boundary else "VERIFIED",
-            "resultLabel": "暂时无法确认" if runtime_boundary else result_label if result_label in {"现在会出错", "用起来别扭", "建议考虑补充"} else "用起来别扭",
+            "verificationState": "NOT_VERIFIED" if runtime_boundary or review_candidate else "VERIFIED",
+            "resultLabel": "暂时无法确认" if runtime_boundary or review_candidate else result_label if result_label in {"现在会出错", "用起来别扭", "建议考虑补充"} else "用起来别扭",
             "severity": "medium" if runtime_boundary else "high" if blocking else "medium",
             "summary": str(item.get("title") or "页面存在明显体验问题"),
-            "impact": "当前运行条件不足以判断页面本身；不应因此修改源码。" if runtime_boundary else "页面运行时出现异常，需要先恢复页面后再做 UI 验证。" if page_health_observation else "关键内容或操作可能被遮挡或无法完成。" if blocking else "用户仍可操作，但理解和操作成本明显增加。",
+            "impact": "当前运行条件不足以判断页面本身；不应因此修改源码。" if runtime_boundary else "已测到视觉比例或布局线索；Host 应查看截图、确认任务语境后决定修复，不能因为仍可点击就忽略。" if review_candidate else "页面运行时出现异常，需要先恢复页面后再做 UI 验证。" if page_health_observation else "关键内容或操作可能被遮挡或无法完成。" if blocking else "用户仍可操作，但理解和操作成本明显增加。",
             "recommendation": str(item.get("recommendation") or "在原设计系统内做最小修复并按相同条件复验。"),
         })
     for run in journey_report.get("runs", []):
@@ -487,6 +554,22 @@ def _render_html(report: Mapping[str, Any]) -> str:
         for row in (report.get("runtime") or {}).get("records", []) if row.get("screenshotRef")
     )
     coverage = report.get("coverageSummary") or {}
+    action_inventory = (report.get("journey") or {}).get("taskActionInventory") or {}
+    action_rows = []
+    for item in action_inventory.get("candidates", []):
+        destination = "未声明目标" if not item.get("destinationDeclared") else "已声明目标，未执行"
+        action = f' · data-action={escape(str(item.get("dataAction")))}' if item.get("dataAction") else ""
+        action_rows.append(
+            f'<li><b>{escape(str(item.get("label") or "未命名操作"))}</b> — '
+            f'{escape(str(item.get("containerKind") or "内容项"))}{action} · {destination} · '
+            f'{int(item.get("count") or 0)} 项</li>'
+        )
+    action_inventory_html = (
+        '<section class=panel><h2>内容区操作候选（未执行）</h2>'
+        + (f'<p><b>用户请求的任务结果：</b>{escape(str(action_inventory.get("requestedOutcome")))}</p>' if action_inventory.get("requestedOutcome") else "")
+        + (f'<ul>{"".join(action_rows)}</ul>' if action_rows else '<p>本次没有发现内容卡片或列表行中的可见操作候选。</p>')
+        + f'<p class=muted>{escape(str(action_inventory.get("claimBoundary") or _ACTION_INVENTORY_BOUNDARY))}</p></section>'
+    )
     return f"""<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>
 <title>Web UI Quality {escape(str(report.get('packageVersion') or ''))} · 智能验收</title><style>
 :root{{--bg:#f5f7f8;--card:#fff;--ink:#18201d;--muted:#66736e;--line:#dfe6e2;--accent:#166b4f}}
@@ -502,6 +585,7 @@ h1{{margin:0 0 8px;font-size:32px}}.status{{border:1px solid var(--line);backgro
 <section class=panel><h2>本次检查范围</h2><p>{escape(str((report.get('businessContext') or {}).get('summary')))}</p>
 <p class=muted>视口：{escape(', '.join(coverage.get('viewports', [])) or '未执行')} · 旅程：{escape(str(coverage.get('journeyStatus')))}</p>
 <p>{escape(str((report.get('preflight') or {}).get('plainSummary')))}</p></section>
+{action_inventory_html}
 <section class=panel><h2>最重要的 {len(top)} 个结果</h2><div class=grid>{cards}</div></section>
 <section class=panel><h2>运行证据</h2><div class=shots>{shots}</div></section>
 <section class=panel><h2>边界</h2><ul>{''.join(f'<li>{escape(str(x))}</li>' for x in (report.get('coverage') or {}).get('boundaries', []))}</ul></section>
@@ -595,6 +679,12 @@ def run_smart_acceptance(
             )
         else:
             journey_report = {"status": "NOT_VERIFIED" if preflight.get("status") != "PARTIAL" else "NOT_EXECUTED", "reason": "Preflight or authentication boundary prevented safe journey execution.", "runs": [], "journey": []}
+        journey_report = dict(journey_report)
+        requested_outcome = task_goal.get("goal") if isinstance(task_goal, Mapping) else None
+        journey_report["taskActionInventory"] = summarize_task_action_inventory(
+            quick_report,
+            requested_outcome=str(requested_outcome or "") or None,
+        )
         candidates = _finding_candidates(url=actual_url, quick_report=quick_report, journey_report=journey_report, preflight=preflight)
         normalized = normalize_findings(candidates, context_version=context["contextVersion"])
         findings = normalized["findings"]
@@ -626,10 +716,11 @@ def run_smart_acceptance(
             "preflight": preflight,
             "pageHealth": page_health,
             "runtime": quick_report,
+            "visualReviewWork": (quick_report or {}).get("visualReviewWork"),
             "journey": journey_report,
             "findings": findings,
             "topFindings": top,
-            "repairRecipes": build_repair_recipes(top, confirmed_ids=[str(item.get("findingId") or item.get("id") or item.get("ruleId") or item.get("fingerprint")) for item in top]),
+            "repairRecipes": build_repair_recipes(findings, confirmed_ids=[str(item.get("findingId") or item.get("id") or item.get("ruleId") or item.get("fingerprint")) for item in findings if item.get("verificationState") == "VERIFIED"]),
             "normalization": {"errors": normalized["normalizationErrors"], "digest": normalized["digest"]},
             "coverage": coverage,
             "coverageSummary": {
@@ -666,6 +757,23 @@ def run_smart_acceptance(
                 summary.append(f"- **{item.get('resultLabel')}：{item.get('summary')}** — {item.get('recommendation')}")
         else:
             summary.extend(["", "## 本次没有可排序的问题", "", "- 当前证据没有形成可验证的 Top 问题；请结合页面可运行性与覆盖边界解读结果。"] )
+        action_inventory = journey_report.get("taskActionInventory") or {}
+        if report.get("visualReviewWork"):
+            summary.extend(["", "## 视觉完成度仍须查看页面", "", "- visualReviewWork 包含实际截图、全部待判断项和修复检查点。Host 应完成配色、对齐、留白、图标及图片复核，不能用操作成功或技术通过代替页面成熟度。"])
+        summary.extend(["", "## 内容区操作候选（未执行）"])
+        if action_inventory.get("requestedOutcome"):
+            summary.append(f"- 用户请求的任务结果：{action_inventory['requestedOutcome']}")
+        if action_inventory.get("candidates"):
+            for item in action_inventory["candidates"]:
+                destination = "未声明导航目标" if not item.get("destinationDeclared") else "声明了目标，尚未执行验证"
+                action = f"；动作标记 {item['dataAction']}" if item.get("dataAction") else ""
+                summary.append(
+                    f"- {item.get('label') or '未命名操作'}（{item.get('containerKind') or '内容项'}{action}；{destination}；"
+                    f"在 {', '.join(item.get('viewports') or [])} 可见）。状态：未执行。"
+                )
+        else:
+            summary.append("- 没有发现内容卡片或列表行中的可见操作候选；这不代表请求中的任务已验证。")
+        summary.append(f"- {_ACTION_INVENTORY_BOUNDARY}")
         summary.extend(["", "## 业务理解边界", "", f"- {context.get('summary')}", "", "技术证据位于 `evidence/`。"] )
         if (output / "screenshots").is_dir() and any((output / "screenshots").iterdir()):
             summary.append("真实页面截图位于 `screenshots/`。")

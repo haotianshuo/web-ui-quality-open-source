@@ -95,7 +95,9 @@ def combine_repair_verification(
     if quality == "QUALITY_RISK":
         warnings.append("PATCH_QUALITY_RISK")
 
-    if host_write not in {"NOT_APPLICABLE", "VERIFIED_V3"}:
+    if host_write == "LOCAL_OPERATION_RECORD_ONLY":
+        blockers.append("INDEPENDENT_HOST_ATTESTATION_NOT_AVAILABLE")
+    elif host_write not in {"NOT_APPLICABLE", "VERIFIED_V3"}:
         blockers.append("LEGACY_RECEIPT_NOT_SUFFICIENT_FOR_VERIFIED" if host_write == "LEGACY_HISTORY_ONLY" else "HOST_WRITE_V3_NOT_VERIFIED")
 
     if budget == "BLOCKED":
@@ -125,7 +127,7 @@ def combine_repair_verification(
         },
         "blockers": blockers,
         "warnings": warnings,
-        "claimBoundary": "VERIFIED requires a trusted V3 Host receipt for write-backed repair, proven Browser improvement, no failed/unverified required project-tool evidence, no unexpected/unverified project drift, an in-budget patch, and no deterministic patch-quality risk in the bounded evidence scope. Legacy receipts are history-only and can never produce VERIFIED.",
+        "claimBoundary": "VERIFIED requires a trusted V3 Host receipt for write-backed repair, proven Browser improvement, no failed/unverified required project-tool evidence, no unexpected/unverified project drift, an in-budget patch, and no deterministic patch-quality risk in the bounded evidence scope. Local operation records remain NOT_VERIFIED because they do not provide independent Host attestation. Legacy receipts are history-only and can never produce VERIFIED.",
     }
 
 

@@ -300,7 +300,7 @@ def prepare_fix_workflow(
             evidence_payload = loaded if isinstance(loaded, Mapping) else {}
         except (OSError, UnicodeError, json.JSONDecodeError):
             evidence_payload = {}
-    raw_findings = evidence_payload.get("topFindings") or evidence_payload.get("findings") or evidence_payload.get("findingCandidates") or []
+    raw_findings = evidence_payload.get("findings", evidence_payload.get("topFindings") or evidence_payload.get("findingCandidates") or [])
     if isinstance(raw_findings, Mapping):
         raw_findings = [raw_findings]
     mappings = build_repair_mappings(root, raw_findings) if isinstance(raw_findings, list) else []

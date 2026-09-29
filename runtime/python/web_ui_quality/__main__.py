@@ -183,6 +183,10 @@ def _parser() -> argparse.ArgumentParser:
     run_cmd.add_argument("--after-url", help="After URL; resumes the latest matching FIX_AND_VERIFY run")
     run_cmd.add_argument("--host-write-receipt", type=Path, help="V3 Host receipt bound to the persisted apply binding; legacy receipts are history-only")
     run_cmd.add_argument("--host-patch-candidate", type=Path, help="pre-write Host patch candidate used to prepare the V3 apply binding")
+    run_cmd.add_argument("--continue-run", help="select this exact local-operation run for pre-write check or same-run After; requires --local-operation")
+    run_cmd.add_argument("--related-run", help="link a new repair run to an immutable discovery run without changing it")
+    run_cmd.add_argument("--local-operation", action="store_true", help="explicit local file observation plus same-condition After; never qualifies as V3 or independent Host attestation")
+    run_cmd.add_argument("--local-operation-prewrite-check", action="store_true", help="check the exact prepared scope immediately before Host editing; requires --continue-run and --local-operation")
     run_cmd.add_argument("--approve-request", action="append", default=[], metavar="ORIGIN,METHOD,PATH[?QUERY]", help="exact temporary Browser request authorization; query values are stored only as a digest; may be repeated, use WEBSOCKET as method for ws/wss")
     run_cmd.add_argument("--host-tool-result", type=Path, action="append", default=[], help="Host project-tool result receipt JSON; may be repeated")
     run_cmd.add_argument("--file", action="append", default=[], help="optional explicit project-relative source scope; may be repeated")
@@ -802,7 +806,9 @@ def _emit_human_repair_report(result: dict[str, Any], *, request: str | None = N
     settings = before_summary.get("settingsSummary") if isinstance(before_summary.get("settingsSummary"), dict) else {}
     if settings.get("plainSummary"):
         print(f"- 设置摘要：{settings['plainSummary']}", file=stream)
-    if host_write in {"VERIFIED_V3", "HOST_WRITE_V3_VERIFIED"}:
+    if host_write == "LOCAL_OPERATION_RECORD_ONLY":
+        print("- 本地文件变化记录与同条件 After 已保存；它不证明独立宿主身份，整体不会标记为 V3 VERIFIED。", file=stream)
+    elif host_write in {"VERIFIED_V3", "HOST_WRITE_V3_VERIFIED"}:
         print("- 宿主已确认本次实际文件修改。", file=stream)
     elif changes or str(task.get("kind") or "").upper() == "REPAIR":
         print("- 修改尚未得到当前宿主确认，因此暂不能标记为已验证完成。", file=stream)
@@ -1147,7 +1153,42 @@ def main(argv: list[str] | None = None) -> int:
             host_write_receipt = _optional_mapping(args.host_write_receipt)
             host_patch_candidate = _optional_mapping(args.host_patch_candidate)
             host_tool_results = [_optional_mapping(path) for path in args.host_tool_result]
-            if host_patch_candidate is not None and not args.after_url:
+            related_run = None
+            if args.local_operation and (host_patch_candidate is not None or host_write_receipt is not None):
+                raise ContractViolation("LOCAL_OPERATION_V3_MIXED", ["$: --local-operation cannot be combined with a V3 or legacy Host receipt/candidate"])
+            if args.continue_run:
+                is_local_after = bool(args.after_url) and not args.local_operation_prewrite_check
+                is_prewrite_check = bool(args.local_operation_prewrite_check) and not args.after_url and bool(args.url)
+                if not args.local_operation or not (is_local_after or is_prewrite_check) or args.related_run or args.file or host_patch_candidate is not None or host_write_receipt is not None:
+                    raise ContractViolation("LOCAL_OPERATION_CONTINUATION_INVALID", ["$: exact local continuation requires --continue-run, --local-operation, and either the pre-write check or --after-url; scope and receipts are loaded from that run"])
+                candidate_dir = (artifacts_root / str(args.continue_run)).resolve()
+                try:
+                    candidate_dir.relative_to(artifacts_root.resolve())
+                except ValueError as error:
+                    raise ContractViolation("LOCAL_OPERATION_RUN_MISMATCH", ["$: selected run must be under this project's artifact root"]) from error
+                if candidate_dir.parent != artifacts_root.resolve() or not candidate_dir.is_dir():
+                    raise ContractViolation("LOCAL_OPERATION_RUN_MISMATCH", ["$: selected run is not present under this project's artifact root"])
+                prior_run = load_experience_run(candidate_dir)
+                run_target_identity, _, _ = _target_identity(args.target, run_url)
+                if str(prior_run.get("taskId")) != stable_task_id or str(prior_run.get("targetDigest")) != digest_json(run_target_identity):
+                    raise ContractViolation("LOCAL_OPERATION_RUN_MISMATCH", ["$: selected run does not match this task and target"])
+                existing_run = candidate_dir
+                session_id = str(prior_run["sessionId"])
+                selected_mode = "FIX_AND_VERIFY"
+            elif args.related_run:
+                if not args.local_operation or args.after_url or host_patch_candidate is not None or host_write_receipt is not None:
+                    raise ContractViolation("RELATED_RUN_INVALID", ["$: --related-run is only for a new explicitly local repair run"])
+                related_run = (artifacts_root / str(args.related_run)).resolve()
+                try:
+                    related_run.relative_to(artifacts_root.resolve())
+                except ValueError as error:
+                    raise ContractViolation("RELATED_RUN_MISMATCH", ["$: related run must be under this project's artifact root"]) from error
+                if related_run.parent != artifacts_root.resolve() or not related_run.is_dir():
+                    raise ContractViolation("RELATED_RUN_MISMATCH", ["$: related run is not present under this project's artifact root"])
+                session_id = f"cli-session-{uuid.uuid4().hex[:16]}"
+            elif args.local_operation and args.after_url:
+                raise ContractViolation("LOCAL_OPERATION_RUN_REQUIRED", ["$: local After must name its exact run with --continue-run"])
+            elif host_patch_candidate is not None and not args.after_url:
                 candidate_run_id = str(host_patch_candidate.get("runId") or "").strip()
                 if not candidate_run_id:
                     raise ContractViolation("HOST_PATCH_CANDIDATE_RUN_MISMATCH", ["$.runId: patch candidate must identify the existing repair run"])
@@ -1188,6 +1229,9 @@ def main(argv: list[str] | None = None) -> int:
                 browser_executable=args.browser_executable, storage_state=storage_state,
                 host_write_receipt=host_write_receipt, host_patch_candidate=host_patch_candidate,
                 host_receipt_hmac_key=_host_receipt_hmac_key(), host_tool_results=host_tool_results,
+                local_operation=args.local_operation,
+                local_operation_prewrite_check=args.local_operation_prewrite_check,
+                related_run=related_run,
             )
             if args.compact:
                 _emit(result, compact=True)

@@ -1,65 +1,67 @@
 # Public source boundary
 
-This repository is the Web UI Quality 4.3.1 Apache-2.0 source release for the
-normal OSS release channel. Release archives are published on the
-[project Releases page](https://github.com/haotianshuo/web-ui-quality-open-source/releases):
+This is the Web UI Quality 4.4.0 Apache-2.0 source release for the normal
+GitHub OSS channel.
 
 - repository: <https://github.com/haotianshuo/web-ui-quality-open-source>;
-- release version: `4.3.1`;
-- license for the release: Apache-2.0;
+- release version: `4.4.0`;
+- license: Apache-2.0 for project-owned material only;
 - PyPI/npm: not published.
 
-The engineering review is closed for the distributed files in
-[FINAL_PUBLIC_SOURCE_MANIFEST.json](FINAL_PUBLIC_SOURCE_MANIFEST.json):
-`RIGHTS_BLOCKED = 0` and `NOT_CONFIRMED_DISTRIBUTED_FILES = 0`.
+The source manifest covers every file selected by the release packager. Its 576
+non-self rows match the package paths, current byte counts, hashes, source
+labels, and required attribution fields. The manifest itself is included in
+the package but cannot contain a self-referential row. The 25 paths omitted by
+the previous manifest were traced to their first-introduction commits in the
+Web UI Quality repository and reviewed against preserved external project
+snapshots. The 32 stale rows were compared with the previous main baseline;
+their text matched after line-ending normalization, and their current byte
+counts and hashes are now recorded.
+
+`scripts/release.py validate` keeps technical validation separate from formal
+source eligibility. The `package` command refuses to write release archives if
+the manifest is absent, partial, malformed, incomplete, or out of date.
 
 ## Included
 
-- the plugin manifest and project skill;
-- the Python Runtime, schemas, public examples, and public tests;
-- bounded security, scope, evidence, verification, and release documentation;
-- reproducible source-package metadata and public CI configuration;
-- the final file-level source manifest.
+- the plugin manifest and user-facing Web UI Quality skill;
+- the Python Runtime, mirrored schemas, public examples, and public tests;
+- bounded product, security, verification, dependency, and release documents;
+- the source manifest and reproducible source-package metadata.
 
 ## Excluded
 
-- ZIP/TAR recovery archives and duplicate historical package folders;
-- ChatGPT/Codex/Claude records, browser profiles, LevelDB, caches, and virtual
-  environments;
-- the private `evolution/` ledger and external project worktrees/evidence;
-- commercial EULA/template files and the commercial demo;
-- historical private/commercial/experimental contract tests that require
-  excluded evidence or non-public release identities;
-- generated screenshots and inventory output that are not needed by the public
-  runtime and are not verified for redistribution;
-- generated audit outputs, credentials, and machine-specific paths.
+- private `evolution/` records, business copies, browser profiles, screenshots,
+  logs, caches, virtual environments, and machine-specific paths;
+- commercial templates and demo material;
+- historical private or commercial tests that depend on excluded evidence;
+- generated audit outputs that are not part of the public Runtime.
 
-## License history
+## License history and third-party material
 
-The historical GitHub release `v4.3.0` is a separate MIT-licensed public
-source snapshot at its recorded commit. It remains in Git history as a real
-historical artifact. It was not rewritten as Apache-2.0. The current 4.3.1
-release is the Apache-2.0 source line built from the 4.3.1 release baseline.
+The historical `v4.3.0` MIT-licensed source snapshot and the previous `v4.3.1`
+Apache-2.0 release remain unchanged. The current source line is Apache-2.0.
+No third-party source code, fixtures, images, fonts, icons, browser binaries, or
+model weights are bundled. Runtime, Browser, test, and build dependencies are
+installed separately and retain their upstream licenses and notices if a
+downstream distribution bundles them. See
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and
+[DEPENDENCY_LICENSE_REVIEW.md](DEPENDENCY_LICENSE_REVIEW.md).
 
-The root Apache license covers only the project-owned material included in
-the current release. A third-party item, if ever included, keeps its own
-license and required notice; the root license does not relicense it.
-
-## Provenance and boundary rules
-
-Every distributed file is classified in the final manifest as an allowed
-engineering disposition. External issue and pull-request pages, commit
-identifiers, URLs, and behavior descriptions are research evidence only. They
-are not copied source and are not automatically dependencies or attributions.
-
-Future additions must record the source, version or commit, license, and any
-notice obligation before they are distributed. Do not add chat exports,
-browser storage, credentials, local absolute paths, generated evidence,
-external repository checkouts, or private audit material.
+External project names, URLs, issue/PR identifiers, commit SHAs, and behavior
+descriptions are research references; they are not copied source or automatic
+attributions. Any future distributed third-party material requires a new
+source, license, and notice review.
 
 ## Claim boundary
 
-The public tests prove only the self-contained package contract. Commercial GA
-remains `NOT_ESTABLISHED`; Real Host, External Blind Holdout, and Browser
-qualification remain `NOT_MEASURED`. This release does not establish
-production compatibility, model accuracy, or legal clearance of future additions.
+The source review is an engineering provenance record, not a statutory
+copyright opinion, contributor assignment, patent clearance, or
+non-infringement guarantee. No legal copyright-holder name is inferred from a
+Git identity or account.
+
+The bounded local operation record documents observed file changes and After
+checks; it is not an independent Host attestation and does not enter the V3
+verifier. Commercial GA, production qualification, and broad page-maturity
+claims remain unestablished. Page-specific placeholder business operations
+remain the responsibility of the host application.

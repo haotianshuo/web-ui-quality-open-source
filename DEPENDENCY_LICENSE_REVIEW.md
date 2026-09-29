@@ -1,9 +1,10 @@
 # Dependency license review
 
-This is a qualification record for the current `4.3.1-open-source` source
-release. It is not a runtime lockfile and it does not mean that these packages
-are bundled in the Web UI Quality source archive or wheel. Runtime dependency
-ranges remain in `pyproject.toml`.
+This record is carried forward for the `4.4.0-open-source` source release.
+Dependency declarations are unchanged from 4.3.1; this is not a new dependency
+security review or a runtime lockfile, and these packages are not bundled in
+the Web UI Quality source archive or wheel. Runtime dependency ranges remain
+in `pyproject.toml`.
 
 The source package declares one required runtime dependency (`Pillow`) and
 optional Browser, validation, test, and development extras. The build system
