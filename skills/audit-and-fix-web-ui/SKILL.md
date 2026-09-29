@@ -3,11 +3,11 @@ name: audit-and-fix-web-ui
 description: "Inspect and improve real website and workbench UI: layout, typography, icon proportions, color roles, spacing, imagery, responsive composition and complete interactions. Use one natural-language run entry; ground repairs in real pages and project source, with Host-applied writes and honest verification."
 ---
 
-# Web UI Quality 4.3.1
+# Web UI Quality 4.4.0
 
 **唯一公共运行入口：** `python -B scripts/run_runtime.py ...`。Skill 内部脚本仅为实现细节，测试与文档不得绕开该入口。
 
-> Current plugin/package: 4.3.1 · Current Trust Kernel: 4.2.3 · Kernel base: 4.0.0-rc.1 · Receipt protocol: 3.0 · Evidence schema: 3.0
+> Current plugin/package: 4.4.0 · Current Trust Kernel: 4.2.3 · Kernel base: 4.0.0-rc.1 · Receipt protocol: 3.0 · Evidence schema: 3.0
 
 ## Default product entry
 

@@ -1,3 +1,27 @@
+# 4.4.0 — real-page review and scoped repair handoff
+
+This normal Apache-2.0 OSS minor release adds public evidence and repair
+handoff capabilities without changing the V3 Host-proof or Runtime write
+boundaries.
+
+## Release changes
+
+- improves rendered evidence for visible icon geometry and text alignment
+  inside similar list rows, retaining candidates with component-level
+  locations and repair guidance;
+- adds a bounded local operation record that connects the approved source
+  scope, actual file changes, and a same-condition After review; it does not
+  identify an independent Host or produce V3 `VERIFIED` proof;
+- keeps source mapping and approved scope in the normal natural-language
+  review and repair flow;
+- makes release validation report source eligibility from the file-level
+  manifest, checks each row's source and license fields, and blocks packaging
+  before writing if the manifest is incomplete or inconsistent.
+
+The release does not claim whole-page maturity, independent Host proof,
+Commercial GA, or production qualification. Placeholder business operations
+remain the responsibility of the host application.
+
 # 4.3.1 — Apache OSS correctness and reliability maintenance release
 
 This release carries the 4.3.1 runtime identity and the existing 4.2.3

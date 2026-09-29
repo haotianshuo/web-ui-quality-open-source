@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "web-ui-quality"
-version = "4.3.1"
+version = "4.4.0"
 description = "Real-page UI quality and Host-guided repair for layout, icons, colors, spacing, imagery and interactions, with scoped evidence-backed verification."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -62,7 +62,7 @@ web_ui_quality = ["schemas/*.json", "browser_runner.cjs", "public-compatibility-
 runtime-path = "runtime/python"
 baseline-version = "v2.3-p0a"
 default-execution-layer = "Lite"
-open-source-release-stage = "4.3.1-open-source"
+open-source-release-stage = "4.4.0-open-source"
 kernel-version = "4.2.3"
 kernel-base-version = "4.0.0-rc.1"
 protocol-version = "3.0"

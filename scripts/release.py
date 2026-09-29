@@ -48,6 +48,13 @@ EXCLUDED_PARTS = {
 }
 HISTORICAL_HEADING = re.compile(r"(?im)^#{1,3}\s+\d+\.\d+\.\d+[^\n]*\bRC\d*\b")
 STALE_PACKAGE_VERSIONS = {".".join(parts) for parts in (("3", "6", "0"), ("3", "6", "1"), ("3", "6", "2"), ("3", "7", "0"), ("3", "7", "1"), ("3", "7", "2"), ("3", "7", "3"))}
+ALLOWED_SOURCE_PROVENANCE = frozenset({
+    "WUQ_ORIGINAL_CONFIRMED",
+    "GENERATED_FROM_WUQ_CONFIRMED",
+    "THIRD_PARTY_APACHE_COMPATIBLE",
+    "THIRD_PARTY_NOTICE_REQUIRED",
+    "REWRITE_INDEPENDENTLY",
+})
 DEFAULT_GATE_TIMEOUT_SECONDS = 180
 # release_gate.py owns a 900-second worker deadline. Allow that worker to
 # report its own result, plus a bounded minute for parent/process cleanup.
@@ -348,6 +355,14 @@ def _source_provenance_conclusion() -> dict[str, object]:
         blockers.append("validationContract does not confirm provenance coverage for all current package files.")
     if not isinstance(validation_contract, dict) or validation_contract.get("allManifestRowsUseAllowedProvenanceLabels") is not True:
         blockers.append("validationContract does not confirm allowed provenance labels for all manifest rows.")
+    declared_provenance = validation_contract.get("allowedProvenance") if isinstance(validation_contract, dict) else None
+    if (
+        not isinstance(declared_provenance, list)
+        or any(not isinstance(label, str) for label in declared_provenance)
+        or len(declared_provenance) != len(ALLOWED_SOURCE_PROVENANCE)
+        or set(declared_provenance) != ALLOWED_SOURCE_PROVENANCE
+    ):
+        blockers.append("validationContract.allowedProvenance does not match the recognized source labels.")
 
     rows = manifest.get("files")
     if not isinstance(rows, list):
@@ -390,6 +405,15 @@ def _source_provenance_conclusion() -> dict[str, object]:
             blockers.append(f"The source manifest contains a duplicate row for {relative}.")
             continue
         row_paths.add(relative)
+        provenance = row.get("provenance")
+        if not isinstance(provenance, str) or provenance not in ALLOWED_SOURCE_PROVENANCE:
+            blockers.append(f"The source manifest row for {relative} has a missing or unrecognized provenance label.")
+        for field in ("license", "classificationReason", "copyrightBasis", "noticeRequirement", "redistributionDecision", "thirdPartyContentDisposition"):
+            value = row.get(field)
+            if not isinstance(value, str) or not value.strip():
+                blockers.append(f"The source manifest row for {relative} is missing {field}.")
+        if not isinstance(row.get("sourceComparison"), dict) or not row["sourceComparison"]:
+            blockers.append(f"The source manifest row for {relative} is missing sourceComparison evidence.")
         path = package_files.get(relative)
         if path is None:
             blockers.append(f"The source manifest row does not match a current package file: {relative}.")

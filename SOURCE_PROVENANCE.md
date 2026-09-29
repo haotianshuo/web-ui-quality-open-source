@@ -1,58 +1,43 @@
 # Source and provenance boundary
 
-This candidate starts from one exact audited source snapshot. It is not a
-reconstruction of the developer's multi-computer Git history and it does not
-invent commits for versions that were not preserved.
+The 4.4.0 release's source manifest covers the exact file set
+selected by `scripts/release.py`: 576 non-self rows and 577 package inputs
+including the self-excluding source manifest. Paths, byte counts, hashes,
+provenance labels, license fields, classification reasons, and source
+comparison records match the files that the packager will include.
 
-The reviewed source paths are recorded in
-[FINAL_PUBLIC_SOURCE_MANIFEST.json](FINAL_PUBLIC_SOURCE_MANIFEST.json). The
-manifest lists 551 provenance rows. The current public source package has 25
-additional paths without provenance rows, and 32 listed rows have byte counts
-or hashes that do not match their current files. All 57 remaining affected
-paths are unchanged by this candidate. This candidate updates the hashes for
-its 35 changed non-self source paths only. The generated release manifest covers
-package composition and content hashes, not provenance. This is an incremental
-review, not a distribution-wide provenance closure.
+The 25 paths missing from the previous manifest are four Runtime modules, two
+validation scripts, and nineteen tests. Git history traces each to a
+first-introduction commit in this Web UI Quality repository. Content review
+found project-specific Runtime and test code; no third-party attribution or
+license header was omitted. Against the preserved external project snapshots,
+25 per-file content signatures and 28 additional long-line signatures had no
+matches. No exact whole-file match was found in those snapshots.
 
-`scripts/release.py validate` reports technical checks separately from formal
-release eligibility. The current `CURRENT_BATCH_ONLY` status prevents the
-`package` command from writing release artifacts. Formal packaging requires a
-closed status and matching package-file coverage, byte counts, and hashes.
+The 32 rows whose old byte counts or hashes were stale were compared with the
+previous `main` source. Their text matched after normalizing line endings;
+the byte differences reflected line-ending representation, not new source
+content. The rows now record the exact current package bytes and hashes. The
+remaining source rows retain their previously reviewed provenance details.
+No third-party source code or assets are included; separately installed
+dependencies keep their upstream licenses and notices if redistributed.
 
-For every file listed in the source manifest, the engineering disposition is
-closed:
+The source manifest and packaging checks enforce different facts: the manifest
+records source and license review, while the packager independently checks
+coverage, recognized provenance labels, required row fields, byte counts, and
+hashes. A technical validation PASS does not by itself establish source
+eligibility. Missing, partial, malformed, unknown, or stale source records
+block formal packaging.
 
-- RIGHTS_BLOCKED = 0;
-- NOT_CONFIRMED_DISTRIBUTED_FILES = 0;
-- third-party code/content disposition is either none or explicitly
-  REFERENCE_ONLY_NOT_DISTRIBUTED_THIRD_PARTY_CODE;
-- project-owned source is prepared for Apache-2.0 without changing a third
-  party's license.
-
-The evidence used for this engineering classification includes the preserved
-source snapshot, historical candidate digests, file-tree and content
-comparisons, the user-controlled WUQ development record, and manual review of
-the files that mention external projects. These are provenance controls, not a
+This is an engineering review of the distributed source boundary. It is not a
 statutory copyright opinion, contributor assignment, patent clearance, or
-non-infringement guarantee.
+non-infringement guarantee. The legal copyright-holder display name remains
+optional and is not inferred from a username, Git identity, local account, or
+contact email.
 
-The user has explicitly confirmed the open-source intent and Apache-2.0 target.
-The legal copyright-holder display name is intentionally not inferred from a
-username, Git identity, local account, or contact email; it is tracked as
-`OPTIONAL_FUTURE_IDENTITY_DISCLOSURE` and is not a general engineering
-blocker.
-
-External issue/PR pages, commit SHAs, URLs, and behavior descriptions remain
-research references. The review found no distributed upstream source, fixture,
-asset, screenshot, icon, or font. If a future change adds one, its original
-license and required notice must be recorded before merge.
-
-The boundary intentionally excludes private chat/session records, browser
-storage, LevelDB, recovered archives, the private evolution/ ledger, external
-project worktrees, commercial templates, and commercial demo material.
-It also removes eight historical private/commercial/experimental contract
-tests whose assumptions require those excluded materials or non-public release
-identities; those files remain in the audit quarantine and are not distributed.
-Generated `examples/ui-inventory-evidence/` screenshots and inventory output
-are quarantined for the same reason: they are not required by the public
-runtime and are not redistributed without separate content provenance.
+Private chat/session records, browser storage, recovered archives, the private
+`evolution/` ledger, business copies, screenshots, external project
+worktrees, commercial templates, and commercial demo material are outside the
+release package. This pass reviewed the preserved project snapshots named in
+the source comparison; it did not scan unrelated local worktrees for material
+to redistribute.

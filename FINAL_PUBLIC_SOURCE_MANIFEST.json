@@ -8,17 +8,18 @@
     "product": "web-ui-quality",
     "publicGithubRelease": "NORMAL_RELEASE",
     "rootLicense": "Apache-2.0",
-    "stage": "4.3.1-open-source",
-    "version": "4.3.1"
+    "stage": "4.4.0-open-source",
+    "version": "4.4.0"
   },
+  "counterScope": "The root counters describe source rows only. The current package tree has 577 inputs including the source manifest; all 576 non-self paths have provenance rows with current byte counts and hashes. The release packager independently checks coverage and file identity, so formal eligibility is not inferred from the CLOSED status string alone.",
   "engineeringClosure": {
-    "claimBoundary": "The current batch source classifications apply to its 35 changed non-self paths. The source manifest omits 25 other package paths and has 32 listed rows whose bytes/hashes no longer match current files; unchanged baseline content is not cleared by this batch. This is not a whole-package provenance closure, statutory copyright opinion, contributor assignment, patent clearance, or non-infringement guarantee.",
+    "claimBoundary": "Engineering provenance covers every distributed source path and current file identity. It is not a statutory copyright opinion, contributor assignment, patent clearance, or non-infringement guarantee; no legal holder is inferred.",
     "copyrightDisplayName": null,
     "copyrightDisplayNameStatus": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
-    "status": "CURRENT_BATCH_ONLY",
-    "thirdPartyProvenanceStatus": "NO_THIRD_PARTY_CONTENT_ADDED_IN_CURRENT_BATCH"
+    "status": "CLOSED_FOR_DISTRIBUTED_FILES",
+    "thirdPartyProvenanceStatus": "CLOSED_FOR_DISTRIBUTED_FILES"
   },
-  "fileCount": 551,
+  "fileCount": 576,
   "files": [
     {
       "bytes": 4492,
@@ -30,7 +31,7 @@
       "path": ".codex-plugin/plugin.json",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "cdf115ac630f17012cb2f80e6b5554ff82af4ca709911d7c2c160c915fbdd4c1",
+      "sha256": "c5ec8def6dab8fe9603db7b2afbddd0fce282c10d3f521e3432ce42e500fcc52",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -47,7 +48,7 @@
       "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "59bc7983ccebabb4f547848a6320344e81594f791bee774b2bc751a12516d48b",
+      "sha256": "cb44324e6e8050772bf0829786e3947bf7d5db7e68f2aeacabd7a7386c4443db",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -64,7 +65,7 @@
       "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "9b7682a011e7b16230a1c61edad0a02d95c5ae701a442a16edfd08ab59dd24bc",
+      "sha256": "af70c10bf0bb4621dec924a02d1cba7c6cc2accd17623c0fa51793c688342584",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -123,7 +124,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1144,
+      "bytes": 1146,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -132,7 +133,7 @@
       "path": "ADAPTIVE_TRUST_KERNEL_RFC.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "277a3e055684c2cf9bee58c9e1ffcbcccbe54a8bc1d79e93bf713dc7bce90bcc",
+      "sha256": "e12abdb35d1f1a0621f5672c4c7c849d790b46f7fe7916f0751df283797a4d10",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -140,7 +141,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1337,
+      "bytes": 1338,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -149,7 +150,7 @@
       "path": "AGENT_BENCHMARK_PROTOCOL.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "12747b0a63784f2387ce063fa990f151ff84c81797ceb344207655e2876d99d5",
+      "sha256": "9179ad92a40b8108438b94e88597eb803ae34af3bdaf5b0b5e8034482114b487",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -166,7 +167,7 @@
       "path": "ARCHITECTURE.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "d0ad71989962d8144f0def27d7555c25b95340ee7157ccda0189a03de9fb1f04",
+      "sha256": "f17c734600e251bc22ebd282036eea63d9bfda3dee2a728aa21ce0165c1cb3ad",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -174,7 +175,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1541,
+      "bytes": 2658,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -183,7 +184,7 @@
       "path": "CHANGELOG.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "c4712cc96d3a8314c5d58aa1b9dd290711129df5439e7704d1796c79ee95bf81",
+      "sha256": "3968d982230f4987074864058f901c0468d3dce1a363e9d9713a57086698c762",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -208,7 +209,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1144,
+      "bytes": 1145,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -217,7 +218,7 @@
       "path": "COMPATIBILITY_MATRIX.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "b97b3eefa5d79ae6a86e22c1d353ab5c132e1378b26bb63f1b456619bebaf02c",
+      "sha256": "dd8945dfcc0b23b50a6d6b1f52c0a5afd1efad2697616da741d9532757881890",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -242,7 +243,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3214,
+      "bytes": 3265,
       "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -251,7 +252,7 @@
       "path": "DEPENDENCY_LICENSE_REVIEW.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "1c68f98f4a97d19d9046c6f4b0f2ff9f21e7afc83ed746e90aa53103e5349669",
+      "sha256": "e33a4742232a15c3bb1012cbff0a8e42c6fa9f0ec50495c53ddf3487f45e348a",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -259,7 +260,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1301,
+      "bytes": 1302,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -268,7 +269,7 @@
       "path": "GUIDED_REPAIR_QUICKSTART.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "10686f8c7b8d6c7142f409707edafe15bce0f277aea2d44c9db0cda7b7206e23",
+      "sha256": "7e2e3594f7c451780cda5d59fe3fe11b941107e8a2fdf303f392a33e4297aa84",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -276,7 +277,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1446,
+      "bytes": 1447,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -285,7 +286,7 @@
       "path": "KNOWN_LIMITATIONS.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "2905efa6fae02cc1cb0e32e69a65ee465da989a416d01d97e1a363b3aab4d7c3",
+      "sha256": "e65ae506b3babc1f684ca1418fe78a44b440101fca6f93524d30294ec888cf63",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -344,7 +345,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1227,
+      "bytes": 1228,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -353,7 +354,7 @@
       "path": "PRODUCT_MEASUREMENT_SPEC.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "27963ed0289540b6bb441eec731d0288da785af387a18305be575625db9601ef",
+      "sha256": "263d437f9f365f9eda07243a9ded0594a8da249bb8806b864e4ad547dd03c6c5",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -361,7 +362,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 4108,
+      "bytes": 3354,
       "classificationReason": "Project-owned Apache-2.0 public documentation updated to state source-coverage and formal-release eligibility boundaries.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -370,7 +371,7 @@
       "path": "PUBLICATION.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "f6faae8ff46f8b4cd8089d4e8f88219c30f9021274c542e440353a82dbe09615",
+      "sha256": "c4f5296885b804486ec0bdf739d3f2532834bf9c1ee8779a777e5968f1bcad12",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -378,7 +379,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 8988,
+      "bytes": 9144,
       "classificationReason": "Project-owned Apache-2.0 public documentation updated to state the reviewed source-provenance coverage boundary; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -387,7 +388,7 @@
       "path": "README.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "4bcf914ee00287fe0590fb1094f0d712b9a3d100f4b8b0c8f84ede9aa39b0ca2",
+      "sha256": "6fc2ffde014678bf2001997a192328c3c3f7dd67e20455f2a3c93c8271f0a2e4",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -395,7 +396,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1022,
+      "bytes": 1023,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -404,7 +405,7 @@
       "path": "REPAIR_MODERNIZATION_ACCEPTANCE.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "8969973ddd6ee7d0ff2b586edd39113f2de019556d9d04a702437424be8a33bc",
+      "sha256": "0b58f67b662ed5a7f5231b404463b983317da05135563a380c198bf0f0f714e0",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -412,7 +413,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1934,
+      "bytes": 1935,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -421,7 +422,7 @@
       "path": "SECURITY.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "36eb676fc61c8455b99cd23626a797d6a70d7a98877e21ec27a9a5938ed2e97e",
+      "sha256": "51216508cfbe0d2974556f5696624f251778664bdc54e8bcce4cdb4eccf85223",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -429,7 +430,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 1487,
+      "bytes": 1488,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -438,7 +439,7 @@
       "path": "SECURITY_RESPONSE_POLICY.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "40be73380372988501df888d659f74df8ce8ee6330b5548c084b276b0c10bfe4",
+      "sha256": "96d8ce751d860eb9b423078ee969b31e0332a3102a9564a65217880bee531917",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -446,7 +447,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3277,
+      "bytes": 2550,
       "classificationReason": "Project-owned Apache-2.0 provenance documentation updated to state source-coverage and formal-release eligibility boundaries.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -455,7 +456,7 @@
       "path": "SOURCE_PROVENANCE.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "71eb2f517a7e8fe7b140afd206d6f3442b305b9369b3be703adb534b908341f2",
+      "sha256": "7458659aab38d407782df81e4d33886b01f2794a0cc980a7bc53312470e89d34",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -472,7 +473,7 @@
       "path": "THIRD_PARTY_NOTICES.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "b684bf505e450a3c39864c22f435a51978f5681261f7d32d9f70df8070c8a1b2",
+      "sha256": "2fedd637aaf793967290d5997852331fc4b8ed181c2f467c828bc6f08f3d5224",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -829,7 +830,7 @@
       "path": "pyproject.toml",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "90d09bb67dde9e3383c309cd627340c6bc1d36da93f9196d21402e6f15a2030c",
+      "sha256": "f455a9e50f8a8b2a28ee78d6bee31ac7e37b6e54e2b1cca767975ee7d6d40fab",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -956,6 +957,24 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 4410,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "runtime/python/web_ui_quality/agent_adapter.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "fbb38406aaa64f7772cfb171684a810077aa725a94057d5f30b78c4cd954d4a3",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 1850,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -1037,6 +1056,24 @@
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 9154,
+      "classificationReason": "First introduced in this Web UI Quality repository at df2e5322a12e355adc41caee06dfd20edc9479d4; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "runtime/python/web_ui_quality/benchmark_evaluation.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "dce935033a12f7e6e3494e2f0652f794bc4ae97ef7e422639de28a3d4933e80b",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "df2e5322a12e355adc41caee06dfd20edc9479d4"
       },
       "thirdPartyContentDisposition": "NONE"
     },
@@ -2146,6 +2183,24 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 11546,
+      "classificationReason": "First introduced in this Web UI Quality repository at 3709c4c39925beb63c1ab467768539653f11e576; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "runtime/python/web_ui_quality/intent_signals.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "147c3cb72a02c6a46b9de3d958c9421d51e2971ecb71e3de47b2ac41d28954ff",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "3709c4c39925beb63c1ab467768539653f11e576"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 6643,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -2826,7 +2881,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 14766,
+      "bytes": 14768,
       "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -2835,7 +2890,7 @@
       "path": "runtime/python/web_ui_quality/public-api-manifest.json",
       "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "07e893c63df278712a0a5eaec4604d966a0365ee7912d79bc99428b5db6da0a0",
+      "sha256": "249da433956d1201e953c429b22c0f509ae499ecf9e2d392da8fec1f4607e028",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -2877,6 +2932,24 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 4336,
+      "classificationReason": "First introduced in this Web UI Quality repository at 2416a1c415d926251a98aaf8d514012787298862; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "runtime/python/web_ui_quality/qualification_harness.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "e67cc6fa9d638660089c2e07d4635f75e8ec602d4c80233a0266c95ad43eb01e",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "2416a1c415d926251a98aaf8d514012787298862"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 27663,
       "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -2911,7 +2984,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 4800,
+      "bytes": 4921,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -2920,7 +2993,7 @@
       "path": "runtime/python/web_ui_quality/release_info.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "e5aa2d751cb364883952534003736edccc4b68523f0121d26799281e7728552c",
+      "sha256": "02ccff9f5fb0cac2676e76419fddc4b0ff6bbdb87c598e44608309e23dbb8821",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -3880,7 +3953,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 4239,
+      "bytes": 4240,
       "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -3889,7 +3962,7 @@
       "path": "runtime/python/web_ui_quality/schemas/host-write-receipt-v3.schema.json",
       "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "45054556c4cb577de978e0d1901da0b99d0e7fc8d71474c5afe5005c86464c8c",
+      "sha256": "72509a9ab9469f6a668eef80582bfdb196d9fcba8881b8494b85d47dcce31d88",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -4084,7 +4157,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 6200,
+      "bytes": 6203,
       "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -4093,7 +4166,7 @@
       "path": "runtime/python/web_ui_quality/schemas/product-experience-report.schema.json",
       "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "029f94fd35dc9bf8a713901efc4af56d8118a3a5f597a6f00619b945588c634c",
+      "sha256": "f19613e15c76944de7c32a92e53613fc3f734c2492b935ab941f0e75dbc6846b",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -5869,7 +5942,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 4239,
+      "bytes": 4240,
       "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -5878,7 +5951,7 @@
       "path": "schemas/host-write-receipt-v3.schema.json",
       "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "45054556c4cb577de978e0d1901da0b99d0e7fc8d71474c5afe5005c86464c8c",
+      "sha256": "72509a9ab9469f6a668eef80582bfdb196d9fcba8881b8494b85d47dcce31d88",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -6073,7 +6146,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 6200,
+      "bytes": 6203,
       "classificationReason": "Generated or maintained from the WUQ source/contracts and included as deterministic project metadata.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -6082,7 +6155,7 @@
       "path": "schemas/product-experience-report.schema.json",
       "provenance": "GENERATED_FROM_WUQ_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "029f94fd35dc9bf8a713901efc4af56d8118a3a5f597a6f00619b945588c634c",
+      "sha256": "f19613e15c76944de7c32a92e53613fc3f734c2492b935ab941f0e75dbc6846b",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -6719,7 +6792,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 7003,
+      "bytes": 7004,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -6728,7 +6801,7 @@
       "path": "scripts/agent_workflow_governance_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "eabf2094cbe1e60d39958cabcba200b58be1c901a846dc108b818b51974f8a8f",
+      "sha256": "91bcd56f0dd25e116d64622f60adfb4502152047c4b2f531000983eb601dd095",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -6940,7 +7013,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 5781,
+      "bytes": 5782,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -6949,7 +7022,7 @@
       "path": "scripts/convergence_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "ddd67a946281b7f39071c0ecbcd850ab243169551cd7f37289b0a782570a8115",
+      "sha256": "a014b97d5d1814abcaab53d35afdead29378fdeb58f25bced800e2b69032a2a1",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7004,6 +7077,24 @@
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 30781,
+      "classificationReason": "First introduced in this Web UI Quality repository at 2416a1c415d926251a98aaf8d514012787298862; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "scripts/formal_fix_validation.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "2b8593fbb68dbf6d4efe70dbe3da9847893c198462b6155ab33093de338d70e4",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "2416a1c415d926251a98aaf8d514012787298862"
       },
       "thirdPartyContentDisposition": "NONE"
     },
@@ -7161,7 +7252,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2953,
+      "bytes": 2955,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7170,7 +7261,7 @@
       "path": "scripts/package_public_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "9a80751c7044074e0f29c3b50873522759725edec153dbeadea67cf54d36fabb",
+      "sha256": "8d65833b22ac18d0504557129fcc8db3dae6fb62dbc7409065a332d94638cb1a",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7416,7 +7507,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 5616,
+      "bytes": 5617,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7425,7 +7516,7 @@
       "path": "scripts/product_evidence_foundation_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "51cc6a66a075807b7acbfea326768e7b2d8f3e38f887a6afa39a9288ae9d9281",
+      "sha256": "160fc2fc6fcf7584a2e05574151320adabbf0427fa37035790273e244487a16d",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7433,7 +7524,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 10905,
+      "bytes": 10906,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7442,7 +7533,7 @@
       "path": "scripts/product_experience_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "3cbb73356a3476ff5e79d0b6aaf13ac22563b8d7bfcb79c028808cf7fdf8315c",
+      "sha256": "46c64b68d441a93eb986d8a71706e98aa34e41d8ba6229112f79de1c0f44b6dc",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7450,7 +7541,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 35095,
+      "bytes": 35096,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7459,7 +7550,7 @@
       "path": "scripts/public_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "1a82e8e1817d6e577dd8e0f386322bff6d1b683599ff8d09717a103bb63dce90",
+      "sha256": "13ae90d20ae6b4c57a3be2950f125d0875c71297f589e91620d072110bc75279",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7501,7 +7592,25 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 31495,
+      "bytes": 7084,
+      "classificationReason": "First introduced in this Web UI Quality repository at df2e5322a12e355adc41caee06dfd20edc9479d4; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "scripts/real_user_findings_validation.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "f9f949b358c0ef01716d4acd1674b4a4ea49ccbb49c58da84857f6fc40619cdd",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "df2e5322a12e355adc41caee06dfd20edc9479d4"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 33015,
       "classificationReason": "Project-owned Apache-2.0 release code now reads manifest status and gates formal packaging on complete source coverage and current hashes.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7510,7 +7619,7 @@
       "path": "scripts/release.py",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "601024799358a0def210344a75362574fe22c2a268d773b9be65fbb0a5aadeb8",
+      "sha256": "b17d804b0c4ea232fdeb8aa280b64c2173768a9870a243af24ce0e175bb17535",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7535,7 +7644,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 35968,
+      "bytes": 35974,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7544,7 +7653,7 @@
       "path": "scripts/release_gate.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "89ba83a0f45f0e499a027099fd16ecc5c7ee283c90c98322926002e736c00f1f",
+      "sha256": "ffc3d3aee86d71316b1fd2afe2628f1439fb18ea89d020fa950b33a67111e0c8",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7552,7 +7661,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 7474,
+      "bytes": 7475,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -7561,7 +7670,7 @@
       "path": "scripts/repair_modernization_acceptance.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "3838172c10b547cc3712033ab008566c97bd481f1a5a4ede76e332f8b041c4ad",
+      "sha256": "0755a503ce2ef73e9a563e27d99a448abac32eceae82bcbb78e76f467752386b",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7765,7 +7874,7 @@
       "path": "scripts/verify_distribution.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "243859310472926c4046e904ffb4a51d484d3c0ad09854a23ae0e57c22266434",
+      "sha256": "49d8cfb07282de597fa02ccc566f6c86120383c55fda55157219602ef5d8b1cb",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7816,7 +7925,7 @@
       "path": "skills/audit-and-fix-web-ui/SKILL.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "855625da484a67018fa48c0752900b28e252692a2811f2cd9a28c6813964c0cf",
+      "sha256": "3867531bc4054011c620cea04271bbc185ab7b4010e8e4622b2f62bd227c4ddc",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -8181,7 +8290,79 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 13444,
+      "bytes": 3667,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_browser_capability_clarity.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "7e35681516e86d135eb74562b5cbcdb9a7596e8f2dd64f3ef95185b931f25ea0",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 2192,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_encoding_boundary.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "3cc299c6bd2523de95382b4ba1c3b96eb419a61db9125cd641952af651df0735",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 1614,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_focus_rule_whitespace.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "5e8a4c8e8cbfc766c7d2f2e8b27997621bcc7ac3bf2b6580c45e44eeeef9e1d3",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 3681,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_intent_router_surface.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "5fe83a07986da64b634f58491135b62a8f17798dc071140969190d57e354cd42",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 16153,
       "classificationReason": "Project-owned Apache-2.0 public regression tests use isolated manifest fixtures to verify truthful release status and pre-artifact blocking.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -8190,10 +8371,100 @@
       "path": "tests/public/test_public_release.py",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "d5a5e4fee8d4f677fb7a491a4d1a768717d90ac0c310268ff76d8bb64381c17d",
+      "sha256": "a51a0111d48ccb3f2239c66b2dca9bcb488d033a7308fd1f0841558a41288c95",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 4147,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_repair_mapping.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "e8f12a1aee1e57ccb9dcd78edd9a618962831d3602e6ba04d4109d1acb975e45",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 1989,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_security_coverage_visibility.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "290f076d8a1fd5eb21c3709eafcc545ed585e91ed934646235816f40a4afa854",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 4134,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_semantic_result.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "2fdacab50b48dd7d71c3e31228a65b78f70d34166439224ea40f9594f5f5fb10",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 2297,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_simple_expert_view.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "f19123d89666343acb3726e0935a39ec079e06d3a552c44019f98555c748a5fe",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 3124,
+      "classificationReason": "First introduced in this Web UI Quality repository at 87bdf7a2a85c87621b89a78e64851b88a472c4aa; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/public/test_thin_agent_adapter.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "262176b7e7310744427bdf06d80905f4730257d8162643deefc276f68e5016a9",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "87bdf7a2a85c87621b89a78e64851b88a472c4aa"
       },
       "thirdPartyContentDisposition": "NONE"
     },
@@ -8232,7 +8503,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 10496,
+      "bytes": 11331,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -8241,7 +8512,7 @@
       "path": "tests/test_421_trust_release_closure.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "4821db82ac13fb795f595570f49478acd5494fe8024021166a2875c6c99e9982",
+      "sha256": "e82bf5dfd9c04592a0b3b38e9d357719f8c5f2d36d341ff7aa0422ab249bbf40",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -8249,7 +8520,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 25240,
+      "bytes": 25243,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -8258,7 +8529,7 @@
       "path": "tests/test_422_release_integrity_trust_ux.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "cec5c86ebec25bb9a2fb0167ca999c6355f40ff8c6bd4af90db45daa6b826307",
+      "sha256": "205cbea2e368ed27dee3ddbe81984631852aef447ab52d95405a318d7833bef8",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -8300,7 +8571,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 13321,
+      "bytes": 13329,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -8309,7 +8580,7 @@
       "path": "tests/test_430_commercial_preflight_binding.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "350d9999db504efa40a65cf436fbb4c2d502a8dedf0807c77d099d2b94903ba8",
+      "sha256": "e8c0ce7e6863be7ec9d6d6ffdbaaf4b93303e7847f8982c698f102f3597a3dff",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -8419,6 +8690,24 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 8343,
+      "classificationReason": "First introduced in this Web UI Quality repository at 15cd497da58f59da2805dc8cf6510f26d82345ad; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_431_read_only_browser_closure.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "4d51158fb67e8cf9ae753b2c91fc8c1b26d4552ee3dfe93d19b81ed8222b297e",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "15cd497da58f59da2805dc8cf6510f26d82345ad"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 17173,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -8436,7 +8725,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 6471,
+      "bytes": 6472,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -8445,7 +8734,7 @@
       "path": "tests/test_alpha10_release_closure.py",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "fdb6aa6779f1ad52fdead36ad4b5307455209a1b62ebd30fc3dba89ceee822da",
+      "sha256": "365d4628660f9799b45c2d2ba4fa2c2d2aeb224fc1d84637bd872490a29117d6",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -8776,6 +9065,24 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 4428,
+      "classificationReason": "First introduced in this Web UI Quality repository at b9d7a5dd0dc1a064bc52dda21a2f15b5bdaa94ec; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_browser_readiness_markers.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "63543043ffeb3370eab066338e743b51989bc1bf42e809c063164cba3b604460",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "b9d7a5dd0dc1a064bc52dda21a2f15b5bdaa94ec"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 976,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -9014,6 +9321,42 @@
       "thirdPartyContentDisposition": "REFERENCE_ONLY_NOT_DISTRIBUTED_THIRD_PARTY_CODE"
     },
     {
+      "bytes": 2463,
+      "classificationReason": "First introduced in this Web UI Quality repository at 2416a1c415d926251a98aaf8d514012787298862; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_formal_fix_harness.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "6a20fcb34b7b813f07d9e45aaad726d77fd525315e54dfe2308d5e60a77245f9",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "2416a1c415d926251a98aaf8d514012787298862"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 14725,
+      "classificationReason": "First introduced in this Web UI Quality repository at 2416a1c415d926251a98aaf8d514012787298862; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_formal_fix_regressions.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "34abc3628562bbb8d7e35cfee0b9e599e40d2363c2d787d559c4ea2d3d4b4c50",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "2416a1c415d926251a98aaf8d514012787298862"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 1864,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -9235,6 +9578,78 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 5195,
+      "classificationReason": "First introduced in this Web UI Quality repository at da5979780417bdc74369cc30d7afc301212d632d; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_quick_ui_findings.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "e8c4bd20547dd472db44221480d0f06b770109fd969d9e4f9881df7e2e50c211",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "da5979780417bdc74369cc30d7afc301212d632d"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 11103,
+      "classificationReason": "First introduced in this Web UI Quality repository at df2e5322a12e355adc41caee06dfd20edc9479d4; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_real_user_benchmark_regressions.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "b188d9f6748989f4c4af1a347b1348fd3dd0eb22fb8c76e60e9f4f1b0ed1cd8e",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "df2e5322a12e355adc41caee06dfd20edc9479d4"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 598,
+      "classificationReason": "First introduced in this Web UI Quality repository at df2e5322a12e355adc41caee06dfd20edc9479d4; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_real_user_findings_validation.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "36430ddc5dcf24915b2fd7c6cd446d31ab40459bb510030a5b5c899645e071a6",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "df2e5322a12e355adc41caee06dfd20edc9479d4"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 5190,
+      "classificationReason": "First introduced in this Web UI Quality repository at df2e5322a12e355adc41caee06dfd20edc9479d4; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_real_user_intent_regressions.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "53cbfec023099c425c334501421184fe971b92910d20cac3c465acb36cc69946",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "df2e5322a12e355adc41caee06dfd20edc9479d4"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 5735,
       "classificationReason": "Project-owned Apache-2.0 source updated for real-page inspection and authorized repair; no third-party expressive content added.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -9303,6 +9718,24 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
+      "bytes": 1213,
+      "classificationReason": "First introduced in this Web UI Quality repository at da5979780417bdc74369cc30d7afc301212d632d; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_semantic_script_module.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "ad3ef8ac9981d332b806385ffbb9fa1d0965a04e2c9a214c8ec41fbd41f6dda8",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "da5979780417bdc74369cc30d7afc301212d632d"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
       "bytes": 3576,
       "classificationReason": "New project-owned regression test for the public passive task-action inventory; no third-party content retained.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
@@ -9333,6 +9766,24 @@
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
+      },
+      "thirdPartyContentDisposition": "NONE"
+    },
+    {
+      "bytes": 4496,
+      "classificationReason": "First introduced in this Web UI Quality repository at cc664f5a255a3353c0e40a9665ba77e4cbb3848f; reviewed as project-specific Runtime, validation, or test code. Targeted comparison against preserved external project snapshots found no exact-file or selected source-signature matches.",
+      "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
+      "copyrightDisplayName": null,
+      "license": "Apache-2.0",
+      "noticeRequirement": "NONE",
+      "path": "tests/test_v2_f001_runtime_classification.py",
+      "provenance": "WUQ_ORIGINAL_CONFIRMED",
+      "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
+      "sha256": "fda3b65924216cfc9feaf2485a42d10a69919b4ffd082f6cdb87f00528bc0c6a",
+      "sourceComparison": {
+        "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
+        "normalizedLongLineMatch": "NONE_FOUND_IN_TARGETED_SNAPSHOT_REVIEW",
+        "sourceHistoryFirstIntroductionCommit": "cc664f5a255a3353c0e40a9665ba77e4cbb3848f"
       },
       "thirdPartyContentDisposition": "NONE"
     },
@@ -9406,7 +9857,7 @@
         "provenance": "GENERATED_FROM_WUQ_CONFIRMED"
       }
     ],
-    "rowsCover": "The source table has 551 rows; the source package has 577 paths including the self-referential manifest. 25 paths have no provenance row and 32 listed rows have stale current bytes/hashes. The 35 non-self source files changed by this candidate have matching rows. Generated release manifests separately cover package composition and content hashes, not provenance."
+    "rowsCover": "The source table contains 576 non-self rows for the 577 paths selected by the current package tree, including the self-referential source manifest. The manifest excludes its own row; every other package path has a provenance row with current byte counts and hashes. Generated release manifests produced by release qualification separately record package composition and content hashes, not source provenance or legal clearance."
   },
   "publicBoundary": {
     "excludedDisposition": "REMOVE_FROM_PUBLIC_RELEASE",
@@ -9473,6 +9924,17 @@
       }
     ]
   },
+  "publicPackageScope": {
+    "candidateChangedSourceRowsWithCurrentBytesAndHash": 57,
+    "claimBoundary": "Every distributed non-self source path has a provenance row and current byte/hash identity; the generated release manifest covers package composition, not legal clearance.",
+    "currentSourceFileCount": 577,
+    "listedProvenanceFileCount": 576,
+    "listedRowsWithStaleCurrentBytesOrHash": 0,
+    "manifestSelfReferenceOmitted": true,
+    "staleListedFilesChangedInThisCandidate": 30,
+    "unlistedFilesChangedInThisCandidate": 0,
+    "unlistedSourceFileCount": 0
+  },
   "schemaVersion": "1.0",
   "sourceComparison": {
     "exactWholeFileHashMatchCount": 0,
@@ -9481,39 +9943,27 @@
     "normalizedMatchesDisposition": "MANUALLY_REVIEWED_GENERATED_WUQ_EVIDENCE_LINES_ONLY",
     "savedExternalChallengeFileCount": 188,
     "savedExternalProjectFileCount": 1531,
-    "scope": "Content/source review and refreshed digests cover the 35 non-self files changed by this candidate. 25 package paths are unlisted and 32 listed hashes are stale on unchanged baseline files.",
+    "scope": "The 25 paths omitted by the previous manifest were traced to repository introduction commits and checked against preserved external project snapshots; 25 per-file signatures and 28 additional long-line signatures returned no matches. The 32 rows stale in the previous manifest matched the prior main source after line-ending normalization. All distributed non-self paths are now classified and their byte counts and hashes match current package files.",
     "thirdPartyExpressiveContentFoundInCurrentChanges": false
   },
   "statusCounts": {
     "GENERATED_FROM_WUQ_CONFIRMED": 184,
     "REWRITE_INDEPENDENTLY": 26,
     "THIRD_PARTY_APACHE_COMPATIBLE": 1,
-    "WUQ_ORIGINAL_CONFIRMED": 340
+    "WUQ_ORIGINAL_CONFIRMED": 365
   },
-  "title": "Reviewed public source provenance for the Web UI Quality 4.3.1 candidate",
+  "title": "Reviewed public source provenance for the Web UI Quality 4.4.0 release",
   "validationContract": {
+    "allCurrentPackageFilesHaveProvenance": true,
+    "allManifestRowsUseAllowedProvenanceLabels": true,
     "allowedProvenance": [
-      "WUQ_ORIGINAL_CONFIRMED",
       "GENERATED_FROM_WUQ_CONFIRMED",
+      "REWRITE_INDEPENDENTLY",
       "THIRD_PARTY_APACHE_COMPATIBLE",
       "THIRD_PARTY_NOTICE_REQUIRED",
-      "REWRITE_INDEPENDENTLY"
+      "WUQ_ORIGINAL_CONFIRMED"
     ],
-    "thirdPartyLicenseRule": "The root Apache-2.0 license does not relicense third-party content; any future copied content keeps its own license and notice.",
-    "scope": "Allowed provenance labels apply to manifest rows; current content/hash identity is refreshed for this candidate’s changed files. 32 unchanged row hashes are stale and 25 package paths are absent from the table.",
-    "allCurrentPackageFilesHaveProvenance": false,
-    "allManifestRowsUseAllowedProvenanceLabels": true
-  },
-  "counterScope": "The root counters describe source rows only. In the current package tree, 25 paths have no provenance row and 32 listed rows have stale byte/hash values; these counts do not establish whole-package provenance closure.",
-  "publicPackageScope": {
-    "currentSourceFileCount": 577,
-    "listedProvenanceFileCount": 551,
-    "unlistedSourceFileCount": 25,
-    "listedRowsWithStaleCurrentBytesOrHash": 32,
-    "candidateChangedSourceRowsWithCurrentBytesAndHash": 35,
-    "manifestSelfReferenceOmitted": true,
-    "unlistedFilesChangedInThisCandidate": 0,
-    "staleListedFilesChangedInThisCandidate": 2,
-    "claimBoundary": "The 25 unlisted paths and 32 stale listed rows are unchanged from the verified main baseline. This candidate refreshes byte counts and hashes for its 35 changed non-self source rows only. The generated release manifest covers package composition and content hashes, not provenance. This is an incremental source review, not a distribution-wide provenance closure."
+    "scope": "All source rows have recognized provenance, a license and classification basis; package membership, current bytes and hashes are independently validated. Third-party material retains its own license and required notice.",
+    "thirdPartyLicenseRule": "The root Apache-2.0 license does not relicense third-party content; any future copied content keeps its own license and notice."
   }
 }

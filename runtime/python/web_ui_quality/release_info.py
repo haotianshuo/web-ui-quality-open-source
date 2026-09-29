@@ -1,4 +1,4 @@
-"""Release identity for the Web UI Quality 4.3.1 Apache-2.0 source release.
+"""Release identity for the Web UI Quality 4.4.0 Apache-2.0 source release.
 
 Package, current kernel, protocol, evidence schema, and historical kernel-base
 identity are deliberately separate.  Legacy evidence may reference the base
@@ -10,9 +10,9 @@ from __future__ import annotations
 import sys
 
 PRODUCT_NAME = "web-ui-quality"
-PLUGIN_VERSION = "4.3.1"
+PLUGIN_VERSION = "4.4.0"
 PACKAGE_VERSION = PLUGIN_VERSION
-PACKAGE_STAGE = "4.3.1-open-source"
+PACKAGE_STAGE = "4.4.0-open-source"
 KERNEL_VERSION = "4.2.3"
 KERNEL_BASE_VERSION = "4.0.0-rc.1"
 LEGACY_PRODUCT_VERSION = KERNEL_BASE_VERSION
@@ -21,7 +21,7 @@ RECEIPT_PROTOCOL_VERSION = "3.0"
 EVIDENCE_SCHEMA_VERSION = "3.0"
 CONTRACT_VERSION = "3.0"
 WORKFLOW_CONTRACT_VERSION = "5"
-RELEASE_STAGE = "4.3.1-open-source"
+RELEASE_STAGE = "4.4.0-open-source"
 # Stable publication identity; qualification and GA status remain separate.
 PUBLICATION_STATUS = "NORMAL_RELEASE"
 # The shadow archive used for this migration is kept outside the public
