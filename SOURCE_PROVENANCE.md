@@ -1,7 +1,7 @@
 # Source and provenance boundary
 
 The 4.4.0 release's source manifest covers the exact file set
-selected by `scripts/release.py`: 576 non-self rows and 577 package inputs
+selected by `scripts/release.py`: 577 non-self rows and 578 package inputs
 including the self-excluding source manifest. Paths, byte counts, hashes,
 provenance labels, license fields, classification reasons, and source
 comparison records match the files that the packager will include.
@@ -17,8 +17,10 @@ matches. No exact whole-file match was found in those snapshots.
 The 32 rows whose old byte counts or hashes were stale were compared with the
 previous `main` source. Their text matched after normalizing line endings;
 the byte differences reflected line-ending representation, not new source
-content. The rows now record the exact current package bytes and hashes. The
-remaining source rows retain their previously reviewed provenance details.
+content. The rows now record the committed package bytes and hashes. `.gitattributes`
+pins distributed text to LF in Windows checkouts while preserving the 24 files
+already committed with CRLF or mixed line endings byte-for-byte. The remaining
+source rows retain their previously reviewed provenance details.
 No third-party source code or assets are included; separately installed
 dependencies keep their upstream licenses and notices if redistributed.
 

@@ -16,7 +16,9 @@ boundaries.
   review and repair flow;
 - makes release validation report source eligibility from the file-level
   manifest, checks each row's source and license fields, and blocks packaging
-  before writing if the manifest is incomplete or inconsistent.
+  before writing if the manifest is incomplete or inconsistent; source hashes
+  now follow committed bytes across Windows checkouts while preserving the
+  existing CRLF or mixed-EOL blobs.
 
 The release does not claim whole-page maturity, independent Host proof,
 Commercial GA, or production qualification. Placeholder business operations

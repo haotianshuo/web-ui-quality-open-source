@@ -192,7 +192,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2624,
+      "bytes": 2749,
       "classificationReason": "Retained in the exact audited WUQ candidate after file-tree, source comparison, and content review.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -201,7 +201,7 @@
       "path": "CHANGELOG.md",
       "provenance": "WUQ_ORIGINAL_CONFIRMED",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "a3031097d44d010ea728ba5f8f2b1134e76c0b352b70e68a3565614b04a86b07",
+      "sha256": "9185d28df5ca753e21b385e4b30c060025be96446fc398080b8cb31910afaf97",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -379,7 +379,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3289,
+      "bytes": 3483,
       "classificationReason": "Project-owned Apache-2.0 public documentation updated to state source-coverage and formal-release eligibility boundaries.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -388,7 +388,7 @@
       "path": "PUBLICATION.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "b8fd3fdeb744bfc619aab29fae8804ef8afb51ed1fa27976973ebb004c811791",
+      "sha256": "839358a4ad8fe3d92a07828c069ceb9590f10bc70c21e058f01889095a433407",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -464,7 +464,7 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2550,
+      "bytes": 2707,
       "classificationReason": "Project-owned Apache-2.0 provenance documentation updated to state source-coverage and formal-release eligibility boundaries.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
@@ -473,7 +473,7 @@
       "path": "SOURCE_PROVENANCE.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "7458659aab38d407782df81e4d33886b01f2794a0cc980a7bc53312470e89d34",
+      "sha256": "0aade43bcc7825904dcb9dc7c133cb736f9ba08017c5b25781f6f5ba7bd16a26",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
