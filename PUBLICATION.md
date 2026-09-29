@@ -10,13 +10,19 @@ normal OSS release channel. Release archives are published on the
 - PyPI/npm: not published.
 
 The source manifest records 551 provenance rows. The current package tree has
-25 source paths without provenance rows, and 34 listed rows have byte counts or
-hashes that do not match current files. All 59 affected paths are unchanged
-from the verified `main` baseline and outside this candidate's source review.
-This candidate refreshes hashes for its 33 changed non-self source paths. The
+25 source paths without provenance rows, and 32 listed rows have byte counts or
+hashes that do not match current files. All 57 remaining affected paths are
+unchanged from the verified `main` baseline and outside this candidate's source
+review. This candidate refreshes hashes for its 35 changed non-self source
+paths. The
 manifest counters do not describe the whole package. A generated release
 manifest covers package contents and hashes, not source provenance. Complete
 provenance reconciliation remains necessary before a subsequent source release.
+
+`scripts/release.py validate` reports technical checks separately from formal
+release eligibility. The current `CURRENT_BATCH_ONLY` source status blocks the
+`package` command before it writes release artifacts. Formal packaging requires
+closed source status and matching package-file coverage, byte counts, and hashes.
 
 ## Included
 
@@ -53,9 +59,10 @@ license and required notice; the root license does not relicense it.
 ## Provenance and boundary rules
 
 Every file listed in the source manifest has an allowed provenance label.
-The candidate's changed files have current byte/hash rows; 34 unchanged rows
+The candidate's changed files have current byte/hash rows; 32 unchanged rows
 remain stale and 25 source paths remain unlisted. See `publicPackageScope` for
-the boundary. External issue and pull-request pages, commit
+the boundary. The release validator's technical PASS does not imply that the
+full source manifest is closed. External issue and pull-request pages, commit
 identifiers, URLs, and behavior descriptions are research evidence only. They
 are not copied source and are not automatically dependencies or attributions.
 

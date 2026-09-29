@@ -7,12 +7,17 @@ invent commits for versions that were not preserved.
 The reviewed source paths are recorded in
 [FINAL_PUBLIC_SOURCE_MANIFEST.json](FINAL_PUBLIC_SOURCE_MANIFEST.json). The
 manifest lists 551 provenance rows. The current public source package has 25
-additional paths without provenance rows, and 34 listed rows have byte counts
-or hashes that do not match their current files. All 59 affected paths are
-unchanged by this candidate. This candidate updates the hashes for its 33
-changed non-self source paths only. The generated release manifest covers
+additional paths without provenance rows, and 32 listed rows have byte counts
+or hashes that do not match their current files. All 57 remaining affected
+paths are unchanged by this candidate. This candidate updates the hashes for
+its 35 changed non-self source paths only. The generated release manifest covers
 package composition and content hashes, not provenance. This is an incremental
 review, not a distribution-wide provenance closure.
+
+`scripts/release.py validate` reports technical checks separately from formal
+release eligibility. The current `CURRENT_BATCH_ONLY` status prevents the
+`package` command from writing release artifacts. Formal packaging requires a
+closed status and matching package-file coverage, byte counts, and hashes.
 
 For every file listed in the source manifest, the engineering disposition is
 closed:

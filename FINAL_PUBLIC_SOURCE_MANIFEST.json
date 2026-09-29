@@ -12,7 +12,7 @@
     "version": "4.3.1"
   },
   "engineeringClosure": {
-    "claimBoundary": "The current batch source classifications apply to its 33 changed non-self paths. The source manifest omits 25 other package paths and has 34 listed rows whose bytes/hashes no longer match current files; unchanged baseline content is not cleared by this batch. This is not a whole-package provenance closure, statutory copyright opinion, contributor assignment, patent clearance, or non-infringement guarantee.",
+    "claimBoundary": "The current batch source classifications apply to its 35 changed non-self paths. The source manifest omits 25 other package paths and has 32 listed rows whose bytes/hashes no longer match current files; unchanged baseline content is not cleared by this batch. This is not a whole-package provenance closure, statutory copyright opinion, contributor assignment, patent clearance, or non-infringement guarantee.",
     "copyrightDisplayName": null,
     "copyrightDisplayNameStatus": "OPTIONAL_FUTURE_IDENTITY_DISCLOSURE",
     "status": "CURRENT_BATCH_ONLY",
@@ -361,8 +361,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3695,
-      "classificationReason": "Project-owned Apache-2.0 public documentation updated to state the reviewed source-provenance coverage boundary; no third-party expressive content added.",
+      "bytes": 4108,
+      "classificationReason": "Project-owned Apache-2.0 public documentation updated to state source-coverage and formal-release eligibility boundaries.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -370,7 +370,7 @@
       "path": "PUBLICATION.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "3a16f9483b44e58526a6fe615ae294e01f8eb116fa96834268aa620f3131b4df",
+      "sha256": "f6faae8ff46f8b4cd8089d4e8f88219c30f9021274c542e440353a82dbe09615",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -446,8 +446,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 2968,
-      "classificationReason": "Project-owned Apache-2.0 public documentation updated to state the reviewed source-provenance coverage boundary; no third-party expressive content added.",
+      "bytes": 3277,
+      "classificationReason": "Project-owned Apache-2.0 provenance documentation updated to state source-coverage and formal-release eligibility boundaries.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -455,7 +455,7 @@
       "path": "SOURCE_PROVENANCE.md",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "a58d119b1ff392be0e7d22b53152b3980367c29d243336cacbcd73c2fd03e55c",
+      "sha256": "71eb2f517a7e8fe7b140afd206d6f3442b305b9369b3be703adb534b908341f2",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -7501,8 +7501,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 23596,
-      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "bytes": 31495,
+      "classificationReason": "Project-owned Apache-2.0 release code now reads manifest status and gates formal packaging on complete source coverage and current hashes.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -7510,7 +7510,7 @@
       "path": "scripts/release.py",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "489aea06cb4ad006a174f1674dfae1ad6f342c6db747292e724e5efbd4745a77",
+      "sha256": "601024799358a0def210344a75362574fe22c2a268d773b9be65fbb0a5aadeb8",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -8181,8 +8181,8 @@
       "thirdPartyContentDisposition": "NONE"
     },
     {
-      "bytes": 3123,
-      "classificationReason": "Prepared or rewritten for the isolated public boundary from the WUQ candidate; no third-party expressive material was retained.",
+      "bytes": 13444,
+      "classificationReason": "Project-owned Apache-2.0 public regression tests use isolated manifest fixtures to verify truthful release status and pre-artifact blocking.",
       "copyrightBasis": "USER_OPEN_SOURCE_INTENT_CONFIRMED_NO_LEGAL_HOLDER_INFERRED",
       "copyrightDisplayName": null,
       "license": "Apache-2.0",
@@ -8190,7 +8190,7 @@
       "path": "tests/public/test_public_release.py",
       "provenance": "REWRITE_INDEPENDENTLY",
       "redistributionDecision": "INCLUDE_IN_APACHE_2_0_CANDIDATE",
-      "sha256": "cf4a1d4116cf5b3fa9832c2813f0ef8cb39e0e0c62c00043425499fe04f0c058",
+      "sha256": "d5a5e4fee8d4f677fb7a491a4d1a768717d90ac0c310268ff76d8bb64381c17d",
       "sourceComparison": {
         "exactWholeFileHashMatchAgainstSavedExternalSnapshots": 0,
         "normalizedLongLineMatch": "NONE_OR_GENERATED_EVIDENCE_ONLY"
@@ -9406,7 +9406,7 @@
         "provenance": "GENERATED_FROM_WUQ_CONFIRMED"
       }
     ],
-    "rowsCover": "The source table has 551 rows; the source package has 577 paths including the self-referential manifest. 25 paths have no provenance row and 34 listed rows have stale current bytes/hashes. The 33 non-self source files changed by this candidate have matching rows. Generated release manifests separately cover package composition and content hashes, not provenance."
+    "rowsCover": "The source table has 551 rows; the source package has 577 paths including the self-referential manifest. 25 paths have no provenance row and 32 listed rows have stale current bytes/hashes. The 35 non-self source files changed by this candidate have matching rows. Generated release manifests separately cover package composition and content hashes, not provenance."
   },
   "publicBoundary": {
     "excludedDisposition": "REMOVE_FROM_PUBLIC_RELEASE",
@@ -9481,7 +9481,7 @@
     "normalizedMatchesDisposition": "MANUALLY_REVIEWED_GENERATED_WUQ_EVIDENCE_LINES_ONLY",
     "savedExternalChallengeFileCount": 188,
     "savedExternalProjectFileCount": 1531,
-    "scope": "Content/source review and refreshed digests cover the 33 non-self files changed by this candidate. 25 package paths are unlisted and 34 listed hashes are stale on unchanged baseline files.",
+    "scope": "Content/source review and refreshed digests cover the 35 non-self files changed by this candidate. 25 package paths are unlisted and 32 listed hashes are stale on unchanged baseline files.",
     "thirdPartyExpressiveContentFoundInCurrentChanges": false
   },
   "statusCounts": {
@@ -9500,20 +9500,20 @@
       "REWRITE_INDEPENDENTLY"
     ],
     "thirdPartyLicenseRule": "The root Apache-2.0 license does not relicense third-party content; any future copied content keeps its own license and notice.",
-    "scope": "Allowed provenance labels apply to manifest rows; current content/hash identity is refreshed for this candidate’s changed files. 34 unchanged row hashes are stale and 25 package paths are absent from the table.",
+    "scope": "Allowed provenance labels apply to manifest rows; current content/hash identity is refreshed for this candidate’s changed files. 32 unchanged row hashes are stale and 25 package paths are absent from the table.",
     "allCurrentPackageFilesHaveProvenance": false,
     "allManifestRowsUseAllowedProvenanceLabels": true
   },
-  "counterScope": "The root counters describe source rows only. In the current package tree, 25 paths have no provenance row and 34 listed rows have stale byte/hash values; these counts do not establish whole-package provenance closure.",
+  "counterScope": "The root counters describe source rows only. In the current package tree, 25 paths have no provenance row and 32 listed rows have stale byte/hash values; these counts do not establish whole-package provenance closure.",
   "publicPackageScope": {
     "currentSourceFileCount": 577,
     "listedProvenanceFileCount": 551,
     "unlistedSourceFileCount": 25,
-    "listedRowsWithStaleCurrentBytesOrHash": 34,
-    "candidateChangedSourceRowsWithCurrentBytesAndHash": 33,
+    "listedRowsWithStaleCurrentBytesOrHash": 32,
+    "candidateChangedSourceRowsWithCurrentBytesAndHash": 35,
     "manifestSelfReferenceOmitted": true,
     "unlistedFilesChangedInThisCandidate": 0,
-    "staleListedFilesChangedInThisCandidate": 0,
-    "claimBoundary": "The 25 unlisted paths and 34 stale listed rows are unchanged from the verified main baseline. This candidate refreshes byte counts and hashes for its 33 changed non-self source rows only. The generated release manifest covers package composition and content hashes, not provenance. This is an incremental source review, not a distribution-wide provenance closure."
+    "staleListedFilesChangedInThisCandidate": 2,
+    "claimBoundary": "The 25 unlisted paths and 32 stale listed rows are unchanged from the verified main baseline. This candidate refreshes byte counts and hashes for its 35 changed non-self source rows only. The generated release manifest covers package composition and content hashes, not provenance. This is an incremental source review, not a distribution-wide provenance closure."
   }
 }
